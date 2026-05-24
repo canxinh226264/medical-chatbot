@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hồ sơ cá nhân - Chuyên gia</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="page">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-logo">
+          <img src="logo.png" alt="Docah logo">
+        </div>
+        <div>
+          <h1>Docah</h1>
+          <p>Hệ thống chuyên gia</p>
+        </div>
+      </div>
+      <nav class="nav-menu">
+        <a class="nav-link" href="dashboard.html"><span class="icon">🏠</span><span>Trang chủ</span></a>
+        <a class="nav-link" href="cases.html"><span class="icon">📋</span><span>Danh sách ca</span></a>
+        <a class="nav-link" href="responses.html"><span class="icon">💬</span><span>Phản hồi</span></a>
+        <a class="nav-link" href="reports.html"><span class="icon">📊</span><span>Báo cáo</span></a>
+        <a class="nav-link active" href="profile.html"><span class="icon">👤</span><span>Hồ sơ cá nhân</span></a>
+      </nav>
+    </aside>
+
+    <main class="content">
+      <div class="topbar">
+        <div class="topbar-title">
+          <h2>Hồ sơ cá nhân</h2>
+          <p>Xem thông tin chuyên gia, chỉnh sửa hồ sơ và theo dõi lịch làm việc.</p>
+        </div>
+        <div class="account-menu">
+          <button class="account-button" id="accountToggle" type="button">
+            <div class="dot">A</div>
+            <div>
+              <div style="font-weight:700;">BS. Nguyễn Văn A</div>
+              <div style="font-size:0.9rem; color: var(--muted);">Chuyên gia</div>
+            </div>
+          </button>
+          <div class="dropdown" id="accountDropdown">
+            <div class="dropdown-illustration">
+              <img src="logo.png" alt="Illustration" />
+              <div><strong>Tài khoản </strong><span>Quản lý hồ sơ và phiên đăng nhập</span></div>
+            </div>
+            <button class="dropdown-item" type="button" id="logoutButton">Đăng xuất</button>
+          </div>
+        </div>
+      </div>
+
+      <section class="card profile-card">
+        <div class="profile-header">
+          <div class="profile-avatar">A</div>
+          <div>
+            <h3>BS. Nguyễn Văn A</h3>
+            <p>Chuyên gia tư vấn nội khoa</p>
+          </div>
+          <button class="btn profile-edit-button" id="editProfileButton" type="button">Chỉnh sửa</button>
+        </div>
+
+        <form class="profile-form" id="profileForm">
+          <div class="form-grid">
+            <label>
+              Họ và tên
+              <input class="profile-field" type="text" value="BS. Nguyễn Văn A" disabled>
+            </label>
+            <label>
+              Email
+              <input class="profile-field" type="email" value="expert@hospital.vn" disabled>
+            </label>
+            <label>
+              Số điện thoại
+              <input class="profile-field" type="tel" value="0900 123 456" disabled>
+            </label>
+            <label>
+              Chuyên khoa
+              <select class="profile-field" disabled>
+                <option selected>Nội khoa</option>
+                <option>Tim mạch</option>
+                <option>Nội tiết</option>
+                <option>Tiêu hóa</option>
+              </select>
+            </label>
+            <label>
+              Đơn vị công tác
+              <input class="profile-field" type="text" value="Bệnh viện Trung tâm" disabled>
+            </label>
+            <label>
+              Mã chuyên gia
+              <input class="profile-field" type="text" value="EXP-001" disabled>
+            </label>
+          </div>
+
+          <label>
+            Giới thiệu chuyên môn
+            <textarea class="profile-field" disabled>Chuyên gia tư vấn các ca nội khoa, ưu tiên đánh giá nguy cơ và hướng xử lý ban đầu cho bác sĩ tuyến dưới.</textarea>
+          </label>
+
+          <div class="form-actions hidden" id="profileActions">
+            <button class="btn" id="cancelProfileButton" type="button">Hủy</button>
+            <button class="primary compact-primary" type="submit">Lưu thay đổi</button>
+          </div>
+          <p id="profileSaved" class="success hidden">Đã lưu hồ sơ cá nhân.</p>
+        </form>
+      </section>
+
+      <section class="card schedule-card">
+        <div class="section-header">
+          <div>
+            <h2>Lịch làm việc</h2>
+            <p>Thời gian tiếp nhận tư vấn trong tuần của chuyên gia.</p>
+          </div>
+        </div>
+        <div class="schedule-list">
+          <div class="schedule-row">
+            <div><strong>Thứ 2</strong><span>08:00 - 11:30</span></div>
+            <span class="badge green">Đang nhận ca</span>
+          </div>
+          <div class="schedule-row">
+            <div><strong>Thứ 3</strong><span>13:30 - 17:00</span></div>
+            <span class="badge green">Đang nhận ca</span>
+          </div>
+          <div class="schedule-row">
+            <div><strong>Thứ 4</strong><span>08:00 - 11:30</span></div>
+            <span class="badge yellow">Trực ưu tiên</span>
+          </div>
+          <div class="schedule-row">
+            <div><strong>Thứ 5</strong><span>13:30 - 17:00</span></div>
+            <span class="badge green">Đang nhận ca</span>
+          </div>
+          <div class="schedule-row">
+            <div><strong>Thứ 6</strong><span>08:00 - 11:30</span></div>
+            <span class="badge blue">Họp chuyên môn</span>
+          </div>
+          <div class="schedule-row">
+            <div><strong>Thứ 7</strong><span>09:00 - 11:00</span></div>
+            <span class="badge yellow">Theo lịch hẹn</span>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>

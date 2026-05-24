@@ -1,0 +1,1807 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chatbot & Quy trình</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+    :root {
+      color-scheme: dark;
+      --bg: #0f172a;
+      --surface: rgba(15, 23, 42, 0.96);
+      --surface-soft: rgba(30, 41, 59, 0.92);
+      --panel: #111827;
+      --panel-alt: #1f2937;
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+      --accent: #3b82f6;
+      --accent-strong: #2563eb;
+      --success: #22c55e;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --radius: 24px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: 'Inter', sans-serif;
+      background: radial-gradient(circle at top, rgba(59, 130, 246, 0.14), transparent 25%),
+                  linear-gradient(180deg, #020617 0%, #111827 100%);
+      color: var(--text);
+      padding: 24px 24px 24px 0;
+    }
+
+    .page {
+      width: calc(100% - 24px);
+      margin: 0;
+      display: grid;
+      grid-template-columns: 280px minmax(0, 1fr);
+      gap: 24px;
+      align-items: start;
+    }
+
+    .sidebar {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(148, 163, 184, 0.14);
+      border-radius: 32px;
+      padding: 28px 22px;
+      min-height: calc(100vh - 48px);
+      position: sticky;
+      top: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding-bottom: 4px;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+    }
+
+    .mark {
+      width: 44px;
+      height: 44px;
+      display: grid;
+      place-items: center;
+      border-radius: 16px;
+      background: linear-gradient(135deg, var(--accent-strong), var(--accent));
+      color: white;
+      font-weight: 800;
+      font-size: 1.1rem;
+      box-shadow: 0 16px 34px rgba(37, 99, 235, 0.2);
+    }
+
+    .sidebar h1,
+    .sidebar p {
+      margin: 0;
+    }
+
+    .sidebar h1 {
+      font-size: 1.1rem;
+      line-height: 1.2;
+      color: white;
+    }
+
+    .sidebar p {
+      margin-top: 6px;
+      font-size: 0.92rem;
+      color: var(--muted);
+    }
+
+    .nav-menu {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .nav-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: flex-start;
+      width: 100%;
+      gap: 12px;
+      padding: 14px 18px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.04);
+      color: var(--text);
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.25s ease;
+      border: 1px solid transparent;
+    }
+
+    .nav-link:hover,
+    .nav-link.active {
+      background: rgba(59, 130, 246, 0.16);
+      border-color: rgba(59, 130, 246, 0.28);
+      color: white;
+    }
+
+    .nav-link .icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 12px;
+      background: rgba(59,130,246,0.14);
+      display: grid;
+      place-items: center;
+      font-size: 1rem;
+      color: #e0f2fe;
+    }
+
+    .nav-link span {
+      color: var(--text);
+      font-size: 0.95rem;
+      margin: 0;
+    }
+
+    .content {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .topbar-title h2 {
+      margin: 0;
+      font-size: 1.5rem;
+      color: white;
+    }
+
+    .topbar-title p {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .account-menu {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: flex-end;
+    }
+
+    .account-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 18px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      color: white;
+      cursor: pointer;
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
+
+    .account-button:hover {
+      background: rgba(59,130,246,0.16);
+      transform: translateY(-1px);
+    }
+
+    .account-button .dot {
+      width: 34px;
+      height: 34px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #3b82f6, #60a5fa);
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      color: white;
+    }
+
+    .brand-logo {
+      width: 120px;
+      height: 56px;
+      border-radius: 20px;
+      background: rgba(255,255,255,0.08);
+      border: 3px solid rgba(255,255,255,0.72);
+      display: grid;
+      place-items: center;
+      box-shadow: 0 18px 48px rgba(37, 99, 235, 0.18);
+      overflow: hidden;
+    }
+
+    .brand-logo img {
+      width: 100%;
+      height: auto;
+      object-fit: contain;
+      display: block;
+    }
+
+    .dropdown {
+      display: none;
+      position: absolute;
+      right: 0;
+      top: calc(100% + 12px);
+      width: 260px;
+      background: rgba(15, 23, 42, 0.98);
+      border: 1px solid rgba(148, 163, 184, 0.18);
+      border-radius: 20px;
+      padding: 18px;
+      box-shadow: 0 28px 60px rgba(0,0,0,0.25);
+      z-index: 20;
+    }
+
+    .dropdown.show {
+      display: block;
+    }
+
+    .dropdown-illustration {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .dropdown-illustration img {
+      width: 48px;
+      height: 48px;
+      border-radius: 18px;
+      object-fit: cover;
+      background: rgba(255,255,255,0.08);
+      padding: 8px;
+    }
+
+    .dropdown-illustration div {
+      display: grid;
+      gap: 4px;
+    }
+
+    .dropdown-illustration span {
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .dropdown-item {
+      display: inline-flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      padding: 14px 16px;
+      border-radius: 18px;
+      background: rgba(59,130,246,0.12);
+      color: white;
+      text-decoration: none;
+      font-weight: 700;
+      border: 1px solid rgba(59,130,246,0.18);
+      cursor: pointer;
+      transition: transform 0.2s ease, background 0.2s ease;
+    }
+
+    .dropdown-item:hover {
+      background: rgba(59,130,246,0.2);
+      transform: translateY(-1px);
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .panel-header .subtitle {
+      color: var(--muted);
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 14px;
+      border-radius: 999px;
+      background: rgba(34,197,94,0.14);
+      color: var(--success);
+      font-weight: 700;
+      font-size: 0.88rem;
+    }
+
+    .screen-tabs {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .step-card {
+      padding: 18px 20px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(148,163,184,0.14);
+      cursor: pointer;
+      transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+      display: grid;
+      gap: 8px;
+    }
+
+    .step-card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(59,130,246,0.3);
+      background: rgba(59,130,246,0.08);
+    }
+
+    .step-card.active {
+      border-color: rgba(59,130,246,0.4);
+      background: rgba(59,130,246,0.12);
+    }
+
+    .step-label {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 30px;
+      height: 30px;
+      border-radius: 999px;
+      background: rgba(59,130,246,0.16);
+      color: #fff;
+      font-weight: 700;
+    }
+
+    .step-title {
+      font-weight: 700;
+      font-size: 0.95rem;
+      margin: 0;
+      color: white;
+    }
+
+    .step-description {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.4;
+    }
+
+    .screen-panel {
+      display: none;
+      gap: 24px;
+    }
+
+    .screen-panel.active {
+      display: grid;
+    }
+
+    .panel-card {
+      background: var(--surface);
+      border: 1px solid rgba(148,163,184,0.14);
+      border-radius: 28px;
+      padding: 24px;
+      box-shadow: 0 18px 40px rgba(0,0,0,0.14);
+    }
+
+    .panel-card h3 {
+      margin: 0 0 12px;
+      font-size: 1.15rem;
+      color: white;
+    }
+
+    .panel-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .question-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: grid;
+      gap: 14px;
+    }
+
+    .question-item {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(148,163,184,0.12);
+      border-radius: 20px;
+      padding: 18px 20px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .question-item-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .question-item-title {
+      margin: 0;
+      font-weight: 700;
+      color: white;
+    }
+
+    .question-pill {
+      padding: 7px 12px;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .pill-required { background: rgba(59,130,246,0.14); color: #60a5fa; }
+    .pill-optional { background: rgba(245,158,11,0.14); color: #f59e0b; }
+    .pill-system { background: rgba(168, 85, 247,0.14); color: #c084fc; }
+
+    .question-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .question-actions button {
+      border: none;
+      border-radius: 16px;
+      padding: 10px 14px;
+      background: rgba(255,255,255,0.06);
+      color: #e2e8f0;
+      cursor: pointer;
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
+
+    .question-actions button:hover {
+      background: rgba(59,130,246,0.16);
+      transform: translateY(-1px);
+    }
+
+    .question-actions button[data-action="delete"] {
+      background: rgba(239,68,68,0.16);
+      color: #fecaca;
+    }
+
+    .question-item[draggable="true"] {
+      cursor: grab;
+    }
+
+    .question-item.dragging {
+      opacity: 0.45;
+      border-color: rgba(59,130,246,0.3);
+    }
+
+    .button {
+      border: none;
+      border-radius: 18px;
+      padding: 12px 20px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.2s ease, background 0.2s ease;
+    }
+
+    .button-primary {
+      background: linear-gradient(135deg, var(--accent-strong), var(--accent));
+      color: white;
+    }
+
+    .button-secondary {
+      background: rgba(255,255,255,0.06);
+      color: #e2e8f0;
+      border: 1px solid rgba(148,163,184,0.16);
+    }
+
+    .button:hover {
+      transform: translateY(-1px);
+    }
+
+    .chat-preview {
+      display: grid;
+      gap: 18px;
+    }
+
+    .chat-bubble {
+      max-width: 68%;
+      border-radius: 24px;
+      padding: 16px 20px;
+      line-height: 1.6;
+      position: relative;
+    }
+
+    .chat-bubble.user {
+      margin-left: auto;
+      background: rgba(59,130,246,0.16);
+      color: white;
+      border-bottom-right-radius: 6px;
+    }
+
+    .chat-bubble.bot {
+      background: rgba(255,255,255,0.06);
+      color: #e2e8f0;
+      border-bottom-left-radius: 6px;
+    }
+
+    .quick-replies {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    .quick-reply {
+      border: 1px solid rgba(148,163,184,0.16);
+      background: rgba(255,255,255,0.06);
+      color: #e2e8f0;
+      border-radius: 18px;
+      padding: 10px 14px;
+      cursor: pointer;
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
+
+    .quick-reply:hover {
+      background: rgba(59,130,246,0.16);
+      transform: translateY(-1px);
+    }
+
+    .progress-track {
+      display: grid;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .track-bar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .track-line {
+      flex: 1;
+      height: 8px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.08);
+      overflow: hidden;
+    }
+
+    .track-fill {
+      width: 54%;
+      height: 100%;
+      background: linear-gradient(135deg, var(--accent-strong), var(--accent));
+      border-radius: 999px;
+    }
+
+    .chat-preview.mobile-mode {
+      position: relative;
+      max-width: 340px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 28px 20px 24px;
+      border-radius: 42px;
+      background: rgba(15,23,42,0.24);
+      box-shadow: inset 0 0 0 1px rgba(148,163,184,0.16);
+    }
+
+    .chat-preview.mobile-mode::before {
+      content: '';
+      position: absolute;
+      top: -18px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100px;
+      height: 14px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.08);
+    }
+
+    .popup-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(3px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      z-index: 50;
+    }
+
+    .popup-backdrop.visible {
+      display: flex;
+    }
+
+    .popup {
+      background: #0f172a;
+      border: 1px solid rgba(148,163,184,0.18);
+      border-radius: 24px;
+      padding: 28px;
+      max-width: 420px;
+      width: 100%;
+      box-shadow: 0 24px 60px rgba(15,23,42,0.45);
+    }
+
+    .popup h4 {
+      margin: 0 0 10px;
+      font-size: 1.1rem;
+    }
+
+    .popup p {
+      margin: 0 0 22px;
+      color: #cbd5e1;
+      line-height: 1.75;
+    }
+
+    .popup-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .popup-actions .button {
+      min-width: 120px;
+    }
+
+    .form-fields {
+      display: grid;
+      gap: 16px;
+      margin-bottom: 12px;
+    }
+
+    .form-fields label {
+      display: grid;
+      gap: 8px;
+      font-size: 0.95rem;
+      color: #e2e8f0;
+    }
+
+    .form-fields input,
+    .form-fields textarea,
+    .form-fields select {
+      width: 100%;
+      border: 1px solid rgba(148,163,184,0.18);
+      background: rgba(255,255,255,0.05);
+      border-radius: 16px;
+      color: #e2e8f0;
+      padding: 12px 14px;
+      outline: none;
+      font: inherit;
+    }
+
+    .form-fields textarea {
+      min-height: 110px;
+      resize: vertical;
+    }
+
+    .package-actions {
+      margin-top: 18px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: flex-end;
+    }
+
+    .package-actions button {
+      border: none;
+      border-radius: 16px;
+      padding: 10px 14px;
+      cursor: pointer;
+      font-weight: 700;
+      background: rgba(255,255,255,0.06);
+      color: #e2e8f0;
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
+
+    .package-actions button:hover {
+      background: rgba(59,130,246,0.16);
+      transform: translateY(-1px);
+    }
+
+    .package-actions button[data-action="delete"] {
+      background: rgba(239,68,68,0.16);
+      color: #fecaca;
+    }
+
+    .package-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      justify-content: flex-end;
+    }
+
+    .package-meta span {
+      color: var(--muted);
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+
+    .package-description {
+      margin: 16px 0 0;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    .pulse {
+      animation: pulse-highlight 0.3s ease;
+    }
+
+    @keyframes pulse-highlight {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.02); }
+      100% { transform: scale(1); }
+    }
+
+    .rule-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 16px;
+      padding: 18px 20px;
+      border-radius: 20px;
+      border: 1px solid rgba(148,163,184,0.15);
+      background: rgba(255,255,255,0.04);
+      align-items: center;
+    }
+
+    .rule-row strong {
+      color: white;
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .rule-outcome {
+      padding: 8px 14px;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: white;
+    }
+
+    .outcome-low { background: rgba(34,197,94,0.18); color: var(--success); }
+    .outcome-medium { background: rgba(245,158,11,0.18); color: var(--warning); }
+    .outcome-high { background: rgba(239,68,68,0.18); color: var(--danger); }
+
+    .package-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .package-card {
+      border-radius: 24px;
+      padding: 24px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(148,163,184,0.14);
+    }
+
+    .package-card h4 {
+      margin: 0 0 10px;
+      font-size: 1rem;
+      color: white;
+    }
+
+    .package-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+
+    .badge-free { background: rgba(34,197,94,0.16); color: var(--success); }
+    .badge-paid { background: rgba(59,130,246,0.16); color: var(--accent); }
+
+    .feature-list {
+      margin: 16px 0 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 10px;
+    }
+
+    .feature-list li {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .feature-list li::before {
+      content: '•';
+      color: var(--accent);
+      margin-top: 2px;
+    }
+
+    .hint-card {
+      background: rgba(59,130,246,0.08);
+      border: 1px solid rgba(59,130,246,0.18);
+      border-radius: 20px;
+      padding: 18px 22px;
+      color: #e2e8f0;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .hint-card span {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 30px;
+      height: 30px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.08);
+      color: white;
+      font-weight: 700;
+    }
+
+    .natural-paywall {
+      margin-top: 16px;
+      padding: 18px 22px;
+      border-radius: 20px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(148,163,184,0.14);
+    }
+
+    .natural-paywall strong {
+      color: white;
+    }
+
+    .dropdown {
+      display: block;
+      visibility: hidden;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(8px) scale(0.98);
+      transform-origin: top right;
+      width: min(280px, calc(100vw - 32px));
+      padding: 12px;
+      border-radius: 18px;
+      background: linear-gradient(180deg, rgba(15,23,42,0.98), rgba(17,24,39,0.96));
+      border: 1px solid rgba(148,163,184,0.22);
+      box-shadow: 0 24px 70px rgba(0,0,0,0.38), inset 0 1px 0 rgba(255,255,255,0.04);
+      backdrop-filter: blur(18px);
+      transition: opacity 0.18s ease, transform 0.18s ease, visibility 0.18s ease;
+      z-index: 60;
+    }
+
+    .dropdown.show {
+      visibility: visible;
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0) scale(1);
+    }
+
+    .dropdown-illustration {
+      margin-bottom: 10px;
+      padding: 10px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.045);
+      border: 1px solid rgba(148,163,184,0.12);
+    }
+
+    .dropdown-item {
+      min-height: 44px;
+      border-radius: 14px;
+      background: rgba(59,130,246,0.1);
+      border-color: rgba(96,165,250,0.2);
+    }
+
+    .dropdown-item:hover {
+      background: rgba(59,130,246,0.18);
+      border-color: rgba(96,165,250,0.34);
+    }
+
+    .form-fields select {
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      padding-right: 44px;
+      background-image: linear-gradient(45deg, transparent 50%, #cbd5e1 50%), linear-gradient(135deg, #cbd5e1 50%, transparent 50%);
+      background-position: calc(100% - 18px) calc(50% - 2px), calc(100% - 14px) calc(50% - 2px);
+      background-size: 6px 6px, 6px 6px;
+      background-repeat: no-repeat;
+      background-color: rgba(15,23,42,0.95);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
+      cursor: pointer;
+    }
+
+    .form-fields select option {
+      background: #0f172a;
+      color: #e2e8f0;
+    }
+
+    .popup-select {
+      position: relative;
+      width: 100%;
+    }
+
+    .popup-select-button {
+      width: 100%;
+      min-height: 48px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 14px;
+      border-radius: 18px;
+      border: 1px solid rgba(148,163,184,0.2);
+      background: rgba(15,23,42,0.95);
+      color: #e2e8f0;
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+    }
+
+    .popup-select-button::after {
+      content: '▾';
+      color: #cbd5e1;
+      font-size: 0.82rem;
+    }
+
+    .popup-select-button:hover,
+    .popup-select.open .popup-select-button {
+      border-color: rgba(96,165,250,0.55);
+      background: rgba(30,41,59,0.95);
+      box-shadow: 0 14px 30px rgba(37,99,235,0.16);
+    }
+
+    .popup-select-menu {
+      position: absolute;
+      top: calc(100% + 10px);
+      left: 0;
+      right: 0;
+      display: grid;
+      gap: 6px;
+      padding: 8px;
+      border-radius: 18px;
+      background: linear-gradient(180deg, rgba(15,23,42,0.98), rgba(17,24,39,0.96));
+      border: 1px solid rgba(148,163,184,0.22);
+      box-shadow: 0 24px 70px rgba(0,0,0,0.38), inset 0 1px 0 rgba(255,255,255,0.04);
+      backdrop-filter: blur(18px);
+      visibility: hidden;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(8px) scale(0.98);
+      transform-origin: top left;
+      transition: opacity 0.18s ease, transform 0.18s ease, visibility 0.18s ease;
+      z-index: 80;
+    }
+
+    .popup-select.open .popup-select-menu {
+      visibility: visible;
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0) scale(1);
+    }
+
+    .popup-select-option {
+      min-height: 42px;
+      width: 100%;
+      padding: 10px 12px;
+      border: none;
+      border-radius: 14px;
+      background: transparent;
+      color: var(--text);
+      text-align: left;
+      cursor: pointer;
+      font-weight: 700;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+
+    .popup-select-option:hover,
+    .popup-select-option.active {
+      background: rgba(59,130,246,0.18);
+      color: white;
+    }
+
+    @media (max-width: 1120px) {
+      .screen-tabs {
+        grid-template-columns: 1fr 1fr;
+      }
+      .package-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 900px) {
+      .page {
+        grid-template-columns: 1fr;
+      }
+      .sidebar {
+        position: relative;
+        top: 0;
+        min-height: auto;
+      }
+      .screen-tabs {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 700px) {
+      .question-item,
+      .rule-row {
+        padding: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <aside class="sidebar">
+      <div class="brand">
+          <div class="brand-logo">
+            <img src="logo.png" alt="Docah logo" />
+          </div>
+          <div>
+            <h1>Docah</h1>
+            <p>Hệ thống quản lý</p>
+          </div>
+        </div>
+      <nav class="nav-menu">
+        <a class="nav-link" href="dashboard.html">
+          <span class="icon">🏠</span>
+          <span>Trang chủ</span>
+        </a>
+        <a class="nav-link" href="quan-li-phong-kham.html">
+          <span class="icon">🏥</span>
+          <span>Phòng khám</span>
+        </a>
+        <a class="nav-link" href="nhan-su-bac-si.html">
+          <span class="icon">👩‍⚕️</span>
+          <span>Nhân sự &amp; bác sĩ</span>
+        </a>
+        <a class="nav-link active" href="chatbot-quy-trinh.html">
+          <span class="icon">🤖</span>
+          <span>Chatbot &amp; quy trình</span>
+        </a>
+        <a class="nav-link" href="bao-cao-phan-tich.html">
+          <span class="icon">📊</span>
+          <span>Báo cáo &amp; phân tích</span>
+        </a>
+        <a class="nav-link" href="chinh-sua-tai-khoan.html">
+          <span class="icon">👤</span>
+          <span>Chỉnh sửa tài khoản</span>
+        </a>
+        <a class="nav-link" href="cai-dat-he-thong.html">
+          <span class="icon">⚙️</span>
+          <span>Cài đặt hệ thống</span>
+        </a>
+      </nav>
+    </aside>
+
+    <main class="content">
+      <div class="topbar">
+        <div class="topbar-title">
+          <h2>Chatbot & Quy trình</h2>
+          <p>Tạo và quản lý luồng tương tác, preview người dùng, cấu hình phân loại nguy cơ và paywall tự nhiên.</p>
+        </div>
+        <div class="account-menu">
+          <button class="account-button" id="accountToggle" type="button">
+            <div class="dot">Q</div>
+            <div>
+              <div style="font-weight:700;">Quản lý</div>
+              <div style="font-size:0.9rem; color: var(--muted);">Tài khoản</div>
+            </div>
+          </button>
+          <div class="dropdown" id="accountDropdown">
+            <div class="dropdown-illustration">
+              <img src="logo.png" alt="Illustration" />
+              <div>
+                <strong>Đăng xuất</strong>
+                <span>Thoát khỏi phiên quản lý hiện tại</span>
+              </div>
+            </div>
+            <button class="dropdown-item" type="button" id="logoutButton">Đăng xuất</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel-header">
+        <div>
+          <p class="subtitle">Bốn màn hình liên kết giúp bạn thiết kế kịch bản chatbot từ câu hỏi đến gợi ý nâng cấp.</p>
+        </div>
+        <button class="button button-primary" id="saveConfigBtn" type="button">Lưu cấu hình</button>
+      </div>
+
+      <div class="screen-tabs">
+        <button class="step-card active" data-step="1">
+          <span class="step-label">1</span>
+          <p class="step-title">Soạn kịch bản</p>
+          <p class="step-description">Quản lý câu hỏi theo bước, thêm/xóa/sắp xếp dễ dàng.</p>
+        </button>
+        <button class="step-card" data-step="2">
+          <span class="step-label">2</span>
+          <p class="step-title">Preview giao diện</p>
+          <p class="step-description">Xem đúng như người dùng sẽ trải nghiệm conversation.</p>
+        </button>
+        <button class="step-card" data-step="3">
+          <span class="step-label">3</span>
+          <p class="step-title">Logic phân loại</p>
+          <p class="step-description">Cấu hình nguy cơ Low / Medium / High dựa trên câu trả lời.</p>
+        </button>
+        <button class="step-card" data-step="4">
+          <span class="step-label">4</span>
+          <p class="step-title">Paywall tự nhiên</p>
+          <p class="step-description">Gợi ý nâng cấp sau khi người dùng đã thấy kết quả.</p>
+        </button>
+      </div>
+
+      <section class="screen-panel active" id="screen-1">
+        <div class="panel-card">
+          <div class="question-header" style="display:flex; justify-content:space-between; gap:16px; align-items:center; flex-wrap:wrap;">
+            <div>
+              <h3>Trình soạn kịch bản hỏi triệu chứng</h3>
+              <p style="margin-top:10px; color: var(--muted);">Mỗi bước là một câu hỏi quick reply. Người dùng trả lời bằng nút, không cần gõ.</p>
+            </div>
+            <span class="status-pill">Đang hoạt động</span>
+          </div>
+
+          <ol class="question-list" id="questionList">
+            <li class="question-item" draggable="true">
+              <div class="question-item-header">
+                <div>
+                  <p class="question-item-title">Triệu chứng chính — “Bạn đang gặp vấn đề gì hôm nay?”</p>
+                  <span class="question-pill pill-required">Bắt buộc</span>
+                </div>
+                <div class="question-actions">
+                  <button type="button" data-action="edit">Chỉnh sửa</button>
+                  <button type="button" data-action="delete">Xóa</button>
+                </div>
+              </div>
+              <p style="color: var(--muted);">Người dùng trả lời nhanh bằng nút quick reply; cho phép xác định dòng triệu chứng chính.</p>
+            </li>
+            <li class="question-item" draggable="true">
+              <div class="question-item-header">
+                <div>
+                  <p class="question-item-title">Thời gian — “Triệu chứng xuất hiện từ bao lâu?”</p>
+                  <span class="question-pill pill-required">Bắt buộc</span>
+                </div>
+                <div class="question-actions">
+                  <button type="button" data-action="edit">Chỉnh sửa</button>
+                  <button type="button" data-action="delete">Xóa</button>
+                </div>
+              </div>
+              <p style="color: var(--muted);">Xác định độ cấp tính của triệu chứng và thời điểm bắt đầu.</p>
+            </li>
+            <li class="question-item" draggable="true">
+              <div class="question-item-header">
+                <div>
+                  <p class="question-item-title">Mức độ — “Bạn đánh giá mức độ khó chịu từ 1-5?”</p>
+                  <span class="question-pill pill-required">Bắt buộc</span>
+                </div>
+                <div class="question-actions">
+                  <button type="button" data-action="edit">Chỉnh sửa</button>
+                  <button type="button" data-action="delete">Xóa</button>
+                </div>
+              </div>
+              <p style="color: var(--muted);">Cho phép phân đồ thị mức độ nghiêm trọng và lọc chuyển sang logic phù hợp.</p>
+            </li>
+            <li class="question-item" draggable="true">
+              <div class="question-item-header">
+                <div>
+                  <p class="question-item-title">Triệu chứng đi kèm — Sốt? Buồn nôn? Chóng mặt?</p>
+                  <span class="question-pill pill-optional">Tùy chọn</span>
+                </div>
+                <div class="question-actions">
+                  <button type="button" data-action="edit">Chỉnh sửa</button>
+                  <button type="button" data-action="delete">Xóa</button>
+                </div>
+              </div>
+              <p style="color: var(--muted);">Thu thập các dấu hiệu đi kèm để tăng độ chính xác phân loại.</p>
+            </li>
+            <li class="question-item" draggable="true">
+              <div class="question-item-header">
+                <div>
+                  <p class="question-item-title">Tiền sử bệnh — “Có bệnh nền? Đang uống thuốc gì?”</p>
+                  <span class="question-pill pill-optional">Tùy chọn</span>
+                </div>
+                <div class="question-actions">
+                  <button type="button" data-action="edit">Chỉnh sửa</button>
+                  <button type="button" data-action="delete">Xóa</button>
+                </div>
+              </div>
+              <p style="color: var(--muted);">Gợi ý bối cảnh sức khỏe, hỗ trợ gợi ý nâng cấp và phân loại nguy cơ.</p>
+            </li>
+            <li class="question-item" draggable="true">
+              <div class="question-item-header">
+                <div>
+                  <p class="question-item-title">Tóm tắt & xác nhận — Hiển thị lại toàn bộ để người dùng kiểm tra</p>
+                  <span class="question-pill pill-system">Hệ thống</span>
+                </div>
+                <div class="question-actions">
+                  <button type="button" data-action="edit">Chỉnh sửa</button>
+                  <button type="button" data-action="delete">Xóa</button>
+                </div>
+              </div>
+              <p style="color: var(--muted);">Bước cuối cùng giúp người dùng xác nhận trước khi xem kết quả phân loại.</p>
+            </li>
+          </ol>
+
+          <div style="display:flex; flex-wrap:wrap; gap:12px; margin-top:18px;">
+            <button class="button button-primary" id="addStepBtn" type="button">Thêm bước</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="screen-panel" id="screen-2">
+        <div class="panel-card">
+          <h3>Preview giao diện chatbot</h3>
+          <p>Giao diện conversation đúng như người dùng sẽ thấy trên ứng dụng.</p>
+
+          <div class="panel-card" style="background: rgba(255,255,255,0.04); border-color: rgba(148,163,184,0.12);">
+            <div class="chat-preview">
+              <div class="chat-bubble bot">Xin chào! Tôi sẽ giúp bạn đánh giá tình trạng sức khỏe ban đầu.</div>
+              <div class="chat-bubble bot">Bạn đang gặp vấn đề gì hôm nay?</div>
+              <div class="chat-bubble user">Đau đầu, mệt mỏi</div>
+              <div class="chat-bubble bot">Triệu chứng này xuất hiện từ bao lâu rồi?</div>
+              <div class="chat-bubble user">Khoảng 2 ngày nay</div>
+              <div class="chat-bubble bot">Bạn đánh giá mức độ khó chịu thế nào? (1 = nhẹ, 5 = rất khó chịu)</div>
+            </div>
+
+            <div class="quick-replies">
+              <div class="quick-reply">1 — Nhẹ</div>
+              <div class="quick-reply">2</div>
+              <div class="quick-reply">3 — Vừa</div>
+              <div class="quick-reply">4</div>
+              <div class="quick-reply">5 — Nặng</div>
+            </div>
+
+            <div class="progress-track">
+              <div style="display:flex; justify-content:space-between; color: var(--muted); font-size:0.9rem;">
+                <span>Bước 3 / 6</span>
+                <span>Thời gian trả lời trung bình: 1m 20s</span>
+              </div>
+              <div class="track-bar">
+                <div class="track-line"><div class="track-fill"></div></div>
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-top: 18px; display: flex; flex-wrap: wrap; gap: 10px;">
+            <button class="button button-primary" id="toggleMobileViewBtn" type="button">Xem dạng mobile</button>
+            <button class="button button-secondary" id="editQuestionsBtn" type="button">Chỉnh câu hỏi</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="screen-panel" id="screen-3">
+        <div class="panel-card">
+          <h3>Cấu hình phân loại nguy cơ</h3>
+          <p>Định nghĩa logic AI cho từng mức nguy cơ và hành động đề xuất.</p>
+
+          <div class="rule-row">
+            <div>
+              <strong>Nguy cơ thấp</strong>
+              Triệu chứng nhẹ, chưa có dấu hiệu nguy hiểm → Theo dõi tại nhà, uống nhiều nước, nghỉ ngơi.
+            </div>
+            <span class="rule-outcome outcome-low">Theo dõi nhà</span>
+          </div>
+          <div class="rule-row">
+            <div>
+              <strong>Nguy cơ trung bình</strong>
+              Kéo dài >3 ngày hoặc có triệu chứng đi kèm → Đặt lịch gặp bác sĩ gia đình trong 24–48h.
+            </div>
+            <span class="rule-outcome outcome-medium">Đặt lịch</span>
+          </div>
+          <div class="rule-row">
+            <div>
+              <strong>Nguy cơ cao</strong>
+              Dấu hiệu cấp cứu (khó thở, đau ngực, co giật...) → Đến bệnh viện ngay lập tức.
+            </div>
+            <span class="rule-outcome outcome-high">Nhập viện ngay</span>
+          </div>
+
+          <div class="panel-card natural-paywall" style="margin-top: 20px;">
+            <strong>Quy tắc phân loại hiện tại</strong>
+            <div style="margin-top: 10px; display:grid; gap:10px; color: var(--muted);">
+              <div>Điểm nguy cơ &lt; 30 → Low</div>
+              <div>30 ≤ Điểm &lt; 70 → Medium</div>
+              <div>Điểm ≥ 70 → High</div>
+            </div>
+          </div>
+
+          <div style="margin-top: 18px; text-align: right;">
+            <button class="button button-secondary" type="button">Chỉnh quy tắc</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="screen-panel" id="screen-4">
+        <div class="panel-card">
+          <h3>Cài đặt paywall tự nhiên</h3>
+          <p>Gợi ý nâng cấp chỉ sau khi người dùng đã xem kết quả, không chặn giữa chừng.</p>
+
+          <div class="package-grid" id="packageList">
+            <div class="package-card" data-package-id="free">
+              <div style="display:flex; justify-content:space-between; gap:12px; align-items:center; flex-wrap:wrap;">
+                <div>
+                  <h4>Gói miễn phí</h4>
+                  <span class="package-badge badge-free">Miễn phí</span>
+                </div>
+                <div class="package-meta">
+                  <span>Cơ bản</span>
+                  <span>0đ</span>
+                </div>
+              </div>
+              <p class="package-description">Khảo sát triệu chứng cơ bản, phân loại nguy cơ và gợi ý hành động nhẹ nhàng.</p>
+              <div class="package-actions">
+                <button type="button" data-action="edit" data-id="free">Chỉnh sửa</button>
+                <button type="button" data-action="delete" data-id="free">Xóa</button>
+              </div>
+            </div>
+            <div class="package-card" data-package-id="premium" style="background: rgba(59,130,246,0.08); border-color: rgba(59,130,246,0.16);">
+              <div style="display:flex; justify-content:space-between; gap:12px; align-items:center; flex-wrap:wrap;">
+                <div>
+                  <h4>Gói trả phí</h4>
+                  <span class="package-badge badge-paid">Premium</span>
+                </div>
+                <div class="package-meta">
+                  <span>Premium</span>
+                  <span>50k/lần</span>
+                </div>
+              </div>
+              <p class="package-description">Bao gồm chat trực tiếp với bác sĩ, phân tích chi tiết và lưu hồ sơ dài hạn.</p>
+              <div class="package-actions">
+                <button type="button" data-action="edit" data-id="premium">Chỉnh sửa</button>
+                <button type="button" data-action="delete" data-id="premium">Xóa</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="hint-card" style="margin-top: 20px;">
+            <span>i</span>
+            <div>
+              Người dùng tự nhận ra giá trị → chủ động nâng cấp, không bị chặn đột ngột.
+            </div>
+          </div>
+
+          <div class="natural-paywall">
+            <strong>Thiết kế paywall tự nhiên</strong>
+            <p style="margin: 10px 0 0; color: var(--muted);">Sau khi xem kết quả phân loại nguy cơ, hiển thị card mềm phía dưới gợi ý nâng cấp, không chặn nội dung.</p>
+          </div>
+
+          <div style="margin-top: 18px; display:flex; flex-wrap:wrap; gap:10px; justify-content:flex-end;">
+            <button class="button button-secondary" id="addPackageBtn" type="button">Thêm gói</button>
+            <button class="button button-primary" id="togglePaywallBtn" type="button">Kích hoạt paywall</button>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div class="popup-backdrop" id="popupBackdrop">
+    <div class="popup" role="dialog" aria-modal="true" aria-labelledby="popupTitle">
+      <h4 id="popupTitle">Xác nhận</h4>
+      <p id="popupText">Bạn có chắc chắn muốn thực hiện hành động này?</p>
+      <div class="popup-actions">
+        <button class="button button-secondary" type="button" id="popupCancel">Hủy</button>
+        <button class="button button-primary" type="button" id="popupConfirm">Xác nhận</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="popup-backdrop" id="formBackdrop">
+    <div class="popup form-popup" role="dialog" aria-modal="true">
+      <h4 id="formTitle">Form</h4>
+      <div class="form-fields" id="formFields"></div>
+      <div class="popup-actions">
+        <button class="button button-secondary" type="button" id="formCancel">Hủy</button>
+        <button class="button button-primary" type="button" id="formSave">Lưu</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const accountToggle = document.getElementById('accountToggle');
+    const accountDropdown = document.getElementById('accountDropdown');
+    const stepButtons = document.querySelectorAll('.step-card');
+    const screens = document.querySelectorAll('.screen-panel');
+
+    accountToggle.addEventListener('click', () => {
+      accountDropdown.classList.toggle('show');
+    });
+
+    document.addEventListener('click', (event) => {
+      if (!accountToggle.contains(event.target) && !accountDropdown.contains(event.target)) {
+        accountDropdown.classList.remove('show');
+      }
+
+      const selectButton = event.target.closest('.popup-select-button');
+      const selectOption = event.target.closest('.popup-select-option');
+
+      if (selectButton) {
+        const select = selectButton.closest('.popup-select');
+        document.querySelectorAll('.popup-select.open').forEach(item => {
+          if (item !== select) item.classList.remove('open');
+        });
+        select.classList.toggle('open');
+        return;
+      }
+
+      if (selectOption) {
+        const select = selectOption.closest('.popup-select');
+        const input = select.querySelector('input[type="hidden"]');
+        const button = select.querySelector('.popup-select-button');
+        input.value = selectOption.dataset.value;
+        button.textContent = selectOption.dataset.label;
+        select.querySelectorAll('.popup-select-option').forEach(option => {
+          option.classList.toggle('active', option === selectOption);
+        });
+        select.classList.remove('open');
+        input.dispatchEvent(new Event('change', { bubbles: true }));
+        return;
+      }
+
+      if (!event.target.closest('.popup-select')) {
+        document.querySelectorAll('.popup-select.open').forEach(item => item.classList.remove('open'));
+      }
+    });
+
+    stepButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        const step = button.dataset.step;
+        stepButtons.forEach(btn => btn.classList.toggle('active', btn === button));
+        screens.forEach(screen => screen.classList.toggle('active', screen.id === `screen-${step}`));
+      });
+    });
+
+    const popupBackdrop = document.getElementById('popupBackdrop');
+    const popupTitle = document.getElementById('popupTitle');
+    const popupText = document.getElementById('popupText');
+    const popupConfirm = document.getElementById('popupConfirm');
+    const popupCancel = document.getElementById('popupCancel');
+    const saveConfigBtn = document.getElementById('saveConfigBtn');
+    const formBackdrop = document.getElementById('formBackdrop');
+    const formTitle = document.getElementById('formTitle');
+    const formFields = document.getElementById('formFields');
+    const formSave = document.getElementById('formSave');
+    const formCancel = document.getElementById('formCancel');
+    const questionList = document.getElementById('questionList');
+    const addStepBtn = document.getElementById('addStepBtn');
+    const previewPanel = document.querySelector('.chat-preview');
+    const toggleMobileViewBtn = document.getElementById('toggleMobileViewBtn');
+    const editQuestionsBtn = document.getElementById('editQuestionsBtn');
+    const addPackageBtn = document.getElementById('addPackageBtn');
+    const packageList = document.getElementById('packageList');
+    const togglePaywallBtn = document.getElementById('togglePaywallBtn');
+    let popupAction = null;
+    let formContext = null;
+    let draggedQuestion = null;
+    let paywallActive = false;
+
+    function showPopup(title, message, action) {
+      popupTitle.textContent = title;
+      popupText.textContent = message;
+      popupAction = action;
+      popupBackdrop.classList.add('visible');
+    }
+
+    function closePopup() {
+      popupBackdrop.classList.remove('visible');
+      popupAction = null;
+    }
+
+    function showForm(kind, target = null, data = {}) {
+      formContext = { kind, target };
+      formBackdrop.classList.add('visible');
+      formTitle.textContent = kind === 'question'
+        ? (target ? 'Chỉnh sửa câu hỏi' : 'Thêm bước mới')
+        : (target ? 'Chỉnh sửa gói' : 'Thêm gói mới');
+      renderFormFields(kind, data);
+    }
+
+    function closeForm() {
+      formBackdrop.classList.remove('visible');
+      formContext = null;
+      formFields.innerHTML = '';
+    }
+
+    function createPopupSelect(id, options, selectedValue) {
+      const selected = options.find(option => option.value === selectedValue) || options[0];
+      return `
+        <div class="popup-select" data-select-id="${id}">
+          <input id="${id}" type="hidden" value="${selected.value}" />
+          <button class="popup-select-button" type="button">${selected.label}</button>
+          <div class="popup-select-menu">
+            ${options.map(option => `
+              <button class="popup-select-option ${option.value === selected.value ? 'active' : ''}" type="button" data-value="${option.value}" data-label="${option.label}">${option.label}</button>
+            `).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    function renderFormFields(kind, data) {
+      if (kind === 'question') {
+        formFields.innerHTML = `
+          <label>
+            Nhập câu hỏi
+            <input id="formQuestionInput" type="text" value="${data.question || ''}" />
+          </label>
+          <label>
+            Nhập mô tả
+            <textarea id="formDescriptionInput">${data.description || ''}</textarea>
+          </label>
+          <label>
+            Thể loại
+            ${createPopupSelect('formTypeSelect', [
+              { value: 'required', label: 'Bắt buộc' },
+              { value: 'optional', label: 'Tùy chọn' },
+              { value: 'system', label: 'Hệ thống' }
+            ], data.type || 'required')}
+          </label>
+        `;
+      } else {
+        formFields.innerHTML = `
+          <label>
+            Tên gói
+            <input id="formPackageName" type="text" value="${data.name || ''}" />
+          </label>
+          <label>
+            Giá tiền
+            <input id="formPackagePrice" type="text" value="${data.price || ''}" />
+          </label>
+          <label>
+            Mô tả gói
+            <textarea id="formPackageDescription">${data.description || ''}</textarea>
+          </label>
+          <label>
+            Loại gói
+            ${createPopupSelect('formPackageType', [
+              { value: 'basic', label: 'Cơ bản' },
+              { value: 'premium', label: 'Premium' }
+            ], data.type || 'basic')}
+          </label>
+        `;
+      }
+    }
+
+    function createQuestionElement(question, description, type) {
+      const item = document.createElement('li');
+      item.className = 'question-item';
+      item.setAttribute('draggable', 'true');
+      item.innerHTML = `
+        <div class="question-item-header">
+          <div>
+            <p class="question-item-title">${question}</p>
+            <span class="question-pill ${type === 'required' ? 'pill-required' : type === 'optional' ? 'pill-optional' : 'pill-system'}">${type === 'required' ? 'Bắt buộc' : type === 'optional' ? 'Tùy chọn' : 'Hệ thống'}</span>
+          </div>
+          <div class="question-actions">
+            <button type="button" data-action="edit">Chỉnh sửa</button>
+            <button type="button" data-action="delete">Xóa</button>
+          </div>
+        </div>
+        <p style="color: var(--muted);">${description}</p>
+      `;
+      return item;
+    }
+
+    function createPackageCard(id, name, price, description, type) {
+      const card = document.createElement('div');
+      card.className = 'package-card';
+      card.dataset.packageId = id;
+      card.dataset.packageType = type;
+      if (type === 'premium') {
+        card.style.background = 'rgba(59,130,246,0.08)';
+        card.style.borderColor = 'rgba(59,130,246,0.16)';
+      }
+      card.innerHTML = `
+        <div style="display:flex; justify-content:space-between; gap:12px; align-items:center; flex-wrap:wrap;">
+          <div>
+            <h4>${name}</h4>
+            <span class="package-badge ${type === 'premium' ? 'badge-paid' : 'badge-free'}">${type === 'premium' ? 'Premium' : 'Miễn phí'}</span>
+          </div>
+          <div class="package-meta">
+            <span>${type === 'premium' ? 'Premium' : 'Cơ bản'}</span>
+            <span>${price || '0đ'}</span>
+          </div>
+        </div>
+        <p class="package-description">${description}</p>
+        <div class="package-actions">
+          <button type="button" data-action="edit" data-id="${id}">Chỉnh sửa</button>
+          <button type="button" data-action="delete" data-id="${id}">Xóa</button>
+        </div>
+      `;
+      return card;
+    }
+
+    function getPackageData(card) {
+      return {
+        id: card.dataset.packageId,
+        name: card.querySelector('h4')?.textContent || '',
+        price: card.querySelector('.package-meta span:last-child')?.textContent || '',
+        description: card.querySelector('.package-description')?.textContent || '',
+        type: card.dataset.packageType || 'basic'
+      };
+    }
+
+    popupCancel.addEventListener('click', closePopup);
+    popupBackdrop.addEventListener('click', (event) => {
+      if (event.target === popupBackdrop) {
+        closePopup();
+      }
+    });
+
+    popupConfirm.addEventListener('click', () => {
+      if (popupAction) popupAction();
+      closePopup();
+    });
+
+    formCancel.addEventListener('click', closeForm);
+    formBackdrop.addEventListener('click', (event) => {
+      if (event.target === formBackdrop) {
+        closeForm();
+      }
+    });
+
+    saveConfigBtn.addEventListener('click', () => {
+      showPopup('Lưu cấu hình', 'Bạn có chắc chắn muốn lưu cấu hình hiện tại?', () => {
+        console.log('Cấu hình đã được lưu.');
+      });
+    });
+
+    formSave.addEventListener('click', () => {
+      if (!formContext) return;
+      if (formContext.kind === 'question') {
+        const question = document.getElementById('formQuestionInput').value.trim();
+        const description = document.getElementById('formDescriptionInput').value.trim();
+        const type = document.getElementById('formTypeSelect').value;
+        if (!question) return;
+        if (formContext.target) {
+          const title = formContext.target.querySelector('.question-item-title');
+          const pill = formContext.target.querySelector('.question-pill');
+          const desc = formContext.target.querySelector('p');
+          title.textContent = question;
+          desc.textContent = description;
+          pill.textContent = type === 'required' ? 'Bắt buộc' : type === 'optional' ? 'Tùy chọn' : 'Hệ thống';
+          pill.className = `question-pill ${type === 'required' ? 'pill-required' : type === 'optional' ? 'pill-optional' : 'pill-system'}`;
+        } else {
+          const newItem = createQuestionElement(question, description, type);
+          questionList.appendChild(newItem);
+        }
+      } else {
+        const name = document.getElementById('formPackageName').value.trim();
+        const price = document.getElementById('formPackagePrice').value.trim();
+        const description = document.getElementById('formPackageDescription').value.trim();
+        const type = document.getElementById('formPackageType').value;
+        if (!name) return;
+        if (formContext.target) {
+          const card = formContext.target;
+          card.dataset.packageType = type;
+          card.querySelector('h4').textContent = name;
+          card.querySelector('.package-description').textContent = description;
+          card.querySelector('.package-meta span:first-child').textContent = type === 'premium' ? 'Premium' : 'Cơ bản';
+          card.querySelector('.package-meta span:last-child').textContent = price || '0đ';
+          const badge = card.querySelector('.package-badge');
+          badge.textContent = type === 'premium' ? 'Premium' : 'Miễn phí';
+          badge.className = `package-badge ${type === 'premium' ? 'badge-paid' : 'badge-free'}`;
+          if (type === 'premium') {
+            card.style.background = 'rgba(59,130,246,0.08)';
+            card.style.borderColor = 'rgba(59,130,246,0.16)';
+          } else {
+            card.style.background = '';
+            card.style.borderColor = '';
+          }
+        } else {
+          const id = `package-${Date.now()}`;
+          const newCard = createPackageCard(id, name, price, description, type);
+          packageList.appendChild(newCard);
+        }
+      }
+      closeForm();
+    });
+
+    questionList.addEventListener('click', (event) => {
+      const button = event.target.closest('button[data-action]');
+      if (!button) return;
+      const action = button.dataset.action;
+      const item = button.closest('.question-item');
+      if (!item) return;
+
+      if (action === 'edit') {
+        const title = item.querySelector('.question-item-title').textContent;
+        const description = item.querySelector('p').textContent;
+        const pillText = item.querySelector('.question-pill').textContent;
+        const type = pillText === 'Bắt buộc' ? 'required' : pillText === 'Tùy chọn' ? 'optional' : 'system';
+        showForm('question', item, { question: title, description, type });
+      }
+
+      if (action === 'delete') {
+        showPopup('Xóa bước', 'Bạn có chắc chắn muốn xóa bước này khỏi luồng?', () => {
+          item.remove();
+        });
+      }
+    });
+
+    questionList.addEventListener('dragstart', (event) => {
+      const item = event.target.closest('.question-item');
+      if (!item) return;
+      draggedQuestion = item;
+      item.classList.add('dragging');
+      event.dataTransfer.effectAllowed = 'move';
+      event.dataTransfer.setData('text/plain', 'drag');
+    });
+
+    questionList.addEventListener('dragend', () => {
+      if (draggedQuestion) {
+        draggedQuestion.classList.remove('dragging');
+        draggedQuestion = null;
+      }
+    });
+
+    questionList.addEventListener('dragover', (event) => {
+      event.preventDefault();
+      const item = event.target.closest('.question-item');
+      if (!item || item === draggedQuestion) return;
+      const rect = item.getBoundingClientRect();
+      const next = (event.clientY - rect.top) > rect.height / 2;
+      questionList.insertBefore(draggedQuestion, next ? item.nextSibling : item);
+    });
+
+    addStepBtn.addEventListener('click', () => {
+      showForm('question', null, { question: '', description: '', type: 'required' });
+    });
+
+    packageList.addEventListener('click', (event) => {
+      const button = event.target.closest('button[data-action]');
+      if (!button) return;
+      const action = button.dataset.action;
+      const packageId = button.dataset.id;
+      const card = packageList.querySelector(`[data-package-id="${packageId}"]`);
+      if (!card) return;
+
+      if (action === 'edit') {
+        const data = getPackageData(card);
+        showForm('package', card, data);
+      }
+
+      if (action === 'delete') {
+        showPopup('Xóa gói', 'Bạn có chắc chắn muốn xóa gói này?', () => {
+          card.remove();
+        });
+      }
+    });
+
+    addPackageBtn.addEventListener('click', () => {
+      showForm('package', null, { name: '', price: '', description: '', type: 'basic' });
+    });
+
+    toggleMobileViewBtn.addEventListener('click', () => {
+      previewPanel.classList.toggle('mobile-mode');
+      toggleMobileViewBtn.textContent = previewPanel.classList.contains('mobile-mode') ? 'Xem dạng web' : 'Xem dạng mobile';
+    });
+
+    editQuestionsBtn.addEventListener('click', () => {
+      showPopup('Chỉnh câu hỏi', 'Bạn muốn quay lại màn hình Soạn kịch bản để chỉnh câu hỏi?', () => {
+        stepButtons[0].click();
+      });
+    });
+
+    togglePaywallBtn.addEventListener('click', () => {
+      if (!paywallActive) {
+        showPopup('Kích hoạt paywall', 'Bật paywall sẽ hiển thị gợi ý nâng cấp cho người dùng. Tiếp tục?', () => {
+          paywallActive = true;
+          togglePaywallBtn.textContent = 'Tắt paywall';
+        });
+      } else {
+        showPopup('Tắt paywall', 'Tắt paywall sẽ loại bỏ gợi ý nâng cấp từ màn hình này.', () => {
+          paywallActive = false;
+          togglePaywallBtn.textContent = 'Kích hoạt paywall';
+        });
+      }
+    });
+    logoutButton.addEventListener('click', () => {
+      window.location.href = '../home.html';
+    });
+  </script>
+</body>
+</html>

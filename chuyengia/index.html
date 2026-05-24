@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Đăng nhập - Chuyên gia</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <section class="login-page">
+    <form class="login-card" onsubmit="location.href='dashboard.html';return false;">
+      <div class="login-logo">
+        <img src="logo.png" alt="Docah logo">
+      </div>
+      <h1>Hệ thống chuyên gia</h1>
+      <p>Đăng nhập để tiếp nhận, đánh giá và phản hồi các ca bệnh được chuyển tới.</p>
+      <label for="email">Email</label>
+      <input id="email" type="email" value="expert@hospital.vn" required>
+      <label for="password">Mật khẩu</label>
+      <div class="password-field">
+        <input id="password" type="password" value="123456" required>
+        <button class="password-toggle" type="button" data-toggle-password="password" aria-label="Hiện mật khẩu" title="Hiện mật khẩu">👁</button>
+      </div>
+      <button class="primary" type="submit">Đăng nhập</button>
+      <a href="#">Quên mật khẩu?</a>
+    </form>
+  </section>
+  <script>
+    document.querySelectorAll('[data-toggle-password]').forEach(button => {
+      button.addEventListener('click', () => {
+        const input = document.getElementById(button.dataset.togglePassword);
+        if (!input) return;
+        const isHidden = input.type === 'password';
+        input.type = isHidden ? 'text' : 'password';
+        button.textContent = isHidden ? '🙈' : '👁';
+        button.setAttribute('aria-label', isHidden ? 'Ẩn mật khẩu' : 'Hiện mật khẩu');
+        input.focus();
+      });
+    });
+  </script>
+</body>
+</html>

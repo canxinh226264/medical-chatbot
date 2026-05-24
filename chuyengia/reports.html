@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Báo cáo - Chuyên gia</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="page">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-logo">
+          <img src="logo.png" alt="Docah logo">
+        </div>
+        <div>
+          <h1>Docah</h1>
+          <p>Hệ thống chuyên gia</p>
+        </div>
+      </div>
+      <nav class="nav-menu">
+        <a class="nav-link" href="dashboard.html"><span class="icon">🏠</span><span>Trang chủ</span></a>
+        <a class="nav-link" href="cases.html"><span class="icon">📋</span><span>Danh sách ca</span></a>
+        <a class="nav-link" href="responses.html"><span class="icon">💬</span><span>Phản hồi</span></a>
+        <a class="nav-link active" href="reports.html"><span class="icon">📊</span><span>Báo cáo</span></a>
+        <a class="nav-link" href="profile.html"><span class="icon">👤</span><span>Hồ sơ cá nhân</span></a>
+      </nav>
+    </aside>
+
+    <main class="content">
+      <div class="topbar">
+        <div class="topbar-title">
+          <h2>Báo cáo</h2>
+          <p>Theo dõi khối lượng ca, tỷ lệ hoàn thành và hiệu suất phản hồi.</p>
+        </div>
+        <div class="account-menu">
+          <button class="account-button" id="accountToggle" type="button">
+            <div class="dot">A</div>
+            <div>
+              <div style="font-weight:700;">BS. Nguyễn Văn A</div>
+              <div style="font-size:0.9rem; color: var(--muted);">Chuyên gia</div>
+            </div>
+          </button>
+          <div class="dropdown" id="accountDropdown">
+            <div class="dropdown-illustration">
+              <img src="logo.png" alt="Illustration" />
+              <div><strong>Tài khoản </strong><span>Quản lý phiên đăng nhập</span></div>
+            </div>
+            <button class="dropdown-item" type="button" id="logoutButton">Đăng xuất</button>
+          </div>
+        </div>
+      </div>
+
+      <section class="card report-toolbar">
+        <h3>Báo cáo thống kê</h3>
+        <select>
+          <option>Tuần này</option>
+          <option selected>Tháng này</option>
+          <option>Tùy chỉnh</option>
+        </select>
+        <button id="exportPdf" type="button">Xuất PDF</button>
+      </section>
+
+      <div class="stats">
+        <div class="stat">
+          <div><p>Tổng số ca</p><strong>24</strong></div>
+          <span class="stat-icon">📊</span>
+        </div>
+        <div class="stat">
+          <div><p>Tỷ lệ hoàn thành</p><strong>87.5%</strong></div>
+          <span class="stat-icon">✅</span>
+        </div>
+        <div class="stat">
+          <div><p>Thời gian phản hồi TB</p><strong>2.5 giờ</strong></div>
+          <span class="stat-icon">⏱</span>
+        </div>
+      </div>
+
+      <section class="card">
+        <h3>Số ca theo thời gian</h3>
+        <div class="bar-chart">
+          <div><div class="bar" style="height:120px"><span>5</span></div><small>Tuần 1</small></div>
+          <div><div class="bar" style="height:192px"><span>8</span></div><small>Tuần 2</small></div>
+          <div><div class="bar" style="height:144px"><span>6</span></div><small>Tuần 3</small></div>
+          <div><div class="bar" style="height:120px"><span>5</span></div><small>Tuần 4</small></div>
+        </div>
+      </section>
+
+      <section class="card">
+        <h3>Thống kê chi tiết</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Loại vấn đề</th>
+                <th>Số ca</th>
+                <th>Đã hoàn thành</th>
+                <th>Đang xử lý</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>Tim mạch</td><td>35</td><td>29</td><td>6</td></tr>
+              <tr><td>Nội tiết</td><td>25</td><td>21</td><td>4</td></tr>
+              <tr><td>Tiêu hóa</td><td>20</td><td>17</td><td>3</td></tr>
+              <tr><td>Thận</td><td>12</td><td>10</td><td>2</td></tr>
+              <tr><td>Khác</td><td>8</td><td>6</td><td>2</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,937 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nhân sự & bác sĩ</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: radial-gradient(circle at top, rgba(59, 130, 246, 0.14), transparent 25%),
+                  linear-gradient(180deg, #020617 0%, #111827 100%);
+      font-family: 'Inter', sans-serif;
+      color: #e2e8f0;
+      padding: 24px 24px 24px 0;
+    }
+    .page {
+      width: calc(100% - 24px);
+      margin: 0;
+      display: grid;
+      grid-template-columns: 280px minmax(0, 1fr);
+      gap: 24px;
+      align-items: start;
+    }
+    .sidebar {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(148, 163, 184, 0.14);
+      border-radius: 32px;
+      padding: 28px 22px;
+      min-height: calc(100vh - 48px);
+      position: sticky;
+      top: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+    .brand { display: flex; align-items: center; gap: 14px; padding-bottom: 4px; border-bottom: 1px solid rgba(148, 163, 184, 0.1); }
+    .mark {
+      width: 44px;
+      height: 44px;
+      display: grid;
+      place-items: center;
+      border-radius: 16px;
+      background: linear-gradient(135deg, #2563eb, #3b82f6);
+      color: white;
+      font-weight: 800;
+      font-size: 1.1rem;
+      box-shadow: 0 16px 34px rgba(37, 99, 235, 0.2);
+    }
+    .sidebar h1, .sidebar p { margin: 0; }
+    .sidebar h1 { font-size: 1.1rem; line-height: 1.2; color: white; }
+    .sidebar p { margin-top: 6px; font-size: 0.92rem; color: #94a3b8; }
+    .nav-menu { display: flex; flex-direction: column; gap: 10px; }
+    .nav-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: flex-start;
+      width: 100%;
+      gap: 12px;
+      padding: 14px 18px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.04);
+      color: #cbd5e1;
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.25s ease;
+      border: 1px solid transparent;
+    }
+    .nav-link:hover, .nav-link.active {
+      background: rgba(59, 130, 246, 0.16);
+      border-color: rgba(59, 130, 246, 0.28);
+      color: white;
+    }
+    .nav-link .icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 12px;
+      background: rgba(59,130,246,0.14);
+      display: grid;
+      place-items: center;
+      font-size: 1rem;
+      color: #e0f2fe;
+    }
+
+    .nav-link span {
+      color: #e2e8f0;
+      font-size: 0.95rem;
+      margin: 0;
+    }
+    .content { display: flex; flex-direction: column; gap: 24px; }
+    .topbar { display: flex; justify-content: space-between; align-items: center; gap: 20px; }
+    .topbar-title h2 { margin: 0; font-size: 1.5rem; color: white; }
+    .topbar-title p { margin: 8px 0 0; color: #94a3b8; font-size: 0.95rem; }
+    .account-menu { position: relative; display: inline-flex; align-items: center; justify-content: flex-end; }
+    .account-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 18px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      color: white;
+      cursor: pointer;
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
+    .account-button:hover { background: rgba(59,130,246,0.16); transform: translateY(-1px); }
+    .account-button .dot { width: 34px; height: 34px; border-radius: 14px; background: linear-gradient(135deg, #3b82f6, #60a5fa); display: grid; place-items: center; font-weight: 800; color: white; }
+    .dropdown {
+      display: none;
+      position: absolute;
+      right: 0;
+      top: calc(100% + 12px);
+      width: 260px;
+      background: rgba(15, 23, 42, 0.98);
+      border: 1px solid rgba(148, 163, 184, 0.18);
+      border-radius: 20px;
+      padding: 18px;
+      box-shadow: 0 28px 60px rgba(0,0,0,0.25);
+      z-index: 20;
+    }
+    .dropdown.show { display: block; }
+    .dropdown-illustration { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+    .dropdown-illustration img { width: 48px; height: 48px; border-radius: 18px; object-fit: cover; background: rgba(255,255,255,0.08); padding: 8px; }
+    .dropdown-illustration div { display: grid; gap: 4px; }
+    .dropdown-illustration span { color: var(--muted); font-size: 0.9rem; }
+    .dropdown-item {
+      display: inline-flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      padding: 14px 16px;
+      border-radius: 18px;
+      background: rgba(59,130,246,0.12);
+      color: white;
+      text-decoration: none;
+      font-weight: 700;
+      border: 1px solid rgba(59,130,246,0.18);
+      cursor: pointer;
+      transition: transform 0.2s ease, background 0.2s ease;
+    }
+    .dropdown-item:hover { background: rgba(59,130,246,0.2); transform: translateY(-1px); }
+    .panel-header { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; }
+    .panel-header .subtitle { color: #94a3b8; }
+    .add-button { border: none; border-radius: 18px; padding: 12px 22px; background: linear-gradient(135deg, #2563eb, #3b82f6); color: white; font-weight: 700; cursor: pointer; box-shadow: 0 18px 35px rgba(37, 99, 235, 0.25); transition: transform 0.2s ease; }
+    .add-button:hover { transform: translateY(-1px); }
+    .filter-panel {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(148,163,184,0.14);
+      border-radius: 28px;
+      padding: 20px;
+      box-shadow: 0 16px 40px rgba(0,0,0,0.12);
+    }
+    .brand-logo {
+      width: 120px;
+      height: 56px;
+      border-radius: 20px;
+      background: rgba(255,255,255,0.08);
+      border: 3px solid rgba(255,255,255,0.72);
+      display: grid;
+      place-items: center;
+      box-shadow: 0 18px 48px rgba(37, 99, 235, 0.18);
+      overflow: hidden;
+    }
+
+    .brand-logo img {
+      width: 100%;
+      height: auto;
+      object-fit: contain;
+      display: block;
+    }
+    .filter-row {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr 1fr 1fr;
+      gap: 16px;
+      align-items: end;
+    }
+    .filter-row .field { margin: 0; }
+    .filter-row label { display: block; margin-bottom: 8px; color: #94a3b8; font-size: 0.95rem; }
+    .filter-panel { position: relative; }
+    .filter-panel::before {
+      content: 'Bộ lọc nhanh';
+      position: absolute;
+      top: 16px;
+      left: 20px;
+      color: #cbd5e1;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+    .filter-panel { padding-top: 44px; }
+    .filter-row input,
+    .filter-row select {
+      width: 100%;
+      min-height: 48px;
+      border-radius: 18px;
+      border: 1px solid rgba(148,163,184,0.2);
+      background: rgba(15,23,42,0.95);
+      color: #e2e8f0;
+      padding: 14px 16px;
+      font-size: 0.95rem;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, transform 0.2s ease;
+      cursor: pointer;
+      box-shadow: inset 0 0 0 1px rgba(148,163,184,0.08);
+    }
+    .filter-row select {
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      padding-right: 44px;
+      background-image: linear-gradient(45deg, transparent 50%, #e2e8f0 50%), linear-gradient(135deg, #e2e8f0 50%, transparent 50%);
+      background-position: calc(100% - 18px) calc(50% - 2px), calc(100% - 14px) calc(50% - 2px);
+      background-size: 6px 6px, 6px 6px;
+      background-repeat: no-repeat;
+      background-color: rgba(15,23,42,0.95);
+    }
+    .filter-row select option {
+      background: rgba(15,23,42,0.98);
+      color: #e2e8f0;
+    }
+    .filter-row input:hover,
+    .filter-row select:hover {
+      outline: none;
+      border-color: #60a5fa;
+      box-shadow: 0 12px 24px rgba(37,99,235,0.14);
+      transform: translateY(-1px);
+    }
+    .filter-row input:focus,
+    .filter-row select:focus,
+    .field input:focus,
+    .field select:focus,
+    .field textarea:focus {
+      outline: none;
+      border-color: #60a5fa;
+      box-shadow: 0 12px 24px rgba(37,99,235,0.14);
+    }
+    .table-card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(148, 163, 184, 0.16);
+      border-radius: 28px;
+      overflow: hidden;
+      box-shadow: 0 18px 40px rgba(0,0,0,0.14);
+    }
+    .table-card .table-header { padding: 22px 24px; display: flex; justify-content: space-between; gap: 16px; align-items: center; }
+    .table-card .table-header p { margin: 0; color: #94a3b8; }
+    .table-responsive { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; min-width: 760px; }
+    thead { background: rgba(59,130,246,0.08); }
+    th, td { padding: 16px 18px; text-align: left; border-bottom: 1px solid rgba(148,163,184,0.12); }
+    th { color: #cbd5e1; font-weight: 600; font-size: 0.95rem; }
+    td { color: #e2e8f0; font-size: 0.95rem; vertical-align: middle; }
+    tbody tr:nth-child(odd) { background: rgba(255,255,255,0.03); }
+    tbody tr:hover { background: rgba(59,130,246,0.12); }
+    tbody tr:hover { background: rgba(59,130,246,0.08); }
+    .status-pill { display: inline-flex; align-items: center; padding: 8px 12px; border-radius: 999px; background: rgba(71, 85, 105, 0.22); color: #e2e8f0; font-size: 0.88rem; }
+    .role-pill { display: inline-flex; align-items: center; padding: 8px 12px; border-radius: 999px; color: #fff; font-size: 0.88rem; }
+    .role-doctor { background: rgba(16, 185, 129, 0.18); }
+    .role-nurse { background: rgba(59, 130, 246, 0.16); }
+    .specialty-pill { display: inline-block; padding: 6px 12px; border-radius: 999px; background: rgba(148,163,184,0.18); color: #e2e8f0; font-size: 0.82rem; }
+    .action-buttons { display: flex; flex-wrap: wrap; gap: 10px; }
+    .button { border: none; border-radius: 16px; padding: 10px 16px; font-weight: 600; cursor: pointer; transition: transform 0.2s ease, background 0.2s ease; }
+    .button:hover { transform: translateY(-1px); }
+    .btn-detail { background: rgba(59,130,246,0.16); color: white; }
+    .btn-edit { background: rgba(16, 185, 129, 0.18); color: #d1fae5; }
+    .btn-delete { background: rgba(239, 68, 68, 0.18); color: #fecaca; }
+    .hidden { display: none; }
+    .modal-backdrop { display: none; position: fixed; inset: 0; background: rgba(15,23,42,0.72); z-index: 30; align-items: center; justify-content: center; padding: 16px; }
+    .modal-backdrop.show { display: flex; }
+    .modal { width: min(100%, 620px); background: rgba(15,23,42,0.98); border: 1px solid rgba(148,163,184,0.2); border-radius: 28px; box-shadow: 0 36px 80px rgba(0,0,0,0.35); overflow: hidden; }
+    .modal-header { padding: 22px 24px 0; display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+    .modal-header h3 { margin: 0; font-size: 1.25rem; }
+    .modal-close { border: none; background: transparent; color: #94a3b8; font-size: 1.4rem; cursor: pointer; }
+    .modal-body { padding: 0 24px 24px; display: grid; gap: 18px; }
+    .field { display: grid; gap: 8px; }
+    .field label { color: #94a3b8; font-size: 0.95rem; }
+    .field .value, .field input, .field select, .field textarea { width: 100%; border-radius: 18px; border: 1px solid rgba(148,163,184,0.2); background: rgba(15,23,42,0.95); color: #e2e8f0; padding: 14px 16px; font-size: 0.95rem; transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease; }
+    .field select option { background: rgba(15,23,42,0.98); color: #e2e8f0; }
+    .field .value { min-height: 46px; display: grid; align-items: center; }
+    .field textarea { resize: vertical; min-height: 96px; }
+    .modal-footer { display: flex; justify-content: flex-end; gap: 12px; padding: 0 24px 24px; }
+    .btn-secondary { background: rgba(148,163,184,0.14); color: #e2e8f0; }
+    .btn-primary { background: linear-gradient(135deg, #2563eb, #3b82f6); color: white; }
+    .btn-danger { background: linear-gradient(135deg, #ef4444, #f97316); color: white; }
+    .summary { color: #94a3b8; font-size: 0.95rem; }
+    .dropdown {
+      display: block;
+      visibility: hidden;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(8px) scale(0.98);
+      transform-origin: top right;
+      width: min(280px, calc(100vw - 32px));
+      padding: 12px;
+      border-radius: 18px;
+      background: linear-gradient(180deg, rgba(15,23,42,0.98), rgba(17,24,39,0.96));
+      border: 1px solid rgba(148,163,184,0.22);
+      box-shadow: 0 24px 70px rgba(0,0,0,0.38), inset 0 1px 0 rgba(255,255,255,0.04);
+      backdrop-filter: blur(18px);
+      transition: opacity 0.18s ease, transform 0.18s ease, visibility 0.18s ease;
+      z-index: 60;
+    }
+    .dropdown.show { visibility: visible; opacity: 1; pointer-events: auto; transform: translateY(0) scale(1); }
+    .dropdown-illustration { margin-bottom: 10px; padding: 10px; border-radius: 16px; background: rgba(255,255,255,0.045); border: 1px solid rgba(148,163,184,0.12); }
+    .dropdown-item { min-height: 44px; border-radius: 14px; background: rgba(59,130,246,0.1); border-color: rgba(96,165,250,0.2); }
+    .dropdown-item:hover { background: rgba(59,130,246,0.18); border-color: rgba(96,165,250,0.34); }
+    .filter-row select,
+    .field select {
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      padding-right: 44px;
+      background-image: linear-gradient(45deg, transparent 50%, #cbd5e1 50%), linear-gradient(135deg, #cbd5e1 50%, transparent 50%);
+      background-position: calc(100% - 18px) calc(50% - 2px), calc(100% - 14px) calc(50% - 2px);
+      background-size: 6px 6px, 6px 6px;
+      background-repeat: no-repeat;
+      background-color: rgba(15,23,42,0.95);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
+      cursor: pointer;
+    }
+    .filter-row select option,
+    .field select option { background: #0f172a; color: #e2e8f0; }
+    .popup-select { position: relative; width: 100%; }
+    .popup-select-button {
+      width: 100%;
+      min-height: 48px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 14px;
+      border-radius: 18px;
+      border: 1px solid rgba(148,163,184,0.2);
+      background: rgba(15,23,42,0.95);
+      color: #e2e8f0;
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+    }
+    .popup-select-button::after { content: '▾'; color: #cbd5e1; font-size: 0.82rem; }
+    .popup-select-button:hover,
+    .popup-select.open .popup-select-button {
+      border-color: rgba(96,165,250,0.55);
+      background: rgba(30,41,59,0.95);
+      box-shadow: 0 14px 30px rgba(37,99,235,0.16);
+    }
+    .popup-select-menu {
+      position: absolute;
+      top: calc(100% + 10px);
+      left: 0;
+      right: 0;
+      display: grid;
+      gap: 6px;
+      padding: 8px;
+      border-radius: 18px;
+      background: linear-gradient(180deg, rgba(15,23,42,0.98), rgba(17,24,39,0.96));
+      border: 1px solid rgba(148,163,184,0.22);
+      box-shadow: 0 24px 70px rgba(0,0,0,0.38), inset 0 1px 0 rgba(255,255,255,0.04);
+      backdrop-filter: blur(18px);
+      visibility: hidden;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(8px) scale(0.98);
+      transform-origin: top left;
+      transition: opacity 0.18s ease, transform 0.18s ease, visibility 0.18s ease;
+      z-index: 80;
+    }
+    .popup-select.open .popup-select-menu { visibility: visible; opacity: 1; pointer-events: auto; transform: translateY(0) scale(1); }
+    .popup-select-option {
+      min-height: 42px;
+      width: 100%;
+      padding: 10px 12px;
+      border: none;
+      border-radius: 14px;
+      background: transparent;
+      color: #e2e8f0;
+      text-align: left;
+      cursor: pointer;
+      font-weight: 700;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+    .popup-select-option:hover,
+    .popup-select-option.active { background: rgba(59,130,246,0.18); color: white; }
+    .modal { overflow: visible; }
+
+    @media (max-width: 1200px) { .filter-row { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 900px) { .clinic-grid, .filter-row { grid-template-columns: 1fr; } .filter-panel { padding: 18px; } }
+    @media (max-width: 780px) { body { padding: 16px; } .page { grid-template-columns: 1fr; } .sidebar { position: relative; top: 0; min-height: auto; } }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <aside class="sidebar">
+      <div class="brand">
+          <div class="brand-logo">
+            <img src="logo.png" alt="Docah logo" />
+          </div>
+          <div>
+            <h1>Docah</h1>
+            <p>Hệ thống quản lý</p>
+          </div>
+        </div>
+      <nav class="nav-menu">
+        <a class="nav-link" href="dashboard.html">
+          <span class="icon">🏠</span>
+          <span>Trang chủ</span>
+        </a>
+        <a class="nav-link" href="quan-li-phong-kham.html">
+          <span class="icon">🏥</span>
+          <span>Phòng khám</span>
+        </a>
+        <a class="nav-link active" href="nhan-su-bac-si.html">
+          <span class="icon">👩‍⚕️</span>
+          <span>Nhân sự &amp; bác sĩ</span>
+        </a>
+        <a class="nav-link" href="chatbot-quy-trinh.html">
+          <span class="icon">🤖</span>
+          <span>Chatbot &amp; quy trình</span>
+        </a>
+        <a class="nav-link" href="bao-cao-phan-tich.html">
+          <span class="icon">📊</span>
+          <span>Báo cáo &amp; phân tích</span>
+        </a>
+        <a class="nav-link" href="chinh-sua-tai-khoan.html">
+          <span class="icon">👤</span>
+          <span>Chỉnh sửa tài khoản</span>
+        </a>
+        <a class="nav-link" href="cai-dat-he-thong.html">
+          <span class="icon">⚙️</span>
+          <span>Cài đặt hệ thống</span>
+        </a>
+      </nav>
+    </aside>
+
+    <main class="content">
+      <div class="topbar">
+        <div class="topbar-title">
+          <h2>Nhân sự & bác sĩ</h2>
+          <p>Quản lý danh sách nhân sự và bác sĩ với bộ lọc theo tên, cơ sở và vai trò.</p>
+        </div>
+        <div class="account-menu">
+          <button class="account-button" id="accountToggle" type="button">
+            <div class="dot">Q</div>
+            <div>
+              <div style="font-weight:700;">Quản lý</div>
+              <div style="font-size:0.9rem; color: var(--muted);">Tài khoản</div>
+            </div>
+          </button>
+          <div class="dropdown" id="accountDropdown">
+            <div class="dropdown-illustration">
+              <img src="logo.png" alt="Illustration" />
+              <div>
+                <strong>Đăng xuất</strong>
+                <span>Thoát khỏi phiên quản lý hiện tại</span>
+              </div>
+            </div>
+            <button class="dropdown-item" type="button" id="logoutButton">Đăng xuất</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel-header">
+        <div>
+          <p class="subtitle">Xem nhanh toàn bộ nhân sự, bác sĩ và chuyên môn hoạt động.</p>
+        </div>
+        <button class="add-button" id="addStaffBtn">Thêm nhân sự</button>
+      </div>
+
+      <section class="filter-panel">
+        <div class="filter-row">
+          <div class="field">
+            <label for="filterName">Tìm theo tên</label>
+            <input id="filterName" type="text" placeholder="Nhập tên nhân sự" />
+          </div>
+          <div class="field">
+            <label for="filterFacility">Lọc theo cơ sở</label>
+            <div class="popup-select">
+              <input id="filterFacility" type="hidden" value="" />
+              <button class="popup-select-button" type="button">Tất cả cơ sở</button>
+              <div class="popup-select-menu">
+                <button class="popup-select-option active" type="button" data-value="" data-label="Tất cả cơ sở">Tất cả cơ sở</button>
+              </div>
+            </div>
+          </div>
+          <div class="field">
+            <label for="filterRole">Lọc theo vai trò</label>
+            <div class="popup-select">
+              <input id="filterRole" type="hidden" value="" />
+              <button class="popup-select-button" type="button">Tất cả vai trò</button>
+              <div class="popup-select-menu">
+                <button class="popup-select-option active" type="button" data-value="" data-label="Tất cả vai trò">Tất cả vai trò</button>
+                <button class="popup-select-option" type="button" data-value="Bác sĩ" data-label="Bác sĩ">Bác sĩ</button>
+                <button class="popup-select-option" type="button" data-value="Y tá" data-label="Y tá">Y tá</button>
+              </div>
+            </div>
+          </div>
+          <div class="field hidden" id="specialtyFilterField">
+            <label for="filterSpecialty">Lọc theo chuyên môn</label>
+            <div class="popup-select">
+              <input id="filterSpecialty" type="hidden" value="" />
+              <button class="popup-select-button" type="button">Tất cả chuyên môn</button>
+              <div class="popup-select-menu">
+                <button class="popup-select-option active" type="button" data-value="" data-label="Tất cả chuyên môn">Tất cả chuyên môn</button>
+                <button class="popup-select-option" type="button" data-value="Khoa Nội" data-label="Khoa Nội">Khoa Nội</button>
+                <button class="popup-select-option" type="button" data-value="Khoa Sản" data-label="Khoa Sản">Khoa Sản</button>
+                <button class="popup-select-option" type="button" data-value="Ngoại khoa" data-label="Ngoại khoa">Ngoại khoa</button>
+                <button class="popup-select-option" type="button" data-value="Tai mũi họng" data-label="Tai mũi họng">Tai mũi họng</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="table-card">
+        <div class="table-header">
+          <p class="summary" id="summaryText">Hiển thị 0 nhân sự</p>
+        </div>
+        <div class="table-responsive">
+          <table>
+            <thead>
+              <tr>
+                <th>Tên nhân sự</th>
+                <th>Cơ sở</th>
+                <th>Vai trò</th>
+                <th>Chuyên môn</th>
+                <th>Trạng thái</th>
+                <th>Hành động</th>
+              </tr>
+            </thead>
+            <tbody id="staffTableBody"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div class="modal-backdrop" id="modalBackdrop">
+    <div class="modal" id="modalContent">
+      <div class="modal-header">
+        <h3 id="modalTitle">Chi tiết nhân sự</h3>
+        <button class="modal-close" id="modalClose">×</button>
+      </div>
+      <div class="modal-body" id="modalBody"></div>
+      <div class="modal-footer" id="modalFooter"></div>
+    </div>
+  </div>
+
+  <script>
+    const staffData = [
+      {
+        id: 1,
+        name: 'Nguyễn Văn A',
+        facility: 'Phòng khám Trung Tâm 1',
+        role: 'Bác sĩ',
+        specialty: 'Khoa Nội',
+        schedule: 'T2 - T6: 08:00 - 17:00',
+        workTime: '08:00 - 17:00',
+        status: 'Đang hoạt động'
+      },
+      {
+        id: 2,
+        name: 'Trần Thị B',
+        facility: 'Phòng khám An Bình',
+        role: 'Y tá',
+        specialty: '',
+        schedule: 'T2 - T6: 07:30 - 16:30',
+        workTime: '07:30 - 16:30',
+        status: 'Đang hoạt động'
+      },
+      {
+        id: 3,
+        name: 'Lê Minh C',
+        facility: 'Phòng khám Sức Khỏe Vàng',
+        role: 'Bác sĩ',
+        specialty: 'Khoa Sản',
+        schedule: 'T3 - T7: 09:00 - 18:00',
+        workTime: '09:00 - 18:00',
+        status: 'Đang hoạt động'
+      },
+      {
+        id: 4,
+        name: 'Hoàng An D',
+        facility: 'Phòng khám Trung Tâm 1',
+        role: 'Bác sĩ',
+        specialty: 'Ngoại khoa',
+        schedule: 'T2 - T6: 10:00 - 19:00',
+        workTime: '10:00 - 19:00',
+        status: 'Đang hoạt động'
+      },
+      {
+        id: 5,
+        name: 'Mai Lan E',
+        facility: 'Phòng khám An Bình',
+        role: 'Y tá',
+        specialty: '',
+        schedule: 'T3 - T7: 08:00 - 16:00',
+        workTime: '08:00 - 16:00',
+        status: 'Tạm ngưng'
+      }
+    ];
+
+    const specialties = ['Khoa Nội', 'Khoa Sản', 'Ngoại khoa', 'Tai mũi họng'];
+
+    const accountToggle = document.getElementById('accountToggle');
+    const accountDropdown = document.getElementById('accountDropdown');
+    const modalBackdrop = document.getElementById('modalBackdrop');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalBody = document.getElementById('modalBody');
+    const modalFooter = document.getElementById('modalFooter');
+    const modalClose = document.getElementById('modalClose');
+    const staffTableBody = document.getElementById('staffTableBody');
+    const summaryText = document.getElementById('summaryText');
+    const filterName = document.getElementById('filterName');
+    const filterFacility = document.getElementById('filterFacility');
+    const filterRole = document.getElementById('filterRole');
+    const filterSpecialty = document.getElementById('filterSpecialty');
+    const specialtyFilterField = document.getElementById('specialtyFilterField');
+    const addStaffBtn = document.getElementById('addStaffBtn');
+
+    accountToggle.addEventListener('click', () => {
+      accountDropdown.classList.toggle('show');
+    });
+    document.addEventListener('click', (event) => {
+      if (!accountToggle.contains(event.target) && !accountDropdown.contains(event.target)) {
+        accountDropdown.classList.remove('show');
+      }
+    });
+
+    function setPopupSelectOptions(input, options, selectedValue = input.value) {
+      const select = input.closest('.popup-select');
+      const menu = select.querySelector('.popup-select-menu');
+      const button = select.querySelector('.popup-select-button');
+      const safeSelected = options.some(option => option.value === selectedValue) ? selectedValue : options[0].value;
+
+      input.value = safeSelected;
+      menu.innerHTML = '';
+      options.forEach(option => {
+        const item = document.createElement('button');
+        item.type = 'button';
+        item.className = `popup-select-option${option.value === safeSelected ? ' active' : ''}`;
+        item.dataset.value = option.value;
+        item.dataset.label = option.label;
+        item.textContent = option.label;
+        menu.appendChild(item);
+        if (option.value === safeSelected) button.textContent = option.label;
+      });
+    }
+
+    function buildFacilityOptions() {
+      const facilities = Array.from(new Set(staffData.map(item => item.facility)));
+      setPopupSelectOptions(filterFacility, [
+        { value: '', label: 'Tất cả cơ sở' },
+        ...facilities.map(facility => ({ value: facility, label: facility }))
+      ]);
+    }
+
+    function getFilteredStaff() {
+      const nameValue = filterName.value.trim().toLowerCase();
+      const facilityValue = filterFacility.value;
+      const roleValue = filterRole.value;
+      const specialtyValue = filterSpecialty.value;
+
+      return staffData.filter(item => {
+        const matchesName = item.name.toLowerCase().includes(nameValue);
+        const matchesFacility = !facilityValue || item.facility === facilityValue;
+        const matchesRole = !roleValue || item.role === roleValue;
+        const matchesSpecialty = !specialtyValue || item.specialty === specialtyValue;
+        return matchesName && matchesFacility && matchesRole && matchesSpecialty;
+      });
+    }
+
+    function updateSummary(count) {
+      summaryText.textContent = `Hiển thị ${count} nhân sự`;
+    }
+
+    function renderStaffTable() {
+      const staff = getFilteredStaff();
+      staffTableBody.innerHTML = staff.length === 0 ? `
+        <tr><td colspan="6" style="color:#94a3b8; text-align:center; padding:32px 0;">Không tìm thấy nhân sự phù hợp.</td></tr>
+      ` : staff.map(item => `
+        <tr data-id="${item.id}">
+          <td>${item.name}</td>
+          <td>${item.facility}</td>
+          <td><span class="role-pill ${item.role === 'Bác sĩ' ? 'role-doctor' : 'role-nurse'}">${item.role}</span></td>
+          <td>${item.role === 'Bác sĩ' ? `<span class="specialty-pill">${item.specialty}</span>` : '-'}</td>
+          <td><span class="status-pill">${item.status}</span></td>
+          <td>
+            <div class="action-buttons">
+              <button class="button btn-detail" data-action="detail">Chi tiết</button>
+              <button class="button btn-edit" data-action="edit">Chỉnh sửa</button>
+              <button class="button btn-delete" data-action="delete">Xóa</button>
+            </div>
+          </td>
+        </tr>
+      `).join('');
+
+      updateSummary(staff.length);
+    }
+
+    function toggleSpecialtyFilter() {
+      specialtyFilterField.classList.toggle('hidden', filterRole.value !== 'Bác sĩ');
+      if (filterRole.value !== 'Bác sĩ') {
+        setPopupSelectValue(filterSpecialty, '');
+      }
+    }
+
+    function openModal() {
+      modalBackdrop.classList.add('show');
+    }
+    function closeModal() {
+      modalBackdrop.classList.remove('show');
+      modalBody.innerHTML = '';
+      modalFooter.innerHTML = '';
+    }
+
+    function createField(label, value) {
+      return `<div class="field"><label>${label}</label><div class="value">${value}</div></div>`;
+    }
+
+    function createPopupSelect(id, options, selectedValue) {
+      const selected = options.find(option => option.value === selectedValue) || options[0];
+      return `
+        <div class="popup-select" data-select-id="${id}">
+          <input id="${id}" type="hidden" value="${selected.value}" />
+          <button class="popup-select-button" type="button">${selected.label}</button>
+          <div class="popup-select-menu">
+            ${options.map(option => `
+              <button class="popup-select-option ${option.value === selected.value ? 'active' : ''}" type="button" data-value="${option.value}" data-label="${option.label}">${option.label}</button>
+            `).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    function setPopupSelectValue(input, value) {
+      const select = input.closest('.popup-select');
+      const option = select?.querySelector(`.popup-select-option[data-value="${value}"]`);
+      if (!select || !option) return;
+      input.value = value;
+      select.querySelector('.popup-select-button').textContent = option.dataset.label;
+      select.querySelectorAll('.popup-select-option').forEach(item => {
+        item.classList.toggle('active', item === option);
+      });
+    }
+
+    function showDetailModal(staff) {
+      modalTitle.textContent = `Chi tiết ${staff.name}`;
+      modalBody.innerHTML = `
+        ${createField('Tên nhân sự', staff.name)}
+        ${createField('Cơ sở', staff.facility)}
+        ${createField('Vai trò', staff.role)}
+        ${staff.role === 'Bác sĩ' ? createField('Chuyên môn', staff.specialty) : ''}
+        ${createField('Lịch làm việc', staff.schedule)}
+        ${createField('Giờ làm việc', staff.workTime)}
+        ${createField('Trạng thái', staff.status)}
+      `;
+      modalFooter.innerHTML = `<button class="button btn-secondary" type="button" id="closeDetailBtn">Đóng</button>`;
+      document.getElementById('closeDetailBtn').addEventListener('click', closeModal);
+      openModal();
+    }
+
+    function showEditModal(staff, isNew = false) {
+      modalTitle.textContent = isNew ? 'Thêm nhân sự mới' : `Chỉnh sửa ${staff.name}`;
+      modalBody.innerHTML = `
+        <div class="field"><label>Tên nhân sự</label><input type="text" id="staffName" value="${staff.name || ''}" /></div>
+        <div class="field"><label>Cơ sở</label><input type="text" id="staffFacility" value="${staff.facility || ''}" /></div>
+        <div class="field"><label>Vai trò</label>
+          ${createPopupSelect('staffRole', [
+            { value: 'Bác sĩ', label: 'Bác sĩ' },
+            { value: 'Y tá', label: 'Y tá' }
+          ], staff.role || 'Bác sĩ')}
+        </div>
+        <div class="field ${staff.role === 'Bác sĩ' ? '' : 'hidden'}" id="specialtyField">
+          <label>Chuyên môn</label>
+          ${createPopupSelect('staffSpecialty', [
+            { value: '', label: 'Chọn chuyên môn' },
+            ...specialties.map(option => ({ value: option, label: option }))
+          ], staff.specialty || '')}
+        </div>
+        <div class="field"><label>Lịch làm việc</label><textarea id="staffSchedule">${staff.schedule || ''}</textarea></div>
+        <div class="field"><label>Giờ làm việc</label><input type="text" id="staffWorkTime" value="${staff.workTime || ''}" /></div>
+        <div class="field"><label>Trạng thái</label>
+          ${createPopupSelect('staffStatus', [
+            { value: 'Đang hoạt động', label: 'Đang hoạt động' },
+            { value: 'Tạm ngưng', label: 'Tạm ngưng' }
+          ], staff.status || 'Đang hoạt động')}
+        </div>
+      `;
+
+      modalFooter.innerHTML = `
+        <button class="button btn-secondary" type="button" id="cancelEditBtn">Hủy</button>
+        <button class="button btn-primary" type="button" id="saveEditBtn">Lưu</button>
+      `;
+
+      const staffRole = document.getElementById('staffRole');
+      const specialtyField = document.getElementById('specialtyField');
+      const staffSpecialty = document.getElementById('staffSpecialty');
+
+      const updateSpecialtyVisibility = () => {
+        specialtyField.classList.toggle('hidden', staffRole.value !== 'Bác sĩ');
+        if (staffRole.value !== 'Bác sĩ') setPopupSelectValue(staffSpecialty, '');
+      };
+      staffRole.addEventListener('change', updateSpecialtyVisibility);
+      updateSpecialtyVisibility();
+
+      document.getElementById('cancelEditBtn').addEventListener('click', closeModal);
+      document.getElementById('saveEditBtn').addEventListener('click', () => {
+        const updatedStaff = {
+          id: staff.id || Date.now(),
+          name: document.getElementById('staffName').value.trim(),
+          facility: document.getElementById('staffFacility').value.trim(),
+          role: document.getElementById('staffRole').value,
+          specialty: staffRole.value === 'Bác sĩ' ? staffSpecialty.value : '',
+          schedule: document.getElementById('staffSchedule').value.trim(),
+          workTime: document.getElementById('staffWorkTime').value.trim(),
+          status: document.getElementById('staffStatus').value
+        };
+
+        if (!updatedStaff.name || !updatedStaff.facility || !updatedStaff.schedule || !updatedStaff.workTime) {
+          alert('Vui lòng điền đầy đủ tên, cơ sở, lịch làm việc và giờ làm việc.');
+          return;
+        }
+        if (updatedStaff.role === 'Bác sĩ' && !updatedStaff.specialty) {
+          alert('Vui lòng chọn chuyên môn cho bác sĩ.');
+          return;
+        }
+
+        if (isNew) {
+          staffData.push(updatedStaff);
+        } else {
+          const targetIndex = staffData.findIndex(item => item.id === staff.id);
+          if (targetIndex >= 0) staffData[targetIndex] = updatedStaff;
+        }
+        buildFacilityOptions();
+        renderStaffTable();
+        closeModal();
+      });
+
+      openModal();
+    }
+
+    function showDeleteModal(staff) {
+      modalTitle.textContent = `Xác nhận xóa`;
+      modalBody.innerHTML = `
+        ${createField('Tên nhân sự', staff.name)}
+        ${createField('Cơ sở', staff.facility)}
+        ${createField('Vai trò', staff.role)}
+        ${staff.role === 'Bác sĩ' ? createField('Chuyên môn', staff.specialty) : ''}
+        <p style="color:#94a3b8; line-height:1.6;">Bạn có chắc muốn xóa nhân sự này? Hành động này không thể hoàn tác.</p>
+      `;
+      modalFooter.innerHTML = `
+        <button class="button btn-secondary" type="button" id="cancelDeleteBtn">Hủy</button>
+        <button class="button btn-danger" type="button" id="confirmDeleteBtn">Xóa</button>
+      `;
+      document.getElementById('cancelDeleteBtn').addEventListener('click', closeModal);
+      document.getElementById('confirmDeleteBtn').addEventListener('click', () => {
+        const index = staffData.findIndex(item => item.id === staff.id);
+        if (index >= 0) {
+          staffData.splice(index, 1);
+          buildFacilityOptions();
+          renderStaffTable();
+        }
+        closeModal();
+      });
+      openModal();
+    }
+
+    document.addEventListener('click', (event) => {
+      const selectButton = event.target.closest('.popup-select-button');
+      const selectOption = event.target.closest('.popup-select-option');
+
+      if (selectButton) {
+        const select = selectButton.closest('.popup-select');
+        document.querySelectorAll('.popup-select.open').forEach(item => {
+          if (item !== select) item.classList.remove('open');
+        });
+        select.classList.toggle('open');
+        return;
+      }
+
+      if (selectOption) {
+        const select = selectOption.closest('.popup-select');
+        const input = select.querySelector('input[type="hidden"]');
+        const button = select.querySelector('.popup-select-button');
+        input.value = selectOption.dataset.value;
+        button.textContent = selectOption.dataset.label;
+        select.querySelectorAll('.popup-select-option').forEach(option => {
+          option.classList.toggle('active', option === selectOption);
+        });
+        select.classList.remove('open');
+        input.dispatchEvent(new Event('change', { bubbles: true }));
+        return;
+      }
+
+      if (!event.target.closest('.popup-select')) {
+        document.querySelectorAll('.popup-select.open').forEach(item => item.classList.remove('open'));
+      }
+
+      const actionBtn = event.target.closest('[data-action]');
+      if (!actionBtn) return;
+      const row = event.target.closest('tr');
+      const staffId = Number(row.dataset.id);
+      const staff = staffData.find(item => item.id === staffId);
+      if (!staff) return;
+      const action = actionBtn.dataset.action;
+      if (action === 'detail') showDetailModal(staff);
+      if (action === 'edit') showEditModal(staff);
+      if (action === 'delete') showDeleteModal(staff);
+    });
+
+    filterName.addEventListener('input', renderStaffTable);
+    filterFacility.addEventListener('change', renderStaffTable);
+    filterRole.addEventListener('change', () => {
+      toggleSpecialtyFilter();
+      renderStaffTable();
+    });
+    filterSpecialty.addEventListener('change', renderStaffTable);
+
+    addStaffBtn.addEventListener('click', () => {
+      showEditModal({ id: null, name: '', facility: '', role: 'Bác sĩ', specialty: '', schedule: '', workTime: '', status: 'Đang hoạt động' }, true);
+    });
+
+    modalClose.addEventListener('click', closeModal);
+    modalBackdrop.addEventListener('click', (event) => {
+      if (event.target === modalBackdrop) closeModal();
+    });
+
+    buildFacilityOptions();
+    toggleSpecialtyFilter();
+    renderStaffTable();
+    logoutButton.addEventListener('click', () => {
+      window.location.href = '../home.html';
+    });
+  </script>
+</body>
+</html>

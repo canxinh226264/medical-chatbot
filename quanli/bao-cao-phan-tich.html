@@ -1,0 +1,1841 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Báo cáo & Phân tích</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+    :root {
+      color-scheme: dark;
+      --bg: #0f172a;
+      --surface: rgba(15, 23, 42, 0.96);
+      --surface-soft: rgba(30, 41, 59, 0.92);
+      --panel: #111827;
+      --panel-alt: #1f2937;
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+      --muted-soft: #cbd5e1;
+      --accent: #3b82f6;
+      --accent-strong: #2563eb;
+      --success: #22c55e;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --radius: 24px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: 'Inter', sans-serif;
+      background: radial-gradient(circle at top, rgba(59, 130, 246, 0.14), transparent 25%),
+                  linear-gradient(180deg, #020617 0%, #111827 100%);
+      color: var(--text);
+      padding: 24px 24px 24px 0;
+    }
+
+    .page {
+      width: calc(100% - 24px);
+      margin: 0;
+      display: grid;
+      grid-template-columns: 280px minmax(0, 1fr);
+      gap: 24px;
+      align-items: start;
+    }
+
+    .sidebar {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(148, 163, 184, 0.14);
+      border-radius: 32px;
+      padding: 28px 22px;
+      min-height: calc(100vh - 48px);
+      position: sticky;
+      top: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .sidebar .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding-bottom: 4px;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+    }
+
+    .sidebar .mark {
+      width: 44px;
+      height: 44px;
+      display: grid;
+      place-items: center;
+      border-radius: 16px;
+      background: linear-gradient(135deg, #2563eb, #3b82f6);
+      color: white;
+      font-weight: 800;
+      font-size: 1.1rem;
+      box-shadow: 0 16px 34px rgba(37, 99, 235, 0.2);
+    }
+
+    .sidebar h1 {
+      margin: 0;
+      font-size: 1.1rem;
+      line-height: 1.2;
+      color: white;
+    }
+
+    .sidebar p {
+      margin: 6px 0 0;
+      font-size: 0.92rem;
+      color: var(--muted);
+    }
+
+    .nav-menu {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .nav-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: flex-start;
+      width: 100%;
+      gap: 12px;
+      padding: 14px 18px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.04);
+      color: var(--text);
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.25s ease;
+      border: 1px solid transparent;
+    }
+
+    .nav-link:hover,
+    .nav-link.active {
+      background: rgba(59, 130, 246, 0.16);
+      border-color: rgba(59, 130, 246, 0.28);
+      color: white;
+    }
+
+    .nav-link .icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 12px;
+      background: rgba(59,130,246,0.14);
+      display: grid;
+      place-items: center;
+      font-size: 1rem;
+      color: #e0f2fe;
+    }
+
+    .nav-link span {
+      color: var(--text);
+      font-size: 0.95rem;
+      margin: 0;
+    }
+
+    .content {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .topbar-title h2 {
+      margin: 0;
+      font-size: 1.5rem;
+      color: #fff;
+    }
+
+    .topbar-title p {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .account-menu {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: flex-end;
+    }
+
+    .account-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 18px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      color: white;
+      cursor: pointer;
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
+
+    .account-button:hover {
+      background: rgba(59,130,246,0.16);
+      transform: translateY(-1px);
+    }
+
+    .brand-logo {
+      width: 120px;
+      height: 56px;
+      border-radius: 20px;
+      background: rgba(255,255,255,0.08);
+      border: 3px solid rgba(255,255,255,0.72);
+      display: grid;
+      place-items: center;
+      box-shadow: 0 18px 48px rgba(37, 99, 235, 0.18);
+      overflow: hidden;
+    }
+
+    .brand-logo img {
+      width: 100%;
+      height: auto;
+      object-fit: contain;
+      display: block;
+    }
+
+    .account-button .dot {
+      width: 34px;
+      height: 34px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #3b82f6, #60a5fa);
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      color: white;
+    }
+
+    .dropdown {
+      display: none;
+      position: absolute;
+      right: 0;
+      top: calc(100% + 12px);
+      width: 260px;
+      background: rgba(15, 23, 42, 0.98);
+      border: 1px solid rgba(148, 163, 184, 0.18);
+      border-radius: 20px;
+      padding: 18px;
+      box-shadow: 0 28px 60px rgba(0,0,0,0.25);
+      z-index: 20;
+    }
+
+    .dropdown.show {
+      display: block;
+    }
+
+    .dropdown-illustration {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .dropdown-illustration img {
+      width: 48px;
+      height: 48px;
+      border-radius: 18px;
+      object-fit: cover;
+      background: rgba(255,255,255,0.08);
+      padding: 8px;
+    }
+
+    .dropdown-illustration div {
+      display: grid;
+      gap: 4px;
+    }
+
+    .dropdown-illustration span {
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .dropdown-item {
+      display: inline-flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      padding: 14px 16px;
+      border-radius: 18px;
+      background: rgba(59,130,246,0.12);
+      color: white;
+      text-decoration: none;
+      font-weight: 700;
+      border: 1px solid rgba(59,130,246,0.18);
+      cursor: pointer;
+      transition: transform 0.2s ease, background 0.2s ease;
+    }
+
+    .dropdown-item:hover {
+      background: rgba(59,130,246,0.2);
+      transform: translateY(-1px);
+    }
+
+    .panel-card,
+    .report-card,
+    .widget-card {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(148,163,184,0.14);
+      border-radius: 28px;
+      padding: 24px;
+      box-shadow: 0 18px 40px rgba(0,0,0,0.14);
+    }
+
+    .panel-card h3,
+    .report-card h3,
+    .widget-card h3 {
+      margin: 0 0 12px;
+      font-size: 1.15rem;
+      color: white;
+    }
+
+    .panel-card p,
+    .report-card p,
+    .widget-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .top-summary {
+      display: grid;
+      gap: 20px;
+      padding: 24px;
+      background: rgba(255,255,255,0.06);
+      border-radius: 28px;
+      border: 1px solid rgba(148,163,184,0.14);
+      box-shadow: 0 18px 40px rgba(0,0,0,0.12);
+    }
+
+    .top-summary-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .top-summary-header h2 {
+      margin: 0;
+      font-size: 1.2rem;
+      color: white;
+    }
+
+    .top-summary-header .label-group {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .time-select {
+      position: relative;
+      display: inline-flex;
+    }
+
+    .time-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 170px;
+      min-height: 44px;
+      padding: 10px 14px;
+      border-radius: 18px;
+      border: 1px solid rgba(148,163,184,0.16);
+      background: rgba(255,255,255,0.1);
+      color: white;
+      font-weight: 700;
+      font-size: 0.92rem;
+      cursor: pointer;
+      transition: background 0.2s ease, border-color 0.2s ease;
+    }
+
+    .time-button:hover {
+      background: rgba(255,255,255,0.16);
+      border-color: rgba(59,130,246,0.28);
+    }
+
+    .time-dropdown {
+      position: absolute;
+      top: calc(100% + 10px);
+      left: 0;
+      width: 170px;
+      background: rgba(15,23,42,0.98);
+      border: 1px solid rgba(148,163,184,0.16);
+      border-radius: 20px;
+      box-shadow: 0 18px 36px rgba(0,0,0,0.18);
+      padding: 10px;
+      display: none;
+      z-index: 12;
+    }
+
+    .time-dropdown.show {
+      display: grid;
+      gap: 6px;
+    }
+
+    .time-dropdown button {
+      width: 100%;
+      padding: 10px 12px;
+      border: none;
+      border-radius: 14px;
+      background: transparent;
+      color: var(--text);
+      text-align: left;
+      cursor: pointer;
+      transition: background 0.2s ease;
+      font-weight: 600;
+    }
+
+    .time-dropdown button:hover {
+      background: rgba(59,130,246,0.12);
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.08);
+      color: #e2e8f0;
+      border: 1px solid rgba(148,163,184,0.12);
+      font-weight: 700;
+      font-size: 0.88rem;
+    }
+
+    .top-summary-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .metric-card {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(148,163,184,0.16);
+      border-radius: 24px;
+      padding: 22px;
+      min-height: 160px;
+      display: grid;
+      gap: 14px;
+    }
+
+    .metric-card strong {
+      color: #94a3b8;
+      font-weight: 700;
+      display: block;
+    }
+
+    .metric-card .value {
+      font-size: 2rem;
+      font-weight: 800;
+      color: white;
+    }
+
+    .metric-card .delta {
+      color: var(--success);
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+
+    .metric-card .delta.negative {
+      color: var(--danger);
+    }
+
+    .summary-chart {
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(148,163,184,0.1);
+      border-radius: 28px;
+      padding: 28px;
+    }
+
+    .summary-chart h3 {
+      margin-bottom: 20px;
+      color: white;
+      font-size: 1.05rem;
+    }
+
+    .summary-bars {
+      display: flex;
+      align-items: flex-end;
+      gap: 20px;
+      height: 260px;
+      padding-top: 8px;
+      justify-content: space-between;
+      max-width: 100%;
+    }
+
+    .summary-bars .bar-wrap {
+      display: grid;
+      gap: 10px;
+      align-items: end;
+      justify-items: center;
+      width: 160px;
+    }
+
+    .summary-bars .bar {
+      position: relative;
+      width: 100%;
+      min-height: 160px;
+      background: rgba(59,130,246,0.12);
+      border-radius: 18px 18px 0 0;
+      overflow: hidden;
+    }
+
+    .summary-bars .bar-fill {
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      border-radius: 18px 18px 0 0;
+      transition: height 0.3s ease;
+      background: linear-gradient(180deg, #2563eb, #60a5fa);
+    }
+
+    .summary-bars .bar-number {
+      position: absolute;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: white;
+      font-size: 0.82rem;
+      font-weight: 700;
+      z-index: 1;
+    }
+
+    .summary-bars .bar-label {
+      color: var(--muted);
+      font-size: 0.82rem;
+      letter-spacing: 0.02em;
+    }
+
+    .summary-bars .bar-wrap:nth-child(1) .bar-fill {
+      background: #86efac;
+      opacity: 1;
+    }
+
+    .summary-bars .bar-wrap:nth-child(2) .bar-fill {
+      background: #4ade80;
+      opacity: 1;
+    }
+
+    .summary-bars .bar-wrap:nth-child(3) .bar-fill {
+      background: #22c55e;
+      opacity: 1;
+    }
+
+    .summary-bars .bar-wrap:nth-child(4) .bar-fill {
+      background: #16a34a;
+      opacity: 1;
+    }
+
+    .summary-bars .bar-wrap:nth-child(5) .bar-fill {
+      background: #4ade80;
+      opacity: 1;
+    }
+
+    .summary-bars .bar-wrap:nth-child(6) .bar-fill {
+      background: #86efac;
+      opacity: 1;
+    }
+
+    .summary-bars .bar-wrap:nth-child(7) .bar-fill {
+      background: #bbf7d0;
+      opacity: 1;
+    }
+
+    .report-panels {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr;
+      gap: 20px;
+    }
+
+    .facility-list,
+    .funnel-list,
+    .report-actions {
+      display: grid;
+      gap: 16px;
+    }
+
+    .facility-item,
+    .funnel-item,
+    .action-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(148,163,184,0.14);
+      border-radius: 22px;
+      padding: 18px 20px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .facility-item strong,
+    .funnel-item strong,
+    .action-card strong {
+      display: block;
+      margin-bottom: 6px;
+      color: white;
+      font-size: 0.95rem;
+    }
+
+    .facility-item span,
+    .funnel-item span {
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .progress-row,
+    .action-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .progress-bar,
+    .action-bar {
+      flex: 1;
+      height: 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.08);
+      overflow: hidden;
+    }
+
+    .progress-fill,
+    .action-fill {
+      height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #3b82f6, #60a5fa);
+    }
+
+    .report-actions {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      justify-items: stretch;
+      align-items: stretch;
+    }
+
+    .action-card {
+      min-height: 220px;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      gap: 16px;
+      padding: 20px;
+      text-align: left;
+      width: 100%;
+    }
+
+    .action-card-top {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+    }
+
+    .action-figure {
+      width: 58px;
+      height: 58px;
+      display: grid;
+      place-items: center;
+      border-radius: 18px;
+      background: rgba(59,130,246,0.18);
+      color: #dbeafe;
+      font-size: 1.5rem;
+      flex-shrink: 0;
+    }
+
+    .action-copy {
+      display: grid;
+      gap: 8px;
+    }
+
+    .action-card p {
+      color: var(--muted);
+      margin: 0;
+    }
+
+    .action-card .button {
+      border: 1px solid rgba(37,99,235,0.4);
+      background: #2563eb;
+      color: white;
+      border-radius: 16px;
+      padding: 10px 16px;
+      cursor: pointer;
+      font-weight: 700;
+      transition: background 0.2s ease, transform 0.2s ease;
+      justify-self: end;
+      font-size: 0.9rem;
+    }
+
+    .action-card .button:hover {
+      background: #1d4ed8;
+      transform: translateY(-1px);
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(34, 197, 94, 0.14);
+      color: var(--success);
+      font-weight: 700;
+      font-size: 0.85rem;
+    }
+
+    .tag-small {
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .detail-button {
+      border: 1px solid rgba(59,130,246,0.34);
+      background: rgba(59,130,246,0.14);
+      color: #dbeafe;
+      border-radius: 16px;
+      padding: 10px 14px;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 0.9rem;
+      transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+    }
+
+    .detail-button:hover {
+      background: rgba(59,130,246,0.24);
+      border-color: rgba(96,165,250,0.54);
+      transform: translateY(-1px);
+    }
+
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 40;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background: rgba(2, 6, 23, 0.72);
+      backdrop-filter: blur(14px);
+    }
+
+    .modal-overlay.show {
+      display: flex;
+    }
+
+    .facility-modal {
+      width: min(1080px, 100%);
+      max-height: min(86vh, 780px);
+      overflow: hidden;
+      display: grid;
+      grid-template-rows: auto 1fr;
+      border-radius: 28px;
+      background: rgba(15, 23, 42, 0.98);
+      border: 1px solid rgba(148,163,184,0.22);
+      box-shadow: 0 34px 90px rgba(0,0,0,0.46);
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 24px 26px;
+      border-bottom: 1px solid rgba(148,163,184,0.14);
+    }
+
+    .modal-header h3 {
+      margin: 0;
+      color: white;
+      font-size: 1.18rem;
+    }
+
+    .modal-header p {
+      margin: 8px 0 0;
+      color: var(--muted);
+      line-height: 1.6;
+      font-size: 0.94rem;
+    }
+
+    .modal-close {
+      width: 42px;
+      height: 42px;
+      flex: 0 0 auto;
+      display: grid;
+      place-items: center;
+      border-radius: 14px;
+      border: 1px solid rgba(148,163,184,0.18);
+      background: rgba(255,255,255,0.06);
+      color: white;
+      cursor: pointer;
+      font-size: 1.35rem;
+      line-height: 1;
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
+
+    .modal-close:hover {
+      background: rgba(239,68,68,0.18);
+      transform: translateY(-1px);
+    }
+
+    .facility-detail-list {
+      display: grid;
+      gap: 14px;
+      padding: 24px 26px 26px;
+      overflow: auto;
+    }
+
+    .facility-detail-item {
+      display: grid;
+      grid-template-columns: minmax(170px, 1fr) minmax(360px, 2fr);
+      gap: 18px;
+      padding: 18px;
+      border-radius: 22px;
+      background: rgba(255,255,255,0.045);
+      border: 1px solid rgba(148,163,184,0.14);
+    }
+
+    .facility-detail-main {
+      display: grid;
+      gap: 10px;
+      align-content: start;
+    }
+
+    .facility-detail-main strong {
+      color: white;
+      font-size: 1rem;
+    }
+
+    .facility-rank {
+      width: max-content;
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: rgba(34,197,94,0.12);
+      color: #86efac;
+      font-size: 0.8rem;
+      font-weight: 800;
+    }
+
+    .facility-note {
+      color: var(--muted);
+      line-height: 1.6;
+      font-size: 0.9rem;
+    }
+
+    .facility-detail-metrics {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .facility-mini-metric {
+      min-height: 96px;
+      display: grid;
+      gap: 8px;
+      align-content: center;
+      padding: 14px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.055);
+      border: 1px solid rgba(148,163,184,0.12);
+    }
+
+    .facility-mini-metric span {
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-weight: 700;
+    }
+
+    .facility-mini-metric b {
+      color: white;
+      font-size: 1.05rem;
+    }
+
+    .facility-mini-metric small {
+      color: var(--success);
+      font-weight: 800;
+      font-size: 0.78rem;
+    }
+
+    .custom-range-modal {
+      width: min(520px, 100%);
+    }
+
+    .custom-range-form {
+      display: grid;
+      gap: 18px;
+      padding: 24px 26px 26px;
+    }
+
+    .date-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .date-field {
+      display: grid;
+      gap: 8px;
+    }
+
+    .date-field label {
+      color: var(--muted-soft);
+      font-weight: 700;
+      font-size: 0.88rem;
+    }
+
+    .date-field input {
+      width: 100%;
+      min-height: 46px;
+      border-radius: 16px;
+      border: 1px solid rgba(148,163,184,0.2);
+      background: rgba(255,255,255,0.08);
+      color: white;
+      padding: 10px 12px;
+      font: inherit;
+      color-scheme: dark;
+    }
+
+    .date-field input:focus {
+      outline: 2px solid rgba(96,165,250,0.45);
+      outline-offset: 2px;
+      border-color: rgba(96,165,250,0.55);
+    }
+
+    .custom-range-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .secondary-button,
+    .primary-button {
+      border-radius: 16px;
+      padding: 11px 16px;
+      cursor: pointer;
+      font-weight: 800;
+      font-size: 0.9rem;
+      border: 1px solid rgba(148,163,184,0.18);
+    }
+
+    .secondary-button {
+      background: rgba(255,255,255,0.06);
+      color: var(--text);
+    }
+
+    .primary-button {
+      background: #2563eb;
+      color: white;
+      border-color: rgba(96,165,250,0.45);
+    }
+
+    .dropdown,
+    .time-dropdown {
+      display: block;
+      visibility: hidden;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(8px) scale(0.98);
+      transform-origin: top right;
+      border-radius: 18px;
+      background: linear-gradient(180deg, rgba(15,23,42,0.98), rgba(17,24,39,0.96));
+      border: 1px solid rgba(148,163,184,0.22);
+      box-shadow: 0 24px 70px rgba(0,0,0,0.38), inset 0 1px 0 rgba(255,255,255,0.04);
+      backdrop-filter: blur(18px);
+      transition: opacity 0.18s ease, transform 0.18s ease, visibility 0.18s ease;
+    }
+
+    .dropdown {
+      width: min(280px, calc(100vw - 32px));
+      padding: 12px;
+      z-index: 60;
+    }
+
+    .time-dropdown {
+      width: 170px;
+      padding: 6px;
+      transform-origin: top left;
+      z-index: 58;
+    }
+
+    .dropdown.show,
+    .time-dropdown.show {
+      visibility: visible;
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0) scale(1);
+    }
+
+    .time-dropdown.show {
+      display: grid;
+      gap: 6px;
+    }
+
+    .dropdown-illustration {
+      margin-bottom: 10px;
+      padding: 10px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.045);
+      border: 1px solid rgba(148,163,184,0.12);
+    }
+
+    .dropdown-item,
+    .time-dropdown button {
+      min-height: 40px;
+      border-radius: 12px;
+    }
+
+    .dropdown-item {
+      background: rgba(59,130,246,0.1);
+      border-color: rgba(96,165,250,0.2);
+    }
+
+    .dropdown-item:hover,
+    .time-dropdown button:hover {
+      background: rgba(59,130,246,0.18);
+      border-color: rgba(96,165,250,0.34);
+    }
+
+    @media (max-width: 1120px) {
+      .page {
+        grid-template-columns: 1fr;
+      }
+
+      .top-summary-grid,
+      .report-panels,
+      .report-actions {
+        grid-template-columns: 1fr;
+      }
+
+      .report-actions {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 780px) {
+      body {
+        padding: 16px;
+      }
+
+      .topbar {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .account-menu {
+        justify-content: space-between;
+      }
+
+      .modal-overlay {
+        padding: 14px;
+      }
+
+      .modal-header {
+        padding: 20px;
+      }
+
+      .facility-detail-list {
+        padding: 18px;
+      }
+
+      .facility-detail-item,
+      .facility-detail-metrics,
+      .date-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <aside class="sidebar">
+      <div class="brand">
+          <div class="brand-logo">
+            <img src="logo.png" alt="Docah logo" />
+          </div>
+          <div>
+            <h1>Docah</h1>
+            <p>Hệ thống quản lý</p>
+          </div>
+        </div>
+      <nav class="nav-menu">
+        <a class="nav-link" href="dashboard.html">
+          <span class="icon">🏠</span>
+          <span>Trang chủ</span>
+        </a>
+        <a class="nav-link" href="quan-li-phong-kham.html">
+          <span class="icon">🏥</span>
+          <span>Phòng khám</span>
+        </a>
+        <a class="nav-link" href="nhan-su-bac-si.html">
+          <span class="icon">👩‍⚕️</span>
+          <span>Nhân sự &amp; bác sĩ</span>
+        </a>
+        <a class="nav-link" href="chatbot-quy-trinh.html">
+          <span class="icon">🤖</span>
+          <span>Chatbot &amp; quy trình</span>
+        </a>
+        <a class="nav-link active" href="bao-cao-phan-tich.html">
+          <span class="icon">📊</span>
+          <span>Báo cáo &amp; phân tích</span>
+        </a>
+        <a class="nav-link" href="chinh-sua-tai-khoan.html">
+          <span class="icon">👤</span>
+          <span>Chỉnh sửa tài khoản</span>
+        </a>
+        <a class="nav-link" href="cai-dat-he-thong.html">
+          <span class="icon">⚙️</span>
+          <span>Cài đặt hệ thống</span>
+        </a>
+      </nav>
+    </aside>
+
+    <main class="content">
+      <div class="topbar">
+        <div class="topbar-title">
+          <h2>Báo cáo tổng hợp</h2>
+          <p>Xem nhanh KPI và xuất báo cáo từ hệ thống.</p>
+        </div>
+        <div class="account-menu">
+          <button class="account-button" id="accountToggle" type="button">
+            <div class="dot">Q</div>
+            <div>
+              <div style="font-weight:700;">Quản lý</div>
+              <div style="font-size:0.9rem; color: var(--muted);">Tài khoản</div>
+            </div>
+          </button>
+          <div class="dropdown" id="accountDropdown">
+            <div class="dropdown-illustration">
+              <img src="logo.png" alt="Illustration" />
+              <div>
+                <strong>Đăng xuất</strong>
+                <span>Thoát khỏi phiên quản lý hiện tại</span>
+              </div>
+            </div>
+            <button class="dropdown-item" type="button" id="logoutButton">Đăng xuất</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="top-summary">
+        <div class="top-summary-header">
+          <div>
+            <h2>KPI tổng hợp — tất cả cơ sở</h2>
+            <p>Xem nhanh các chỉ số chiến dịch và hiệu suất cửa hàng.</p>
+          </div>
+          <div class="label-group">
+            <div class="time-select">
+              <button class="time-button" id="timeRangeButton" type="button">Tuần này ▾</button>
+              <div class="time-dropdown" id="timeDropdown">
+                <button type="button" data-range="Tuần này">Tuần này</button>
+                <button type="button" data-range="Tuần trước">Tuần trước</button>
+                <button type="button" data-range="Tháng này">Tháng này</button>
+                <button type="button" data-range="Tháng trước">Tháng trước</button>
+                <button type="button" data-range="Năm này">Năm này</button>
+                <button type="button" data-range="Năm trước">Năm trước</button>
+                <button type="button" data-range="Tùy chọn">Tùy chọn</button>
+              </div>
+            </div>
+            <div class="pill" style="background: rgba(34,197,94,0.12); color: var(--success); border-color: rgba(34,197,94,0.2);">Live</div>
+          </div>
+        </div>
+
+        <div class="top-summary-grid">
+          <div class="metric-card">
+            <strong>Lượt dùng chatbot</strong>
+            <div class="value" id="metricChatbot">1.284</div>
+            <div class="delta" id="deltaChatbot">+18% so với tuần trước</div>
+          </div>
+          <div class="metric-card">
+            <strong>Lịch hẹn thành công</strong>
+            <div class="value" id="metricAppointment">342</div>
+            <div class="delta" id="deltaAppointment">+9%</div>
+          </div>
+          <div class="metric-card">
+            <strong>Tỷ lệ chuyển trả phí</strong>
+            <div class="value" id="metricConversion">12.4%</div>
+            <div class="delta" id="deltaConversion">+2.1 điểm</div>
+          </div>
+          <div class="metric-card">
+            <strong>Doanh thu tuần</strong>
+            <div class="value" id="metricRevenue">17.1tr</div>
+            <div class="delta" id="deltaRevenue">+22%</div>
+          </div>
+        </div>
+
+        <div class="summary-chart">
+          <h3>Lượt dùng chatbot theo ngày (7 ngày qua)</h3>
+          <div class="summary-bars">
+            <div class="bar-wrap">
+              <div class="bar">
+                <span class="bar-number">520</span>
+                <div class="bar-fill" style="height: 55%;"></div>
+              </div>
+              <div class="bar-label">T2</div>
+            </div>
+            <div class="bar-wrap">
+              <div class="bar">
+                <span class="bar-number">642</span>
+                <div class="bar-fill" style="height: 68%;"></div>
+              </div>
+              <div class="bar-label">T3</div>
+            </div>
+            <div class="bar-wrap">
+              <div class="bar">
+                <span class="bar-number">470</span>
+                <div class="bar-fill" style="height: 50%;"></div>
+              </div>
+              <div class="bar-label">T4</div>
+            </div>
+            <div class="bar-wrap">
+              <div class="bar">
+                <span class="bar-number">814</span>
+                <div class="bar-fill" style="height: 82%;"></div>
+              </div>
+              <div class="bar-label">T5</div>
+            </div>
+            <div class="bar-wrap">
+              <div class="bar">
+                <span class="bar-number">692</span>
+                <div class="bar-fill" style="height: 70%;"></div>
+              </div>
+              <div class="bar-label">T6</div>
+            </div>
+            <div class="bar-wrap">
+              <div class="bar">
+                <span class="bar-number">584</span>
+                <div class="bar-fill" style="height: 60%;"></div>
+              </div>
+              <div class="bar-label">T7</div>
+            </div>
+            <div class="bar-wrap">
+              <div class="bar">
+                <span class="bar-number">430</span>
+                <div class="bar-fill" style="height: 45%;"></div>
+              </div>
+              <div class="bar-label">CN</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="report-panels">
+        <div class="panel-card">
+          <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap;">
+            <div>
+              <h3>So sánh hiệu suất cơ sở</h3>
+              <p>Đánh giá kết quả theo cơ sở và tìm ra điểm chênh lệch.</p>
+            </div>
+            <button class="detail-button" id="facilityDetailButton" type="button">Xem chi tiết từng cơ sở →</button>
+          </div>
+
+          <div class="facility-list">
+            <div class="facility-item">
+              <strong>CS Quận 1</strong>
+              <div class="progress-row">
+                <span style="color: white;">432</span>
+                <div class="progress-bar"><div class="progress-fill" style="width: 78%;"></div></div>
+              </div>
+            </div>
+            <div class="facility-item">
+              <strong>CS Quận 3</strong>
+              <div class="progress-row">
+                <span style="color: white;">341</span>
+                <div class="progress-bar"><div class="progress-fill" style="width: 62%;"></div></div>
+              </div>
+            </div>
+            <div class="facility-item">
+              <strong>CS Bình Thạnh</strong>
+              <div class="progress-row">
+                <span style="color: white;">264</span>
+                <div class="progress-bar"><div class="progress-fill" style="width: 48%;"></div></div>
+              </div>
+            </div>
+            <div class="facility-item">
+              <strong>CS Gò Vấp</strong>
+              <div class="progress-row">
+                <span style="color: white;">247</span>
+                <div class="progress-bar"><div class="progress-fill" style="width: 44%;"></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel-card">
+          <h3>Funnel chuyển đổi</h3>
+          <p>Theo dõi hành trình người dùng từ mở chatbot đến thanh toán.</p>
+
+          <div class="funnel-list">
+            <div class="funnel-item">
+              <strong>Mở chatbot</strong>
+              <div class="progress-row">
+                <span style="color: white;">1.284</span>
+                <div class="progress-bar"><div class="progress-fill" style="width: 100%;"></div></div>
+              </div>
+            </div>
+            <div class="funnel-item">
+              <strong>Hoàn thành khảo sát</strong>
+              <div class="progress-row">
+                <span style="color: white;">74%</span>
+                <div class="progress-bar"><div class="progress-fill" style="width: 74%;"></div></div>
+              </div>
+            </div>
+            <div class="funnel-item">
+              <strong>Xem kết quả nguy cơ</strong>
+              <div class="progress-row">
+                <span style="color: white;">68%</span>
+                <div class="progress-bar"><div class="progress-fill" style="width: 68%;"></div></div>
+              </div>
+            </div>
+            <div class="funnel-item">
+              <strong>Thấy gợi ý trả phí</strong>
+              <div class="progress-row">
+                <span style="color: white;">40%</span>
+                <div class="progress-bar"><div class="progress-fill" style="width: 40%;"></div></div>
+              </div>
+            </div>
+            <div class="funnel-item">
+              <strong>Thanh toán thành công</strong>
+              <div class="progress-row">
+                <span style="color: #22c55e;">12%</span>
+                <div class="progress-bar"><div class="progress-fill" style="width: 12%; background: linear-gradient(135deg, #22c55e, #4ade80);"></div></div>
+              </div>
+            </div>
+          </div>
+          <p style="margin-top: 14px; color: var(--muted); font-size: 0.92rem;">Drop-off lớn nhất: hoàn thành khảo sát → xem kết quả (6%).</p>
+        </div>
+      </div>
+
+      <div class="panel-card report-actions">
+        <div class="action-card">
+          <div class="action-card-top">
+            <div class="action-figure">📄</div>
+            <div class="action-copy">
+              <strong>Báo cáo PDF</strong>
+              <p>Trình bày đẹp - in được.</p>
+            </div>
+          </div>
+          <button class="button">Xuất ngay →</button>
+        </div>
+        <div class="action-card">
+          <div class="action-card-top">
+            <div class="action-figure">📊</div>
+            <div class="action-copy">
+              <strong>File Excel</strong>
+              <p>Dữ liệu thô - phân tích sâu.</p>
+            </div>
+          </div>
+          <button class="button">Xuất ngay</button>
+        </div>
+        <div class="action-card">
+          <div class="action-card-top">
+            <div class="action-figure">✉️</div>
+            <div class="action-copy">
+              <strong>Email tự động</strong>
+              <p>Lịch gửi hàng tuần cho cơ sở và quản lý.</p>
+            </div>
+          </div>
+          <button class="button">Cài đặt</button>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <div class="modal-overlay" id="facilityModal" aria-hidden="true">
+    <section class="facility-modal" role="dialog" aria-modal="true" aria-labelledby="facilityModalTitle">
+      <div class="modal-header">
+        <div>
+          <h3 id="facilityModalTitle">Chi tiết hiệu suất từng cơ sở</h3>
+          <p>Danh sách mở rộng theo lượt dùng chatbot, lịch hẹn, tỷ lệ chuyển đổi và doanh thu trong kỳ đang xem.</p>
+        </div>
+        <button class="modal-close" id="facilityModalClose" type="button" aria-label="Đóng">×</button>
+      </div>
+
+      <div class="facility-detail-list">
+        <article class="facility-detail-item">
+          <div class="facility-detail-main">
+            <div class="facility-rank">Top 1</div>
+            <strong>CS Quận 1</strong>
+            <div class="progress-bar"><div class="progress-fill" style="width: 86%;"></div></div>
+            <div class="facility-note">Nhu cầu khám ngoài giờ cao, nhóm khách quay lại chiếm tỷ trọng tốt.</div>
+          </div>
+          <div class="facility-detail-metrics">
+            <div class="facility-mini-metric"><span>Lượt chatbot</span><b>432</b><small>+18%</small></div>
+            <div class="facility-mini-metric"><span>Lịch hẹn</span><b>126</b><small>+14%</small></div>
+            <div class="facility-mini-metric"><span>Chuyển đổi</span><b>15.8%</b><small>+2.4đ</small></div>
+            <div class="facility-mini-metric"><span>Doanh thu</span><b>5.6tr</b><small>+21%</small></div>
+          </div>
+        </article>
+
+        <article class="facility-detail-item">
+          <div class="facility-detail-main">
+            <div class="facility-rank">Top 2</div>
+            <strong>CS Quận 3</strong>
+            <div class="progress-bar"><div class="progress-fill" style="width: 74%;"></div></div>
+            <div class="facility-note">Tỷ lệ hoàn thành khảo sát ổn định, cần tăng nhắc lịch sau tư vấn.</div>
+          </div>
+          <div class="facility-detail-metrics">
+            <div class="facility-mini-metric"><span>Lượt chatbot</span><b>341</b><small>+11%</small></div>
+            <div class="facility-mini-metric"><span>Lịch hẹn</span><b>92</b><small>+8%</small></div>
+            <div class="facility-mini-metric"><span>Chuyển đổi</span><b>13.9%</b><small>+1.6đ</small></div>
+            <div class="facility-mini-metric"><span>Doanh thu</span><b>4.2tr</b><small>+15%</small></div>
+          </div>
+        </article>
+
+        <article class="facility-detail-item">
+          <div class="facility-detail-main">
+            <div class="facility-rank">Top 3</div>
+            <strong>CS Bình Thạnh</strong>
+            <div class="progress-bar"><div class="progress-fill" style="width: 63%;"></div></div>
+            <div class="facility-note">Lượng truy cập tăng từ chiến dịch địa phương, chuyển đổi trả phí còn dư địa.</div>
+          </div>
+          <div class="facility-detail-metrics">
+            <div class="facility-mini-metric"><span>Lượt chatbot</span><b>264</b><small>+9%</small></div>
+            <div class="facility-mini-metric"><span>Lịch hẹn</span><b>71</b><small>+6%</small></div>
+            <div class="facility-mini-metric"><span>Chuyển đổi</span><b>11.6%</b><small>+0.8đ</small></div>
+            <div class="facility-mini-metric"><span>Doanh thu</span><b>3.1tr</b><small>+10%</small></div>
+          </div>
+        </article>
+
+        <article class="facility-detail-item">
+          <div class="facility-detail-main">
+            <div class="facility-rank">Top 4</div>
+            <strong>CS Gò Vấp</strong>
+            <div class="progress-bar"><div class="progress-fill" style="width: 58%;"></div></div>
+            <div class="facility-note">Hiệu suất khá đều, cần tối ưu kịch bản tư vấn gói dịch vụ sau khảo sát.</div>
+          </div>
+          <div class="facility-detail-metrics">
+            <div class="facility-mini-metric"><span>Lượt chatbot</span><b>247</b><small>+7%</small></div>
+            <div class="facility-mini-metric"><span>Lịch hẹn</span><b>64</b><small>+5%</small></div>
+            <div class="facility-mini-metric"><span>Chuyển đổi</span><b>10.4%</b><small>+0.5đ</small></div>
+            <div class="facility-mini-metric"><span>Doanh thu</span><b>2.7tr</b><small>+8%</small></div>
+          </div>
+        </article>
+
+        <article class="facility-detail-item">
+          <div class="facility-detail-main">
+            <div class="facility-rank">Top 5</div>
+            <strong>CS Tân Bình</strong>
+            <div class="progress-bar"><div class="progress-fill" style="width: 51%;"></div></div>
+            <div class="facility-note">Có nhiều khách mới từ quảng cáo, nên ưu tiên lọc nhóm nguy cơ cao.</div>
+          </div>
+          <div class="facility-detail-metrics">
+            <div class="facility-mini-metric"><span>Lượt chatbot</span><b>218</b><small>+6%</small></div>
+            <div class="facility-mini-metric"><span>Lịch hẹn</span><b>53</b><small>+4%</small></div>
+            <div class="facility-mini-metric"><span>Chuyển đổi</span><b>9.8%</b><small>+0.4đ</small></div>
+            <div class="facility-mini-metric"><span>Doanh thu</span><b>2.1tr</b><small>+7%</small></div>
+          </div>
+        </article>
+
+        <article class="facility-detail-item">
+          <div class="facility-detail-main">
+            <div class="facility-rank">Top 6</div>
+            <strong>CS Thủ Đức</strong>
+            <div class="progress-bar"><div class="progress-fill" style="width: 46%;"></div></div>
+            <div class="facility-note">Lịch hẹn buổi sáng tăng tốt, cần cải thiện tốc độ phản hồi cuối tuần.</div>
+          </div>
+          <div class="facility-detail-metrics">
+            <div class="facility-mini-metric"><span>Lượt chatbot</span><b>196</b><small>+5%</small></div>
+            <div class="facility-mini-metric"><span>Lịch hẹn</span><b>47</b><small>+3%</small></div>
+            <div class="facility-mini-metric"><span>Chuyển đổi</span><b>9.1%</b><small>+0.3đ</small></div>
+            <div class="facility-mini-metric"><span>Doanh thu</span><b>1.9tr</b><small>+5%</small></div>
+          </div>
+        </article>
+      </div>
+    </section>
+  </div>
+
+  <div class="modal-overlay" id="customRangeModal" aria-hidden="true">
+    <section class="facility-modal custom-range-modal" role="dialog" aria-modal="true" aria-labelledby="customRangeTitle">
+      <div class="modal-header">
+        <div>
+          <h3 id="customRangeTitle">Chọn khoảng thời gian</h3>
+          <p>Chọn ngày bắt đầu và ngày kết thúc để cập nhật dữ liệu trên biểu đồ.</p>
+        </div>
+        <button class="modal-close" id="customRangeClose" type="button" aria-label="Đóng">×</button>
+      </div>
+
+      <form class="custom-range-form" id="customRangeForm">
+        <div class="date-grid">
+          <div class="date-field">
+            <label for="customStartDate">Từ ngày</label>
+            <input id="customStartDate" type="date" required />
+          </div>
+          <div class="date-field">
+            <label for="customEndDate">Đến ngày</label>
+            <input id="customEndDate" type="date" required />
+          </div>
+        </div>
+        <div class="custom-range-actions">
+          <button class="secondary-button" id="customRangeCancel" type="button">Hủy</button>
+          <button class="primary-button" type="submit">Áp dụng</button>
+        </div>
+      </form>
+    </section>
+  </div>
+
+  <script>
+    const accountToggle = document.getElementById('accountToggle');
+    const accountDropdown = document.getElementById('accountDropdown');
+    const facilityDetailButton = document.getElementById('facilityDetailButton');
+    const facilityModal = document.getElementById('facilityModal');
+    const facilityModalClose = document.getElementById('facilityModalClose');
+    const customRangeModal = document.getElementById('customRangeModal');
+    const customRangeClose = document.getElementById('customRangeClose');
+    const customRangeCancel = document.getElementById('customRangeCancel');
+    const customRangeForm = document.getElementById('customRangeForm');
+    const customStartDate = document.getElementById('customStartDate');
+    const customEndDate = document.getElementById('customEndDate');
+    const timeRangeButton = document.getElementById('timeRangeButton');
+    const timeDropdown = document.getElementById('timeDropdown');
+    const rangeButtons = Array.from(timeDropdown.querySelectorAll('button[data-range]'));
+    const metricChatbot = document.getElementById('metricChatbot');
+    const metricAppointment = document.getElementById('metricAppointment');
+    const metricConversion = document.getElementById('metricConversion');
+    const metricRevenue = document.getElementById('metricRevenue');
+    const deltaChatbot = document.getElementById('deltaChatbot');
+    const deltaAppointment = document.getElementById('deltaAppointment');
+    const deltaConversion = document.getElementById('deltaConversion');
+    const deltaRevenue = document.getElementById('deltaRevenue');
+    const barFills = document.querySelectorAll('.summary-bars .bar-fill');
+    const barNumbers = document.querySelectorAll('.summary-bars .bar-number');
+    const barLabels = document.querySelectorAll('.summary-bars .bar-label');
+    const chartTitle = document.querySelector('.summary-chart h3');
+
+    const reportData = {
+      'Tuần này': {
+        title: 'Lượt dùng chatbot theo ngày (7 ngày qua)',
+        metrics: {
+          chatbot: '1.284',
+          appointment: '342',
+          conversion: '12.4%',
+          revenue: '17.1tr'
+        },
+        deltas: {
+          chatbot: '+18% so với tuần trước',
+          appointment: '+9%',
+          conversion: '+2.1 điểm',
+          revenue: '+22%'
+        },
+        bars: [55, 68, 50, 82, 70, 60, 45],
+        numbers: [520, 642, 470, 814, 692, 584, 430],
+        labels: ['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN']
+      },
+      'Tuần trước': {
+        title: 'Lượt dùng chatbot theo ngày (7 ngày trước)',
+        metrics: {
+          chatbot: '1.042',
+          appointment: '298',
+          conversion: '11.7%',
+          revenue: '14.9tr'
+        },
+        deltas: {
+          chatbot: '-10% so với tuần này',
+          appointment: '-8%',
+          conversion: '-0.7 điểm',
+          revenue: '-13%'
+        },
+        bars: [50, 62, 45, 74, 65, 55, 40],
+        numbers: [480, 560, 420, 720, 640, 560, 410],
+        labels: ['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN']
+      },
+      'Tháng này': {
+        title: 'Lượt dùng chatbot theo tuần (4 tuần qua)',
+        metrics: {
+          chatbot: '4.820',
+          appointment: '1.248',
+          conversion: '13.2%',
+          revenue: '68.4tr'
+        },
+        deltas: {
+          chatbot: '+22% so với tháng trước',
+          appointment: '+16%',
+          conversion: '+1.0 điểm',
+          revenue: '+21%'
+        },
+        bars: [60, 72, 58, 84, 78, 70, 62],
+        numbers: [720, 860, 680, 920, 820, 740, 660],
+        labels: ['01-05', '06-10', '11-15', '16-20', '21-25', '26-28', '29-30']
+      },
+      'Tháng trước': {
+        title: 'Lượt dùng chatbot theo tuần (4 tuần trước)',
+        metrics: {
+          chatbot: '3.950',
+          appointment: '1.075',
+          conversion: '12.1%',
+          revenue: '56.5tr'
+        },
+        deltas: {
+          chatbot: '-8% so với tháng này',
+          appointment: '-5%',
+          conversion: '-0.3 điểm',
+          revenue: '-12%'
+        },
+        bars: [48, 60, 52, 70, 66, 58, 50],
+        numbers: [620, 740, 660, 760, 700, 620, 540],
+        labels: ['01-05', '06-10', '11-15', '16-20', '21-25', '26-28', '29-31']
+      },
+      'Năm này': {
+        title: 'Lượt dùng chatbot theo tháng (12 tháng qua)',
+        metrics: {
+          chatbot: '18.4k',
+          appointment: '4.570',
+          conversion: '14.2%',
+          revenue: '235.6tr'
+        },
+        deltas: {
+          chatbot: '+27% so với năm trước',
+          appointment: '+20%',
+          conversion: '+1.6 điểm',
+          revenue: '+29%'
+        },
+        bars: [70, 78, 72, 84, 80, 76, 68],
+        numbers: [820, 910, 880, 980, 930, 890, 840],
+        labels: ['T1', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7']
+      },
+      'Năm trước': {
+        title: 'Lượt dùng chatbot theo tháng (12 tháng trước)',
+        metrics: {
+          chatbot: '14.5k',
+          appointment: '3.810',
+          conversion: '12.6%',
+          revenue: '182.4tr'
+        },
+        deltas: {
+          chatbot: '-18% so với năm này',
+          appointment: '-14%',
+          conversion: '-1.6 điểm',
+          revenue: '-22%'
+        },
+        bars: [58, 64, 60, 72, 68, 62, 56],
+        numbers: [720, 780, 760, 820, 780, 740, 700],
+        labels: ['T1', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7']
+      }
+    };
+
+    function renderReport(data, buttonLabel) {
+      timeRangeButton.textContent = `${buttonLabel} ▾`;
+      chartTitle.textContent = data.title;
+
+      metricChatbot.textContent = data.metrics.chatbot;
+      deltaChatbot.textContent = data.deltas.chatbot;
+      metricAppointment.textContent = data.metrics.appointment;
+      deltaAppointment.textContent = data.deltas.appointment;
+      metricConversion.textContent = data.metrics.conversion;
+      deltaConversion.textContent = data.deltas.conversion;
+      metricRevenue.textContent = data.metrics.revenue;
+      deltaRevenue.textContent = data.deltas.revenue;
+
+      barFills.forEach((fill, index) => {
+        fill.style.height = `${data.bars[index]}%`;
+      });
+
+      barNumbers.forEach((number, index) => {
+        number.textContent = data.numbers[index];
+      });
+
+      barLabels.forEach((label, index) => {
+        label.textContent = data.labels[index];
+      });
+    }
+
+    function updateRange(range) {
+      const data = reportData[range];
+      if (!data) return;
+
+      renderReport(data, range);
+    }
+
+    function formatDateLabel(dateValue) {
+      const [year, month, day] = dateValue.split('-');
+      return `${day}/${month}/${year}`;
+    }
+
+    function buildCustomLabels(startDate, endDate) {
+      const start = new Date(`${startDate}T00:00:00`);
+      const end = new Date(`${endDate}T00:00:00`);
+      const totalDays = Math.max(1, Math.round((end - start) / 86400000) + 1);
+
+      return Array.from({ length: 7 }, (_, index) => {
+        const dayOffset = totalDays <= 7
+          ? index
+          : Math.round((index * (totalDays - 1)) / 6);
+        const current = new Date(start);
+        current.setDate(start.getDate() + Math.min(dayOffset, totalDays - 1));
+        return `${String(current.getDate()).padStart(2, '0')}/${String(current.getMonth() + 1).padStart(2, '0')}`;
+      });
+    }
+
+    function applyCustomRange(startDate, endDate) {
+      const start = new Date(`${startDate}T00:00:00`);
+      const end = new Date(`${endDate}T00:00:00`);
+      const totalDays = Math.max(1, Math.round((end - start) / 86400000) + 1);
+      const base = reportData['Tuần này'];
+      const scale = Math.min(2.4, Math.max(0.65, totalDays / 7));
+      const customNumbers = base.numbers.map((value, index) => Math.round(value * scale * (0.92 + index * 0.025)));
+      const maxNumber = Math.max(...customNumbers);
+
+      renderReport({
+        title: `Lượt dùng chatbot theo ngày (${formatDateLabel(startDate)} - ${formatDateLabel(endDate)})`,
+        metrics: {
+          chatbot: customNumbers.reduce((total, value) => total + value, 0).toLocaleString('vi-VN'),
+          appointment: Math.round(342 * scale).toLocaleString('vi-VN'),
+          conversion: `${(11.8 + Math.min(totalDays, 30) * 0.04).toFixed(1)}%`,
+          revenue: `${(17.1 * scale).toFixed(1)}tr`
+        },
+        deltas: {
+          chatbot: `Theo ${totalDays} ngày đã chọn`,
+          appointment: `Ước tính ${Math.round(342 * scale)} lịch`,
+          conversion: 'Cập nhật theo tùy chọn',
+          revenue: 'Cập nhật theo tùy chọn'
+        },
+        bars: customNumbers.map((value) => Math.max(18, Math.round((value / maxNumber) * 86))),
+        numbers: customNumbers,
+        labels: buildCustomLabels(startDate, endDate)
+      }, 'Tùy chọn');
+    }
+
+    rangeButtons.forEach((button) => {
+      button.addEventListener('click', () => {
+        const range = button.dataset.range;
+        if (range === 'Tùy chọn') {
+          timeDropdown.classList.remove('show');
+          openCustomRangeModal();
+          return;
+        }
+        updateRange(range);
+        timeDropdown.classList.remove('show');
+      });
+    });
+
+    timeRangeButton.addEventListener('click', () => {
+      timeDropdown.classList.toggle('show');
+    });
+
+    function openFacilityModal() {
+      facilityModal.classList.add('show');
+      facilityModal.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+      facilityModalClose.focus();
+    }
+
+    function closeFacilityModal() {
+      facilityModal.classList.remove('show');
+      facilityModal.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+      facilityDetailButton.focus();
+    }
+
+    function getDateInputValue(date) {
+      return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+    }
+
+    function openCustomRangeModal() {
+      const today = new Date();
+      const sevenDaysAgo = new Date();
+      sevenDaysAgo.setDate(today.getDate() - 6);
+
+      if (!customStartDate.value) {
+        customStartDate.value = getDateInputValue(sevenDaysAgo);
+      }
+      if (!customEndDate.value) {
+        customEndDate.value = getDateInputValue(today);
+      }
+
+      customRangeModal.classList.add('show');
+      customRangeModal.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+      customStartDate.focus();
+    }
+
+    function closeCustomRangeModal() {
+      customRangeModal.classList.remove('show');
+      customRangeModal.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+      timeRangeButton.focus();
+    }
+
+    facilityDetailButton.addEventListener('click', openFacilityModal);
+    facilityModalClose.addEventListener('click', closeFacilityModal);
+    customRangeClose.addEventListener('click', closeCustomRangeModal);
+    customRangeCancel.addEventListener('click', closeCustomRangeModal);
+
+    facilityModal.addEventListener('click', (event) => {
+      if (event.target === facilityModal) {
+        closeFacilityModal();
+      }
+    });
+
+    customRangeModal.addEventListener('click', (event) => {
+      if (event.target === customRangeModal) {
+        closeCustomRangeModal();
+      }
+    });
+
+    customRangeForm.addEventListener('submit', (event) => {
+      event.preventDefault();
+
+      if (!customStartDate.value || !customEndDate.value) {
+        return;
+      }
+
+      if (customEndDate.value < customStartDate.value) {
+        customEndDate.setCustomValidity('Ngày kết thúc phải sau ngày bắt đầu.');
+        customEndDate.reportValidity();
+        return;
+      }
+
+      customEndDate.setCustomValidity('');
+      applyCustomRange(customStartDate.value, customEndDate.value);
+      closeCustomRangeModal();
+    });
+
+    [customStartDate, customEndDate].forEach((input) => {
+      input.addEventListener('input', () => {
+        customEndDate.setCustomValidity('');
+      });
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && facilityModal.classList.contains('show')) {
+        closeFacilityModal();
+      }
+      if (event.key === 'Escape' && customRangeModal.classList.contains('show')) {
+        closeCustomRangeModal();
+      }
+    });
+
+    document.addEventListener('click', (event) => {
+      if (!timeRangeButton.contains(event.target) && !timeDropdown.contains(event.target)) {
+        timeDropdown.classList.remove('show');
+      }
+      if (!accountToggle.contains(event.target) && !accountDropdown.contains(event.target)) {
+        accountDropdown.classList.remove('show');
+      }
+    });
+
+    accountToggle.addEventListener('click', () => {
+      accountDropdown.classList.toggle('show');
+    });
+
+    updateRange('Tuần này');
+    logoutButton.addEventListener('click', () => {
+      window.location.href = '../home.html';
+    });
+  </script>
+</body>
+</html>

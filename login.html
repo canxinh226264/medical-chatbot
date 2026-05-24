@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Docah - Đăng nhập</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background: radial-gradient(circle at top, rgba(59, 130, 246, 0.18), transparent 35%),
+                  linear-gradient(180deg, #0f172a 0%, #111827 48%, #0f172a 100%);
+      color: #0f172a;
+    }
+
+    .login-box {
+      width: min(100%, 520px);
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(20px);
+      border-radius: 32px;
+      box-shadow: 0 32px 80px rgba(15, 23, 42, 0.18);
+      padding: 60px 48px;
+      text-align: center;
+      border: 1px solid rgba(148, 163, 184, 0.18);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .login-box::before {
+      content: '';
+      position: absolute;
+      top: -48px;
+      right: -48px;
+      width: 140px;
+      height: 140px;
+      background: rgba(59, 130, 246, 0.12);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .login-box::after {
+      content: '';
+      position: absolute;
+      bottom: -36px;
+      left: -36px;
+      width: 120px;
+      height: 120px;
+      background: rgba(99, 102, 241, 0.12);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .logo-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 32px;
+    }
+
+    .logo {
+      width: 130px;
+      height: 130px;
+      border-radius: 50%;
+      object-fit: cover;
+      box-shadow: 0 20px 60px rgba(59, 130, 246, 0.16);
+      background: linear-gradient(135deg, #1e40af, #3b82f6);
+      border: 4px solid rgba(255, 255, 255, 0.65);
+    }
+
+    .logo-text {
+      font-size: 44px;
+      font-weight: 800;
+      color: #1e3a8a;
+      letter-spacing: -1.75px;
+      margin-bottom: 0;
+    }
+
+    h1 {
+      font-size: 30px;
+      color: #172554;
+      margin: 12px 0 8px;
+    }
+
+    .subtitle {
+      font-size: 16px;
+      color: #475569;
+      font-weight: 500;
+    }
+
+    .welcome {
+      color: #475569;
+      font-size: 16px;
+      margin-bottom: 36px;
+      line-height: 1.5;
+    }
+
+    .form-group {
+      margin-bottom: 22px;
+      text-align: left;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 10px;
+      color: #334155;
+      font-weight: 600;
+      font-size: 15px;
+    }
+
+    input[type='text'],
+    input[type='password'],
+    input[type='email'] {
+      width: 100%;
+      padding: 16px 18px;
+      border: 1px solid #cbd5e1;
+      border-radius: 16px;
+      background: #f8fafc;
+      font-size: 16px;
+      color: #0f172a;
+      transition: all 0.25s ease;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.14);
+      background: #ffffff;
+    }
+
+    .password-field {
+      position: relative;
+    }
+
+    .password-field input {
+      padding-right: 54px;
+    }
+
+    .password-toggle {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 36px;
+      height: 36px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0;
+      padding: 0;
+      border: 0;
+      border-radius: 12px;
+      background: transparent;
+      color: #64748b;
+      font-size: 18px;
+      line-height: 1;
+      cursor: pointer;
+      box-shadow: none;
+    }
+
+    .password-toggle:hover {
+      transform: translateY(-50%);
+      background: #e0f2fe;
+      color: #2563eb;
+      box-shadow: none;
+    }
+
+    .options {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 32px;
+      font-size: 15px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .remember {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: #334155;
+      cursor: pointer;
+    }
+
+    .remember input {
+      width: 18px;
+      height: 18px;
+      accent-color: #3b82f6;
+      border-radius: 6px;
+      border: 1px solid #94a3b8;
+      cursor: pointer;
+    }
+
+    button {
+      width: 100%;
+      padding: 16px;
+      background: linear-gradient(135deg, #2563eb, #3b82f6);
+      color: white;
+      border: none;
+      border-radius: 16px;
+      font-size: 18px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      margin-bottom: 24px;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 18px 35px rgba(59, 130, 246, 0.26);
+    }
+
+    .footer {
+      color: #64748b;
+      font-size: 15px;
+    }
+
+    .footer a {
+      color: #2563eb;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    /* Modal PIN */
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.7);
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .modal-content {
+      background: white;
+      padding: 32px;
+      border-radius: 24px;
+      width: 100%;
+      max-width: 380px;
+      text-align: center;
+    }
+
+    .modal-content h3 {
+      margin-bottom: 20px;
+      color: #172554;
+    }
+
+    .modal-content p {
+      color: #475569;
+      margin-bottom: 24px;
+    }
+
+    .options {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 32px;
+      font-size: 15px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .forgot {
+      color: #3b82f6;
+      text-decoration: none;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    @media (max-width: 520px) {
+      .login-box {
+        padding: 36px 26px;
+      }
+
+      .logo {
+        width: 110px;
+        height: 110px;
+      }
+
+      .logo-text {
+        font-size: 36px;
+      }
+
+      h1 {
+        font-size: 26px;
+      }
+
+      .welcome {
+        font-size: 15px;
+        margin-bottom: 28px;
+      }
+
+      .options {
+        justify-content: center;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="login-box">
+    <div class="logo-container">
+      <img src="logo.png" alt="Docah Logo" class="logo">
+      <div class="logo-text">docah</div>
+      <div class="subtitle">AI Medical Chatbot</div>
+    </div>
+
+    <h1>Đăng nhập</h1>
+    <p class="welcome">Chào mừng bạn trở lại với hệ thống Docah</p>
+
+    <form id="loginForm">
+      <div class="form-group">
+        <label for="username">Email hoặc tên đăng nhập</label>
+        <input type="text" id="username" placeholder="example@docah.vn" required>
+      </div>
+
+      <div class="form-group">
+        <label for="password">Mật khẩu</label>
+        <div class="password-field">
+          <input type="password" id="password" placeholder="••••••••••••" required>
+          <button class="password-toggle" type="button" data-toggle-password="password" aria-label="Hiện mật khẩu" title="Hiện mật khẩu">👁</button>
+        </div>
+      </div>
+
+      <div class="options">
+        <label class="remember">
+          <input type="checkbox" id="remember"> Ghi nhớ tôi
+        </label>
+        <span class="forgot" id="forgotPassword">Quên mật khẩu?</span>
+      </div>
+
+      <button type="submit">Đăng nhập</button>
+    </form>
+
+    <div class="footer">
+      Chưa có tài khoản? <a href="register.html">Đăng ký ngay</a>
+    </div>
+  </div>
+
+  <!-- Modal nhập mã PIN cho Quản lí chuỗi phòng khám -->
+  <div class="modal" id="managerPinModal">
+    <div class="modal-content">
+      <h3>Nhập mã PIN</h3>
+      <p style="margin-bottom: 20px; color: #475569;">Tài khoản Quản lí chuỗi phòng khám</p>
+      <div class="password-field" style="margin-bottom:20px;">
+        <input type="password" id="pinInput" maxlength="6" placeholder="Nhập mã PIN 6 số">
+        <button class="password-toggle" type="button" data-toggle-password="pinInput" aria-label="Hiện mã PIN" title="Hiện mã PIN">👁</button>
+      </div>
+      <button onclick="verifyPIN()" style="width:100%; padding:14px; background:#3b82f6; color:white; border:none; border-radius:12px; font-weight:600; cursor:pointer;">
+        Xác nhận
+      </button>
+      <button onclick="closePinModal()" style="margin-top:10px; width:100%; padding:12px; background:#e2e8f0; border:none; border-radius:12px; cursor:pointer;">
+        Hủy
+      </button>
+    </div>
+  </div>
+
+  <div class="modal" id="emailModal">
+    <div class="modal-content">
+      <h3>Quên mật khẩu</h3>
+      <p>Nhập email của bạn để nhận mã PIN xác thực</p>
+      <input type="email" id="resetEmail" placeholder="example@docah.vn" style="width:100%; padding:14px; margin-bottom:20px; border-radius:12px;">
+      <button onclick="sendResetCode()" style="width:100%; padding:14px; background:#3b82f6; color:white; border:none; border-radius:12px; font-weight:600;">Gửi mã PIN</button>
+      <button onclick="closeAllModals()" style="margin-top:12px; width:100%; padding:12px; background:#e2e8f0; border:none; border-radius:12px;">Hủy</button>
+    </div>
+  </div>
+
+  <!-- Popup Nhập mã PIN -->
+  <div class="modal" id="resetPinModal">
+    <div class="modal-content">
+      <h3>Nhập mã PIN</h3>
+      <p>Chúng tôi đã gửi mã PIN đến email của bạn</p>
+      <input type="text" id="resetPin" maxlength="6" placeholder="Nhập mã PIN 6 số" style="width:100%; padding:14px; margin-bottom:20px; border-radius:12px; text-align:center; font-size:18px;">
+      <button onclick="verifyResetPin()" style="width:100%; padding:14px; background:#3b82f6; color:white; border:none; border-radius:12px; font-weight:600;">Xác nhận</button>
+    </div>
+  </div>
+
+  <!-- Popup Đặt mật khẩu mới -->
+  <div class="modal" id="newPasswordModal">
+    <div class="modal-content">
+      <h3>Đặt mật khẩu mới</h3>
+      
+      <div class="form-group">
+        <label>Mật khẩu mới</label>
+        <div class="password-field">
+          <input type="password" id="newPass" placeholder="Nhập mật khẩu mới">
+          <button class="password-toggle" type="button" data-toggle-password="newPass" aria-label="Hiện mật khẩu mới" title="Hiện mật khẩu">👁</button>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Xác nhận mật khẩu mới</label>
+        <div class="password-field">
+          <input type="password" id="confirmNewPass" placeholder="Nhập lại mật khẩu">
+          <button class="password-toggle" type="button" data-toggle-password="confirmNewPass" aria-label="Hiện xác nhận mật khẩu" title="Hiện mật khẩu">👁</button>
+        </div>
+      </div>
+
+      <button onclick="resetPassword()" style="width:100%; padding:14px; background:#22c55e; color:white; border:none; border-radius:12px; font-weight:600; margin-top:20px;">
+        Cập nhật mật khẩu
+      </button>
+    </div>
+  </div>
+
+  <script>
+    const loginForm = document.getElementById('loginForm');
+    const managerPinModal = document.getElementById('managerPinModal');
+    let currentUsername = '';
+
+    // Danh sách tài khoản demo
+    const accounts = {
+      "quanly": {
+        password: "123456",
+        role: "manager",
+        redirect: "quanli/dashboard.html"           // ← Bạn tự thay đường dẫn sau
+      },
+      "bacsi": {
+        password: "123456",
+        role: "doctor",
+        redirect: "bacsi/index.html"
+      },
+      "chuyengia": {
+        password: "123456",
+        role: "expert",
+        redirect: "chuyengia/dashboard.html"
+      }
+    };
+
+    loginForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const username = document.getElementById('username').value.trim().toLowerCase();
+      const password = document.getElementById('password').value;
+
+      const account = accounts[username];
+
+      if (!account) {
+        alert("Tài khoản không tồn tại!");
+        return;
+      }
+
+      if (account.password !== password) {
+        alert("Mật khẩu không đúng!");
+        return;
+      }
+
+      currentUsername = username;
+
+      // Nếu là Quản lí chuỗi phòng khám → hiện popup PIN
+      if (account.role === "manager") {
+        managerPinModal.style.display = 'flex';
+        document.getElementById('pinInput').focus();
+      } else {
+        // Các vai trò khác đăng nhập bình thường
+        loginSuccess(account.redirect);
+      }
+    });
+
+    function verifyPIN() {
+      const pin = document.getElementById('pinInput').value;
+      if (pin === "123456") {
+        closePinModal();
+        const redirectUrl = accounts[currentUsername].redirect;
+        loginSuccess(redirectUrl);
+      } else {
+        alert("Mã PIN không đúng!");
+        document.getElementById('pinInput').value = '';
+      }
+    }
+
+    function closePinModal() {
+      managerPinModal.style.display = 'none';
+      document.getElementById('pinInput').value = '';
+    }
+
+    function loginSuccess(redirectUrl) {
+      alert("Đăng nhập thành công!");
+      window.location.href = redirectUrl;   // Chuyển hướng theo vai trò
+    }
+
+    document.getElementById('forgotPassword').addEventListener('click', () => {
+      document.getElementById('emailModal').style.display = 'flex';
+    });
+
+    function closeAllModals() {
+      document.querySelectorAll('.modal').forEach(m => m.style.display = 'none');
+    }
+
+    function sendResetCode() {
+      const email = document.getElementById('resetEmail').value.trim();
+      if (!email) {
+        alert("Vui lòng nhập email!");
+        return;
+      }
+      alert(`Mã PIN đã được gửi đến ${email}\n\n(Mã PIN demo: 123456)`);
+      closeAllModals();
+      document.getElementById('resetPinModal').style.display = 'flex';
+      document.getElementById('resetPin').focus();
+    }
+
+    function verifyResetPin() {
+      const pin = document.getElementById('resetPin').value.trim();
+      if (pin === "123456") {
+        closeAllModals();
+        document.getElementById('newPasswordModal').style.display = 'flex';
+      } else {
+        alert("Mã PIN không đúng!");
+        document.getElementById('resetPin').value = '';
+      }
+    }
+
+    function resetPassword() {
+      const newPass = document.getElementById('newPass').value;
+      const confirmPass = document.getElementById('confirmNewPass').value;
+
+      if (!newPass || newPass.length < 6) {
+        alert("Mật khẩu phải có ít nhất 6 ký tự!");
+        return;
+      }
+      if (newPass !== confirmPass) {
+        alert("Mật khẩu xác nhận không khớp!");
+        return;
+      }
+
+      alert("✅ Mật khẩu đã được cập nhật thành công!");
+      closeAllModals();
+    }
+
+    // Đóng modal khi click ngoài
+    managerPinModal.addEventListener('click', function(e) {
+      if (e.target === managerPinModal) closePinModal();
+    });
+
+    document.querySelectorAll('.modal').forEach(modal => {
+      modal.addEventListener('click', function(e) {
+        if (e.target === modal) closeAllModals();
+      });
+    });
+
+    document.querySelectorAll('[data-toggle-password]').forEach(button => {
+      button.addEventListener('click', () => {
+        const input = document.getElementById(button.dataset.togglePassword);
+        if (!input) return;
+        const isHidden = input.type === 'password';
+        input.type = isHidden ? 'text' : 'password';
+        button.textContent = isHidden ? '🙈' : '👁';
+        button.setAttribute('aria-label', isHidden ? 'Ẩn mật khẩu' : 'Hiện mật khẩu');
+        input.focus();
+      });
+    });
+  </script>
+</body>
+</html>

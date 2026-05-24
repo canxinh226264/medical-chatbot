@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chi tiết ca - Chuyên gia</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="page">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-logo">
+          <img src="logo.png" alt="Docah logo">
+        </div>
+        <div>
+          <h1>Docah</h1>
+          <p>Hệ thống chuyên gia</p>
+        </div>
+      </div>
+      <nav class="nav-menu">
+        <a class="nav-link" href="dashboard.html"><span class="icon">🏠</span><span>Trang chủ</span></a>
+        <a class="nav-link active" href="cases.html"><span class="icon">📋</span><span>Danh sách ca</span></a>
+        <a class="nav-link" href="responses.html"><span class="icon">💬</span><span>Phản hồi</span></a>
+        <a class="nav-link" href="reports.html"><span class="icon">📊</span><span>Báo cáo</span></a>
+        <a class="nav-link" href="profile.html"><span class="icon">👤</span><span>Hồ sơ cá nhân</span></a>
+      </nav>
+    </aside>
+
+    <main class="content">
+      <div class="topbar">
+        <div class="topbar-title">
+          <h2>Chi tiết ca</h2>
+          <p>Xem thông tin bệnh nhân và gửi ý kiến chuyên môn.</p>
+        </div>
+        <div class="account-menu">
+          <button class="account-button" id="accountToggle" type="button">
+            <div class="dot">A</div>
+            <div>
+              <div style="font-weight:700;">BS. Nguyễn Văn A</div>
+              <div style="font-size:0.9rem; color: var(--muted);">Chuyên gia</div>
+            </div>
+          </button>
+          <div class="dropdown" id="accountDropdown">
+            <div class="dropdown-illustration">
+              <img src="logo.png" alt="Illustration" />
+              <div><strong>Tài khoản</strong><span>Quản lý phiên đăng nhập</span></div>
+            </div>
+            <button class="dropdown-item" type="button" id="logoutButton">Đăng xuất</button>
+          </div>
+        </div>
+      </div>
+
+      <a class="back" href="cases.html">← Quay lại danh sách ca</a>
+      <div id="detailBox"></div>
+    </main>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>

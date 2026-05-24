@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chỉnh sửa tài khoản - Docah</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+    :root {
+      color-scheme: dark;
+      --bg: #0f172a;
+      --surface: rgba(15, 23, 42, 0.96);
+      --panel: #111827;
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+      --accent: #3b82f6;
+      --accent-strong: #2563eb;
+      --success: #22c55e;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --radius: 24px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: 'Inter', sans-serif;
+      background: radial-gradient(circle at top, rgba(59, 130, 246, 0.14), transparent 25%),
+                  linear-gradient(180deg, #020617 0%, #111827 100%);
+      color: var(--text);
+      padding: 24px 24px 24px 0;
+    }
+
+    .page {
+      width: calc(100% - 24px);
+      margin: 0;
+      display: grid;
+      grid-template-columns: 280px minmax(0, 1fr);
+      gap: 24px;
+      align-items: start;
+    }
+
+    /* Sidebar - Giống hệt mẫu */
+    .sidebar {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(148, 163, 184, 0.14);
+      border-radius: 32px;
+      padding: 28px 22px;
+      min-height: calc(100vh - 48px);
+      position: sticky;
+      top: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .sidebar .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding-bottom: 4px;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+    }
+
+    .sidebar .mark {
+      width: 44px;
+      height: 44px;
+      display: grid;
+      place-items: center;
+      border-radius: 16px;
+      background: linear-gradient(135deg, #2563eb, #3b82f6);
+      color: white;
+      font-weight: 800;
+      font-size: 1.1rem;
+      box-shadow: 0 16px 34px rgba(37, 99, 235, 0.2);
+    }
+
+    .sidebar h1 {
+      margin: 0;
+      font-size: 1.1rem;
+      line-height: 1.2;
+      color: white;
+    }
+
+    .sidebar p {
+      margin: 6px 0 0;
+      font-size: 0.92rem;
+      color: var(--muted);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding-bottom: 4px;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+    }
+
+    .brand-logo {
+      width: 120px;
+      height: 56px;
+      border-radius: 20px;
+      background: rgba(255,255,255,0.08);
+      border: 3px solid rgba(255,255,255,0.72);
+      display: grid;
+      place-items: center;
+      box-shadow: 0 18px 48px rgba(37, 99, 235, 0.18);
+      overflow: hidden;
+    }
+
+    .brand-logo img {
+      width: 100%;
+      height: auto;
+      object-fit: contain;
+      display: block;
+    }
+
+    .nav-menu {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .nav-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: flex-start;
+      width: 100%;
+      gap: 12px;
+      padding: 14px 18px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.04);
+      color: #cbd5e1;
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.25s ease;
+      border: 1px solid transparent;
+    }
+    .nav-link:hover,
+    .nav-link.active {
+      background: rgba(59, 130, 246, 0.16);
+      border-color: rgba(59, 130, 246, 0.28);
+      color: white;
+    }
+    .nav-link .icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 12px;
+      background: rgba(59,130,246,0.14);
+      display: grid;
+      place-items: center;
+      font-size: 1rem;
+      color: #e0f2fe;
+    }
+
+    .nav-link span {
+      color: var(--text);
+      font-size: 0.95rem;
+      margin: 0;
+    }
+
+    .content {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .topbar-title h2 {
+      margin: 0;
+      font-size: 1.5rem;
+      color: white;
+    }
+
+    .topbar-title p {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .dropdown-illustration {
+      margin-bottom: 10px;
+      padding: 10px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.045);
+      border: 1px solid rgba(148,163,184,0.12);
+    }
+
+    .dropdown-illustration {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .dropdown-illustration img {
+      width: 48px;
+      height: 48px;
+      border-radius: 18px;
+      object-fit: cover;
+      background: rgba(255,255,255,0.08);
+      padding: 8px;
+    }
+
+    .dropdown-illustration div {
+      display: grid;
+      gap: 4px;
+    }
+
+    .dropdown-illustration span {
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .dropdown-item {
+      display: inline-flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      padding: 14px 16px;
+      border-radius: 18px;
+      background: rgba(59,130,246,0.12);
+      color: white;
+      text-decoration: none;
+      font-weight: 700;
+      border: 1px solid rgba(59,130,246,0.18);
+      cursor: pointer;
+      transition: transform 0.2s ease, background 0.2s ease;
+    }
+
+    .dropdown-item:hover {
+      background: rgba(59,130,246,0.2);
+      transform: translateY(-1px);
+    }
+
+    .dropdown-item {
+      min-height: 44px;
+      border-radius: 14px;
+      background: rgba(59,130,246,0.1);
+      border-color: rgba(96,165,250,0.2);
+    }
+
+    .dropdown-item:hover {
+      background: rgba(59,130,246,0.18);
+      border-color: rgba(96,165,250,0.34);
+    }
+
+    .account-menu {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: flex-end;
+    }
+
+    .account-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 18px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      color: white;
+      cursor: pointer;
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
+
+    .account-button:hover {
+      background: rgba(59,130,246,0.16);
+      transform: translateY(-1px);
+    }
+
+    .account-button .dot {
+      width: 34px;
+      height: 34px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #3b82f6, #60a5fa);
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      color: white;
+    }
+
+    .dropdown {
+      display: none;
+      position: absolute;
+      right: 0;
+      top: calc(100% + 12px);
+      width: 260px;
+      background: rgba(15, 23, 42, 0.98);
+      border: 1px solid rgba(148, 163, 184, 0.18);
+      border-radius: 20px;
+      padding: 18px;
+      box-shadow: 0 28px 60px rgba(0,0,0,0.25);
+      z-index: 20;
+    }
+
+    .dropdown.show {
+      display: block;
+    }
+
+    /* Card chính */
+    .profile-card, .security-card {
+      background: var(--panel);
+      border: 1px solid rgba(148,163,184,0.14);
+      border-radius: 28px;
+      padding: 32px;
+    }
+
+    .avatar-section {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      margin-bottom: 32px;
+    }
+
+    .avatar {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #3b82f6, #60a5fa);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+      color: white;
+      border: 6px solid rgba(59,130,246,0.3);
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 14px 18px;
+      background: rgba(15,23,42,0.7);
+      border: 1px solid rgba(148,163,184,0.3);
+      border-radius: 16px;
+      color: white;
+      font-size: 1rem;
+    }
+
+    .form-control:disabled {
+      opacity: 0.75;
+      background: rgba(15,23,42,0.4);
+      cursor: not-allowed;
+    }
+
+    .btn-edit {
+      padding: 10px 24px;
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: 16px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    /* Nút Thay đổi mật khẩu - TÔ XANH LAM */
+    .btn-change-password {
+      background: linear-gradient(135deg, var(--accent-strong), var(--accent));
+      color: white;
+      padding: 14px 32px;
+      border: none;
+      border-radius: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 16px;
+      transition: all 0.2s ease;
+    }
+
+    .btn-change-password:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4);
+    }
+
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.75);
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .modal-content {
+      background: #0f172a;
+      border-radius: 24px;
+      width: 100%;
+      max-width: 440px;
+      padding: 32px;
+      border: 1px solid rgba(148,163,184,0.2);
+    }
+
+    .modal h3 {
+      margin-bottom: 24px;
+      text-align: center;
+    }
+
+    .modal input {
+      width: 100%;
+      padding: 14px 16px;
+      margin-bottom: 16px;
+      background: rgba(15,23,42,0.8);
+      border: 1px solid #475569;
+      border-radius: 16px;
+      color: white;
+    }
+
+    .password-field {
+      position: relative;
+      margin-bottom: 16px;
+    }
+
+    .password-field input {
+      margin-bottom: 0;
+      padding-right: 52px;
+    }
+
+    .password-toggle {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 36px;
+      height: 36px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      border: 0;
+      border-radius: 12px;
+      background: transparent;
+      color: var(--muted);
+      font-size: 18px;
+      line-height: 1;
+      cursor: pointer;
+    }
+
+    .password-toggle:hover {
+      transform: translateY(-50%);
+      background: rgba(59, 130, 246, 0.16);
+      color: #bfdbfe;
+    }
+
+    .modal-buttons {
+      display: flex;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .btn {
+      flex: 1;
+      padding: 14px;
+      border: none;
+      border-radius: 16px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .btn-primary { background: var(--accent); color: white; }
+    .btn-secondary { background: #334155; color: white; }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-logo">
+          <img src="logo.png" alt="Docah logo" />
+        </div>
+        <div>
+          <h1>Docah</h1>
+          <p>Hệ thống quản lý</p>
+        </div>
+      </div>
+
+      <nav class="nav-menu">
+        <a class="nav-link" href="dashboard.html"><span class="icon">🏠</span><span>Trang chủ</span></a>
+        <a class="nav-link" href="quan-li-phong-kham.html"><span class="icon">🏥</span><span>Phòng khám</span></a>
+        <a class="nav-link" href="nhan-su-bac-si.html"><span class="icon">👩‍⚕️</span><span>Nhân sự &amp; bác sĩ</span></a>
+        <a class="nav-link" href="chatbot-quy-trinh.html"><span class="icon">🤖</span><span>Chatbot &amp; quy trình</span></a>
+        <a class="nav-link" href="bao-cao-phan-tich.html"><span class="icon">📊</span><span>Báo cáo &amp; phân tích</span></a>
+        
+        <!-- Chỉnh sửa tài khoản - Active -->
+        <a class="nav-link active" href="chinh-sua-tai-khoan.html">
+          <span class="icon">👤</span>
+          <span>Chỉnh sửa tài khoản</span>
+        </a>
+
+        <a class="nav-link" href="cai-dat-he-thong.html"><span class="icon">⚙️</span><span>Cài đặt hệ thống</span></a>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="content">
+      <div class="topbar">
+        <div class="topbar-title">
+          <h2>Chỉnh sửa tài khoản</h2>
+          <p>Quản lý thông tin cá nhân và bảo mật tài khoản của bạn</p>
+        </div>
+
+        <div class="account-menu">
+          <button class="account-button" id="accountToggle" type="button">
+            <div class="dot">Q</div>
+            <div>
+              <div style="font-weight:700;">Quản lý</div>
+              <div style="font-size:0.9rem; color: var(--muted);">Tài khoản</div>
+            </div>
+          </button>
+          <div class="dropdown" id="accountDropdown">
+            <div class="dropdown-illustration">
+              <img src="logo.png" alt="Illustration" />
+              <div>
+                <strong>Đăng xuất</strong>
+                <span>Thoát khỏi phiên quản lý hiện tại</span>
+              </div>
+            </div>
+            <button class="dropdown-item" type="button" id="logoutButton">Đăng xuất</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Thông tin cá nhân -->
+      <div class="profile-card">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:28px;">
+          <h3>Thông tin cá nhân</h3>
+          <button class="btn-edit" id="btnEdit">Chỉnh sửa</button>
+        </div>
+
+        <div class="avatar-section">
+          <div class="avatar">Q</div>
+          <div>
+            <h2 id="displayName" style="margin:0 0 6px 0;">Nguyễn Văn Quản Lý</h2>
+            <p style="color:var(--muted);">Quản trị viên hệ thống</p>
+          </div>
+        </div>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Tên đầy đủ</label>
+            <input type="text" class="form-control" id="fullName" value="Nguyễn Văn Quản Lý" disabled>
+          </div>
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" class="form-control" id="email" value="quanly@docah.vn" disabled>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bảo mật tài khoản -->
+      <div class="security-card">
+        <h3>Bảo mật tài khoản</h3>
+        <p style="color: var(--muted); margin: 12px 0 20px 0;">
+          Thay đổi mật khẩu để tăng cường bảo vệ tài khoản của bạn.
+        </p>
+        <button class="btn-change-password" id="btnChangePassword">
+          Thay đổi mật khẩu
+        </button>
+      </div>
+    </main>
+  </div>
+
+  <!-- Modal Nhập PIN -->
+  <div class="modal" id="pinModal">
+    <div class="modal-content">
+      <h3>Nhập mã PIN</h3>
+      <div class="password-field">
+        <input type="password" id="pinInput" placeholder="Nhập mã PIN 6 số" maxlength="6">
+        <button class="password-toggle" type="button" data-toggle-password="pinInput" aria-label="Hiện mã PIN" title="Hiện mã PIN">👁</button>
+      </div>
+      <div class="modal-buttons">
+        <button class="btn btn-secondary" onclick="closePinModal()">Hủy</button>
+        <button class="btn btn-primary" onclick="verifyPIN()">Xác nhận</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Đổi mật khẩu -->
+  <div class="modal" id="changePasswordModal">
+    <div class="modal-content">
+      <h3>Đổi mật khẩu</h3>
+      <div class="password-field">
+        <input type="password" id="currentPassword" placeholder="Mật khẩu hiện tại">
+        <button class="password-toggle" type="button" data-toggle-password="currentPassword" aria-label="Hiện mật khẩu hiện tại" title="Hiện mật khẩu">👁</button>
+      </div>
+      <div class="password-field">
+        <input type="password" id="newPassword" placeholder="Mật khẩu mới">
+        <button class="password-toggle" type="button" data-toggle-password="newPassword" aria-label="Hiện mật khẩu mới" title="Hiện mật khẩu">👁</button>
+      </div>
+      <div class="password-field">
+        <input type="password" id="confirmPassword" placeholder="Xác nhận mật khẩu mới">
+        <button class="password-toggle" type="button" data-toggle-password="confirmPassword" aria-label="Hiện xác nhận mật khẩu" title="Hiện mật khẩu">👁</button>
+      </div>
+      <div class="modal-buttons">
+        <button class="btn btn-secondary" onclick="closeChangePasswordModal()">Hủy</button>
+        <button class="btn btn-primary" onclick="changePassword()">Thay đổi mật khẩu</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Account dropdown
+    const accountToggle = document.getElementById('accountToggle');
+    const accountDropdown = document.getElementById('accountDropdown');
+    const logoutButton = document.getElementById('logoutButton');
+
+    accountToggle.addEventListener('click', () => accountDropdown.classList.toggle('show'));
+    document.addEventListener('click', (e) => {
+      if (!accountToggle.contains(e.target) && !accountDropdown.contains(e.target)) {
+        accountDropdown.classList.remove('show');
+      }
+    });
+
+    // Chỉnh sửa thông tin
+    let isEditing = false;
+    document.getElementById('btnEdit').addEventListener('click', () => {
+      isEditing = !isEditing;
+      const fields = document.querySelectorAll('#fullName, #email');
+      fields.forEach(f => f.disabled = !isEditing);
+      document.getElementById('btnEdit').textContent = isEditing ? 'Lưu thay đổi' : 'Chỉnh sửa';
+      if (!isEditing) alert('Thông tin đã được cập nhật!');
+    });
+
+    // Thay đổi mật khẩu
+    document.getElementById('btnChangePassword').addEventListener('click', () => {
+      document.getElementById('pinModal').style.display = 'flex';
+      document.getElementById('pinInput').focus();
+    });
+
+    function closePinModal() {
+      document.getElementById('pinModal').style.display = 'none';
+      document.getElementById('pinInput').value = '';
+    }
+
+    function verifyPIN() {
+      if (document.getElementById('pinInput').value === "123456") {
+        closePinModal();
+        document.getElementById('changePasswordModal').style.display = 'flex';
+      } else {
+        alert("Mã PIN không đúng!");
+      }
+    }
+
+    function closeChangePasswordModal() {
+      document.getElementById('changePasswordModal').style.display = 'none';
+    }
+
+    function changePassword() {
+      const newPass = document.getElementById('newPassword').value;
+      const confirm = document.getElementById('confirmPassword').value;
+      if (newPass && newPass === confirm) {
+        closeChangePasswordModal();
+        alert("Mật khẩu đã được thay đổi thành công!");
+      } else {
+        alert("Mật khẩu mới không khớp hoặc chưa nhập!");
+      }
+    }
+
+    // Đóng modal khi click ngoài
+    document.querySelectorAll('.modal').forEach(modal => {
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) modal.style.display = 'none';
+      });
+    });
+    document.querySelectorAll('[data-toggle-password]').forEach(button => {
+      button.addEventListener('click', () => {
+        const input = document.getElementById(button.dataset.togglePassword);
+        if (!input) return;
+        const isHidden = input.type === 'password';
+        input.type = isHidden ? 'text' : 'password';
+        button.textContent = isHidden ? '🙈' : '👁';
+        button.setAttribute('aria-label', isHidden ? 'Ẩn mật khẩu' : 'Hiện mật khẩu');
+        input.focus();
+      });
+    });
+    logoutButton.addEventListener('click', () => {
+      window.location.href = '../home.html';
+    });
+  </script>
+</body>
+</html>
