@@ -234,7 +234,11 @@ function showCaseAttachmentName(input) {
 function setupReport() {
   const btn = document.querySelector("#exportPdf");
   if (btn) {
-    btn.addEventListener("click", () => alert("Đang xuất báo cáo PDF..."));
+    btn.addEventListener("click", () => {
+      if (window.showToast) {
+        showToast("Đang xuất báo cáo", "Hệ thống đang chuẩn bị tệp PDF.");
+      }
+    });
   }
 }
 

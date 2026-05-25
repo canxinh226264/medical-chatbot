@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
@@ -361,8 +361,8 @@
 .chart-card.users {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  align-items: stretch;
+  justify-content: flex-start;
 }
 
     .chart-bars .bar:hover,
@@ -434,48 +434,51 @@
     }
 
     .pie-chart {
-      position: relative;
-      width: 160px;
-      height: 160px;
-      margin: 24px auto 0;
-      border-radius: 50%;
-      background: conic-gradient(
-        #3b82f6 0 25%,
-        #22c55e 25% 55%,
-        #f59e0b 55% 80%,
-        #6366f1 80% 100%
-      );
+      width: min(260px, 70vw);
+      height: min(260px, 70vw);
+      margin: 12px auto 0;
+      overflow: visible;
+      display: block;
     }
 
-    .pie-chart::after {
-      content: '';
-      position: absolute;
-      inset: 32px;
-      border-radius: 50%;
-      background: rgba(15, 23, 42, 0.95);
+    .pie-bg {
+      fill: rgba(255,255,255,0.06);
     }
 
-    .pie-chart .slice {
-      display: none;
+    .pie-segment {
+      cursor: pointer;
+      transform-box: fill-box;
+      transform-origin: center;
+      transition: transform 0.2s ease, filter 0.2s ease, opacity 0.2s ease;
+    }
+
+    .pie-chart:hover .pie-segment {
+      opacity: 0.72;
+    }
+
+    .pie-segment:hover {
+      opacity: 1 !important;
+      transform: scale(1.035);
+      filter: drop-shadow(0 12px 18px rgba(0,0,0,0.35));
     }
 
     .chart-card.users {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  align-items: stretch;
+  justify-content: flex-start;
 }
 
 .chart-legend {
   width: 100%;
-  margin-top: 16px;
+  margin-top: 10px;
 }
 
     .chart-legend {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 10px;
-      margin-top: 18px;
+      margin-top: 10px;
     }
 
     .legend-item {
@@ -714,6 +717,11 @@
         grid-template-columns: 1fr;
       }
 
+      .pie-chart {
+        width: min(220px, 74vw);
+        height: min(220px, 74vw);
+      }
+
       .chart-card.wide .line-chart {
         gap: 8px;
         padding: 20px 12px;
@@ -846,7 +854,13 @@
           <!-- Phân bổ người dùng -->
           <div class="chart-card users">
             <strong>Phân bổ người dùng</strong>
-            <div class="pie-chart" data-tooltip="Tổng người dùng: 12.400 | Bệnh nhân mới 25%, tái khám 30%, bác sĩ 25%, quản trị 20%"></div>
+            <svg class="pie-chart" viewBox="0 0 200 200" aria-label="Phân bổ người dùng">
+              <circle class="pie-bg" cx="100" cy="100" r="40"></circle>
+              <path class="pie-segment" fill="#3b82f6" d="M 101.56 36.02 A 64 64 0 0 1 163.98 98.44 L 139.99 99.02 A 40 40 0 0 0 100.98 60.01 Z" data-tooltip="Bệnh nhân mới: 3.100 người, chiếm 25%"></path>
+              <path class="pie-segment" fill="#22c55e" d="M 163.98 101.56 A 64 64 0 0 1 81.72 161.33 L 88.57 138.33 A 40 40 0 0 0 139.99 100.98 Z" data-tooltip="Tái khám: 3.720 người, chiếm 30%"></path>
+              <path class="pie-segment" fill="#f59e0b" d="M 78.74 160.37 A 64 64 0 0 1 38.67 81.72 L 61.67 88.57 A 40 40 0 0 0 86.71 137.73 Z" data-tooltip="Bác sĩ: 3.100 tài khoản, chiếm 25%"></path>
+              <path class="pie-segment" fill="#6366f1" d="M 39.63 78.74 A 64 64 0 0 1 98.44 36.02 L 99.02 60.01 A 40 40 0 0 0 62.27 86.71 Z" data-tooltip="Quản trị: 2.480 tài khoản, chiếm 20%"></path>
+            </svg>
             
             <div class="chart-legend">
               <span class="legend-item" data-tooltip="Bệnh nhân mới: 3.100 người, chiếm 25%">
@@ -965,5 +979,6 @@
       window.location.href = '../home.html';
     });
   </script>
+  <script src="../shared-toast.js"></script>
 </body>
 </html>

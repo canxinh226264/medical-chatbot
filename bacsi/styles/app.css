@@ -177,6 +177,14 @@
     min-height: 8px;
     border-radius: 8px 8px 0 0;
     background: var(--color-blue);
+    cursor: pointer;
+    transition: transform 0.2s ease, filter 0.2s ease, box-shadow 0.2s ease;
+}
+
+.bar-wrap:hover .bar {
+    transform: translateY(-8px) scaleY(1.04);
+    filter: brightness(1.16);
+    box-shadow: 0 14px 28px rgba(59, 130, 246, 0.35);
 }
 
 .donut-wrap {
@@ -185,20 +193,32 @@
     height: 200px;
 }
 
-.donut {
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
-    background: conic-gradient(#3b82f6 0 45%, #ef4444 45% 75%, #f97316 75% 100%);
-    position: relative;
+.donut-chart {
+    width: 170px;
+    height: 170px;
+    overflow: visible;
+    display: block;
 }
 
-.donut::after {
-    content: "";
-    position: absolute;
-    inset: 36px;
-    border-radius: 50%;
-    background: var(--bg-secondary);
+.donut-bg {
+    fill: rgba(255, 255, 255, 0.06);
+}
+
+.donut-segment {
+    cursor: pointer;
+    transform-box: fill-box;
+    transform-origin: center;
+    transition: transform 0.2s ease, filter 0.2s ease, opacity 0.2s ease;
+}
+
+.donut-chart:hover .donut-segment {
+    opacity: 0.72;
+}
+
+.donut-segment:hover {
+    opacity: 1 !important;
+    transform: scale(1.035);
+    filter: drop-shadow(0 12px 18px rgba(0, 0, 0, 0.35));
 }
 
 .legend {

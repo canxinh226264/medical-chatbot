@@ -641,7 +641,9 @@
       const fields = document.querySelectorAll('#fullName, #email');
       fields.forEach(f => f.disabled = !isEditing);
       document.getElementById('btnEdit').textContent = isEditing ? 'Lưu thay đổi' : 'Chỉnh sửa';
-      if (!isEditing) alert('Thông tin đã được cập nhật!');
+      if (!isEditing && window.showToast) {
+        showToast('Cập nhật tài khoản thành công', 'Thông tin tài khoản đã được lưu.');
+      }
     });
 
     // Thay đổi mật khẩu
@@ -673,7 +675,9 @@
       const confirm = document.getElementById('confirmPassword').value;
       if (newPass && newPass === confirm) {
         closeChangePasswordModal();
-        alert("Mật khẩu đã được thay đổi thành công!");
+        if (window.showToast) {
+          showToast("Đổi mật khẩu thành công", "Mật khẩu mới đã được lưu.");
+        }
       } else {
         alert("Mật khẩu mới không khớp hoặc chưa nhập!");
       }
@@ -700,5 +704,6 @@
       window.location.href = '../home.html';
     });
   </script>
+  <script src="../shared-toast.js"></script>
 </body>
 </html>

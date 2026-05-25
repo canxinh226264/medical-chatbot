@@ -192,6 +192,11 @@ function renderDashboard() {
     </tr>
   `).join("");
   const barData = [["T2", 12], ["T3", 19], ["T4", 15], ["T5", 22], ["T6", 18], ["T7", 8], ["CN", 5]];
+  const complexityData = [
+    ["Routine", 45, "#3b82f6", "Ca thường quy: 45% - 18 ca"],
+    ["Follow-up", 30, "#ef4444", "Ca cần theo dõi: 30% - 12 ca"],
+    ["High Risk", 25, "#f97316", "Ca nguy cơ cao: 25% - 10 ca"],
+  ];
 
   return `<section class="page active">
     <div class="dashboard-grid">
@@ -210,8 +215,8 @@ function renderDashboard() {
           `).join("")}</div>
         </div>
         <div class="charts-grid">
-          <div class="card"><h2 class="card-title">Lượt tư vấn mỗi ngày</h2><div class="chart-bars">${barData.map(([day, count]) => `<div class="bar-wrap"><div class="bar" style="height:${count * 7}px"></div><span class="tiny muted">${day}</span></div>`).join("")}</div></div>
-          <div class="card"><h2 class="card-title">Độ phức tạp của ca bệnh</h2><div class="donut-wrap"><div><div class="donut"></div><div class="legend"><span><i class="dot" style="background:#3b82f6"></i>Routine</span><span><i class="dot" style="background:#ef4444"></i>Follow-up</span><span><i class="dot" style="background:#f97316"></i>High Risk</span></div></div></div></div>
+          <div class="card"><h2 class="card-title">Lượt tư vấn mỗi ngày</h2><div class="chart-bars">${barData.map(([day, count]) => `<div class="bar-wrap chart-tip" data-tip="${day}: ${count} lượt tư vấn"><div class="bar" style="height:${count * 7}px"></div><span class="tiny muted">${day}</span></div>`).join("")}</div></div>
+          <div class="card"><h2 class="card-title">Độ phức tạp của ca bệnh</h2><div class="donut-wrap"><div><svg class="donut-chart" viewBox="0 0 200 200" aria-label="Độ phức tạp của ca bệnh"><circle class="donut-bg" cx="100" cy="100" r="40"></circle><path class="donut-segment" fill="#3b82f6" d="M 101.56 36.02 A 64 64 0 0 1 121.26 160.37 L 113.29 137.73 A 40 40 0 0 0 100.98 60.01 Z" data-tip="${complexityData[0][3]}"></path><path class="donut-segment" fill="#ef4444" d="M 118.28 161.33 A 64 64 0 0 1 36.02 101.56 L 60.01 100.98 A 40 40 0 0 0 111.43 138.33 Z" data-tip="${complexityData[1][3]}"></path><path class="donut-segment" fill="#f97316" d="M 36.02 98.44 A 64 64 0 0 1 98.44 36.02 L 99.02 60.01 A 40 40 0 0 0 60.01 99.02 Z" data-tip="${complexityData[2][3]}"></path></svg><div class="legend">${complexityData.map(([label, , color, tip]) => `<span data-tip="${tip}"><i class="dot" style="background:${color}"></i>${label}</span>`).join("")}</div></div></div></div>
         </div>
       </div>
       <div class="dashboard-right">
@@ -246,8 +251,13 @@ function renderConsultList(items) {
 function renderChat(selected) {
   return `<div class="ai-summary"><strong>AI Tóm tắt</strong><p class="small muted">${selected.aiSummary}</p></div>
     <div class="chat-actions"><button class="btn btn-success">Kết nối Video</button><button class="btn btn-primary">Gọi điện</button><span class="muted" style="margin-left:auto">Đang chờ: 15 phút</span></div>
-    <div class="chat-history">${selected.chat.map(([sender, message, time]) => `<div class="message-row ${sender === "ai" ? "ai" : ""}"><div class="message"><p>${message}</p><p class="tiny muted">${time}</p></div></div>`).join("")}</div>
-    <div class="chat-input"><input class="input-field" placeholder="Nhập tin nhắn với bệnh nhân..."><button class="btn btn-primary">Gửi</button></div>`;
+    <div class="chat-history" id="chatHistory">${selected.chat.map(([sender, message, time]) => renderChatMessage(sender, message, time)).join("")}</div>
+    <div class="chat-input"><input class="input-field" id="chatMessageInput" placeholder="Nhập tin nhắn với bệnh nhân..."><button class="btn btn-primary" id="sendChatMessage" type="button">Gửi</button></div>`;
+}
+
+function renderChatMessage(sender, message, time) {
+  const outgoing = sender === "ai" || sender === "doctor";
+  return `<div class="message-row ${outgoing ? "ai" : ""}"><div class="message"><p>${escapeHtml(message)}</p><p class="tiny muted">${time}</p></div></div>`;
 }
 
 function renderTreatmentPanel(selected) {
@@ -363,6 +373,7 @@ function bindPageEvents() {
 
   bindOpenPatientButtons();
   bindConsultButtons();
+  bindChatEvents();
 
   const consultSearch = document.getElementById("consultSearch");
   if (consultSearch) consultSearch.addEventListener("input", () => {
@@ -439,7 +450,9 @@ function bindPageEvents() {
       return;
     }
     state.passwordEditing = false;
-    alert("Đã cập nhật mật khẩu.");
+    if (window.showToast) {
+      showToast("Cập nhật mật khẩu thành công", "Mật khẩu mới đã được lưu.");
+    }
     render();
   });
 
@@ -452,6 +465,40 @@ function bindPageEvents() {
     button.setAttribute("aria-label", isHidden ? "Ẩn mật khẩu" : "Hiện mật khẩu");
     input.focus();
   }));
+}
+
+function bindChatEvents() {
+  const input = document.getElementById("chatMessageInput");
+  const sendButton = document.getElementById("sendChatMessage");
+  const history = document.getElementById("chatHistory");
+  const selected = consultations.find((item) => item.id === state.selectedConsultationId);
+
+  if (!input || !sendButton || !history || !selected) return;
+
+  const sendMessage = () => {
+    const message = input.value.trim();
+    if (!message) return;
+
+    const time = new Date().toLocaleTimeString("vi-VN", { hour: "2-digit", minute: "2-digit" });
+    selected.chat.push(["doctor", message, time]);
+    history.insertAdjacentHTML("beforeend", renderChatMessage("doctor", message, time));
+    input.value = "";
+    history.scrollTop = history.scrollHeight;
+
+    if (window.showToast) {
+      showToast("Đã gửi tin nhắn", "Tin nhắn đã hiển thị trong cuộc trò chuyện.");
+    }
+  };
+
+  sendButton.addEventListener("click", sendMessage);
+  input.addEventListener("keydown", (event) => {
+    if (event.key === "Enter" && !event.shiftKey) {
+      event.preventDefault();
+      sendMessage();
+    }
+  });
+
+  history.scrollTop = history.scrollHeight;
 }
 
 function bindOpenPatientButtons() {

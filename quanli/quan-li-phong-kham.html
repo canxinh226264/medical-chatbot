@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="vi">
 <head>
   <meta charset="UTF-8" />
@@ -560,7 +560,9 @@
       `;
       document.getElementById('cancelEditBtn').addEventListener('click', closeModal);
       document.getElementById('saveEditBtn').addEventListener('click', () => {
-        alert('Dữ liệu đã được lưu (mô phỏng).');
+        if (window.showToast) {
+          showToast('Lưu cơ sở thành công', 'Thông tin phòng khám đã được cập nhật.');
+        }
         closeModal();
       });
       openModal();
@@ -579,7 +581,9 @@
       `;
       document.getElementById('cancelDeleteBtn').addEventListener('click', closeModal);
       document.getElementById('confirmDeleteBtn').addEventListener('click', () => {
-        alert('Đã xóa cơ sở (mô phỏng).');
+        if (window.showToast) {
+          showToast('Đã xóa cơ sở', 'Cơ sở đã được xóa khỏi danh sách mô phỏng.');
+        }
         closeModal();
       });
       openModal();
@@ -590,5 +594,6 @@
       window.location.href = '../home.html';
     });
   </script>
+  <script src="../shared-toast.js"></script>
 </body>
 </html>

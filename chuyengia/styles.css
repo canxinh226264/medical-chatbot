@@ -470,12 +470,20 @@ main.content {
   place-items: start center;
   color: white;
   padding-top: 8px;
+  transition: transform 0.2s ease, filter 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
 }
 
 .bar-chart > div {
   text-align: center;
   flex: 1;
   color: var(--muted);
+}
+
+.bar-chart > div:hover .bar {
+  transform: translateY(-8px) scaleY(1.06);
+  filter: brightness(1.16);
+  box-shadow: 0 16px 32px rgba(59, 130, 246, 0.38);
 }
 
 .line-chart {

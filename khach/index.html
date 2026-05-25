@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Docah - Khách hàng</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="page">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-logo">
+          <img src="../logo.png" alt="Docah logo">
+        </div>
+        <div>
+          <h1>Docah</h1>
+          <p>Trợ lý sức khỏe gia đình</p>
+        </div>
+      </div>
+
+      <nav class="nav-menu" aria-label="Điều hướng khách hàng">
+        <button class="nav-link active" type="button" data-view="triage"><span class="icon">+</span><span>Kiểm tra ban đầu</span></button>
+        <button class="nav-link" type="button" data-view="appointments"><span class="icon">L</span><span>Đặt lịch khám</span></button>
+        <button class="nav-link" type="button" data-view="history"><span class="icon">H</span><span>Lịch sử tư vấn</span></button>
+        <button class="nav-link" type="button" data-view="profile"><span class="icon">P</span><span>Hồ sơ gia đình</span></button>
+        <button class="nav-link" type="button" data-view="plans"><span class="icon">V</span><span>Gói tư vấn</span></button>
+      </nav>
+
+      <div class="sidebar-note">
+        <strong>Giới hạn an toàn</strong>
+        <p>Chatbot không kê đơn thuốc. Kết quả chỉ là sàng lọc ban đầu để bạn chọn bước tiếp theo phù hợp.</p>
+      </div>
+    </aside>
+
+    <main class="content">
+      <header class="topbar">
+        <div class="topbar-title">
+          <p class="eyebrow">Vai trò khách hàng</p>
+          <h2>Tự đánh giá tình trạng sức khỏe ban đầu</h2>
+          <p>Trả lời từng câu một bằng nút chọn, xem lại tóm tắt, rồi nhận gợi ý hành động rõ ràng.</p>
+        </div>
+        <div class="account-menu">
+          <button class="account-button" type="button" id="accountToggle" aria-expanded="false">
+            <div class="dot">KH</div>
+            <div>
+              <div style="font-weight:700;">Nguyễn Minh Anh</div>
+              <div style="font-size:0.9rem; color: var(--muted);">Khách hàng</div>
+            </div>
+          </button>
+          <div class="dropdown" id="accountDropdown">
+            <div class="dropdown-illustration">
+              <img src="../logo.png" alt="Docah logo">
+              <div>
+                <strong>Đăng xuất</strong>
+                <span>Thoát khỏi phiên khách hàng hiện tại</span>
+              </div>
+            </div>
+            <button class="dropdown-item" type="button" id="logoutButton">Đăng xuất</button>
+          </div>
+        </div>
+      </header>
+
+      <section class="view active" id="view-triage">
+        <div class="status-strip" aria-label="Trang thai dich vu">
+          <div>
+            <span class="status-dot free"></span>
+            <strong>Miễn phí</strong>
+            <p>Khảo sát triệu chứng, tóm tắt thông tin, phân loại nguy cơ.</p>
+          </div>
+          <div>
+            <span class="status-dot paid"></span>
+            <strong>Trả phí khi cần</strong>
+            <p>Bác sĩ gia đình đọc hồ sơ và tư vấn chuyên sâu theo yêu cầu.</p>
+          </div>
+          <div>
+            <span class="status-dot safety"></span>
+            <strong>Không ép buộc</strong>
+            <p>Bạn luôn thấy rõ lý do hệ thống gợi ý gặp bác sĩ.</p>
+          </div>
+        </div>
+
+        <div class="workspace">
+          <section class="triage-panel" aria-live="polite">
+            <div class="panel-head">
+              <div>
+                <p class="eyebrow" id="stepEyebrow">Bước 1</p>
+                <h3 id="questionTitle">Đang tải câu hỏi</h3>
+              </div>
+              <span class="flow-badge" id="flowBadge">Sàng lọc miễn phí</span>
+            </div>
+
+            <div class="progress">
+              <span id="progressBar"></span>
+            </div>
+
+            <div id="triageBody"></div>
+          </section>
+
+          <aside class="context-rail">
+            <section class="mini-panel">
+              <div class="mini-head">
+                <span class="mini-icon">?</span>
+                <h4>Docah có thể hỗ trợ</h4>
+              </div>
+              <ul class="check-list">
+                <li>Khai thác triệu chứng có cấu trúc</li>
+                <li>Tóm tắt lại để bạn xác nhận</li>
+                <li>Gợi ý theo dõi, đặt lịch, hoặc đi viện</li>
+              </ul>
+            </section>
+
+            <section class="mini-panel">
+              <div class="mini-head">
+                <span class="mini-icon">BS</span>
+                <h4>Cần bác sĩ khi</h4>
+              </div>
+              <ul class="check-list danger-list">
+                <li>Có dấu hiệu nguy hiểm</li>
+                <li>Triệu chứng kéo dài hoặc nặng lên</li>
+                <li>Cần giải thích kết quả xét nghiệm, bệnh nền, thuốc đang dùng</li>
+              </ul>
+            </section>
+
+            <section class="mini-panel calm">
+              <h4>Lựa chọn sau sàng lọc</h4>
+              <p>Nếu kết quả cần bác sĩ, bạn có thể đặt lịch tại cơ sở ABC hoặc gửi tóm tắt cho bác sĩ gia đình. Nếu chưa cần, bạn tiếp tục theo dõi tại nhà.</p>
+            </section>
+          </aside>
+        </div>
+      </section>
+
+      <section class="view" id="view-appointments">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Cơ sở ABC</p>
+            <h3>Đặt lịch gặp bác sĩ gia đình</h3>
+          </div>
+          <button class="primary-action" type="button" data-start-triage>Làm sàng lọc trước</button>
+        </div>
+        <div class="appointment-grid">
+          <article class="appointment-item">
+            <span class="doctor-avatar">AN</span>
+            <div>
+              <h4>BS. Trần Hoài An</h4>
+              <p>Bác sĩ gia đình - Nội tổng quát</p>
+              <small>Hôm nay: 15:30, 16:00, 18:00</small>
+            </div>
+            <button type="button" data-book-appointment data-doctor="BS. Trần Hoài An" data-time="15:30 hôm nay">Đặt lịch</button>
+          </article>
+          <article class="appointment-item">
+            <span class="doctor-avatar green">MP</span>
+            <div>
+              <h4>BS. Lê Minh Phương</h4>
+              <p>Nhi khoa và chăm sóc gia đình</p>
+              <small>Ngày mai: 08:30, 10:00, 14:30</small>
+            </div>
+            <button type="button" data-book-appointment data-doctor="BS. Lê Minh Phương" data-time="08:30 ngày mai">Đặt lịch</button>
+          </article>
+          <article class="appointment-item">
+            <span class="doctor-avatar amber">HN</span>
+            <div>
+              <h4>Phòng khám ABC gần nhất</h4>
+              <p>Số 25 Nguyễn Trãi, Hà Nội</p>
+              <small>Thời gian di chuyển dự kiến: 18 phút</small>
+            </div>
+            <button type="button" data-book-appointment data-doctor="Phòng khám ABC Nguyễn Trãi" data-time="khung giờ gần nhất">Chọn cơ sở</button>
+          </article>
+        </div>
+      </section>
+
+      <section class="view" id="view-history">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Lịch sử</p>
+            <h3>Các lần tư vấn gần đây</h3>
+          </div>
+        </div>
+        <div class="timeline">
+          <div class="timeline-row">
+            <span class="risk-chip medium">Medium</span>
+            <div>
+              <h4>Sốt và đau họng</h4>
+              <p>Đã gợi ý đặt lịch gặp bác sĩ nếu sốt trên 38.5 độ sau 48 giờ.</p>
+            </div>
+            <small>22/05/2026</small>
+          </div>
+          <div class="timeline-row">
+            <span class="risk-chip low">Low</span>
+            <div>
+              <h4>Mệt mỏi nhẹ</h4>
+              <p>Đã gợi ý theo dõi tại nhà, ngủ bù đủ và cập nhật nếu nặng lên.</p>
+            </div>
+            <small>18/05/2026</small>
+          </div>
+        </div>
+      </section>
+
+      <section class="view" id="view-profile">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Hồ sơ</p>
+            <h3>Thông tin sức khỏe gia đình</h3>
+          </div>
+        </div>
+        <div class="profile-grid">
+          <label>Họ và tên<input value="Nguyễn Minh Anh"></label>
+          <label>Năm sinh<input value="1994"></label>
+          <label>Bệnh nền<input value="Không ghi nhận"></label>
+          <label>Dị ứng<input value="Chưa rõ"></label>
+          <label>Người liên hệ khẩn cấp<input value="Nguyễn Văn B - 0988 000 111"></label>
+          <label>Cơ sở ưu tiên<input value="Phòng khám ABC Nguyễn Trãi"></label>
+          <div class="profile-actions">
+            <button class="secondary-action" type="button" id="resetProfile">Hoàn tác</button>
+            <button class="primary-action" type="button" id="saveProfile">Lưu chỉnh sửa</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="view" id="view-plans">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Miễn phí và trả phí</p>
+            <h3>Bạn chỉ trả phí khi cần bác sĩ tham gia</h3>
+          </div>
+        </div>
+        <div class="plan-grid">
+          <article class="plan">
+            <span class="plan-label">Miễn phí</span>
+            <h4>Sàng lọc ban đầu</h4>
+            <p>Trả lời câu hỏi, xem tóm tắt, phân loại nguy cơ và hướng hành động tiếp theo.</p>
+            <strong>0đ</strong>
+          </article>
+          <article class="plan featured">
+            <span class="plan-label">Trả phí</span>
+            <h4>Bác sĩ đọc hồ sơ</h4>
+            <p>Bác sĩ gia đình xem lại tóm tắt, hỏi thêm nếu cần và tư vấn chuyên sâu.</p>
+            <strong>80.000đ</strong>
+          </article>
+          <article class="plan">
+            <span class="plan-label">Tại phòng khám</span>
+            <h4>Đặt lịch khám</h4>
+            <p>Chọn cơ sở ABC, khung giờ và bác sĩ phù hợp với mức độ nguy cơ.</p>
+            <strong>Theo dịch vụ</strong>
+          </article>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div class="modal" id="paidModal" aria-hidden="true">
+    <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="paidTitle">
+      <button class="modal-close" type="button" id="closePaid" aria-label="Đóng">x</button>
+      <p class="eyebrow" id="modalEyebrow">Lựa chọn tư vấn</p>
+      <h3 id="paidTitle">Chuyển sang bác sĩ gia đình?</h3>
+      <p class="modal-copy" id="paidCopy">Đây là bước trả phí vì cần bác sĩ đọc tóm tắt, đánh giá bối cảnh cá nhân và hỏi thêm khi thông tin chưa đủ. Bạn có thể bỏ qua và tiếp tục theo dõi miễn phí.</p>
+      <div class="choice-list">
+        <button class="choice paid-choice" type="button" id="confirmPaid">Gửi tóm tắt cho bác sĩ - 80.000đ</button>
+        <button class="choice free-choice" type="button" id="stayFree">Tiếp tục với hướng dẫn miễn phí</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite">
+    <strong id="toastTitle">Đặt lịch thành công</strong>
+    <span id="toastMessage">Lịch hẹn đã được ghi nhận.</span>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
