@@ -219,6 +219,64 @@
       box-shadow: 0 18px 35px rgba(59, 130, 246, 0.26);
     }
 
+    .quick-login {
+      margin: 2px 0 26px;
+      padding-top: 22px;
+      border-top: 1px solid #e2e8f0;
+    }
+
+    .quick-login-title {
+      margin-bottom: 14px;
+      color: #475569;
+      font-size: 15px;
+      font-weight: 700;
+      text-align: left;
+    }
+
+    .quick-role-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .quick-role-button {
+      min-height: 54px;
+      padding: 12px 14px;
+      border: 1px solid #cbd5e1;
+      border-radius: 16px;
+      background: #f8fafc;
+      color: #172554;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      font-size: 15px;
+      font-weight: 700;
+      text-decoration: none;
+      transition: all 0.25s ease;
+    }
+
+    .quick-role-button:hover {
+      transform: translateY(-2px);
+      border-color: #3b82f6;
+      background: #eff6ff;
+      box-shadow: 0 14px 28px rgba(59, 130, 246, 0.14);
+    }
+
+    .quick-role-icon {
+      width: 30px;
+      height: 30px;
+      border-radius: 12px;
+      background: #dbeafe;
+      color: #1d4ed8;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex: 0 0 auto;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
     .footer {
       color: #64748b;
       font-size: 15px;
@@ -304,6 +362,10 @@
         justify-content: center;
         text-align: center;
       }
+
+      .quick-role-grid {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
@@ -341,6 +403,28 @@
 
       <button type="submit">Đăng nhập</button>
     </form>
+
+    <div class="quick-login" aria-label="Truy cap nhanh theo vai tro">
+      <div class="quick-login-title">Truy c&#7853;p nhanh theo vai tr&#242;</div>
+      <div class="quick-role-grid">
+        <a class="quick-role-button" href="quanli/dashboard.html">
+          <span class="quick-role-icon">QL</span>
+          <span>Qu&#7843;n l&#253;</span>
+        </a>
+        <a class="quick-role-button" href="bacsi/index.html">
+          <span class="quick-role-icon">BS</span>
+          <span>B&#225;c s&#297;</span>
+        </a>
+        <a class="quick-role-button" href="chuyengia/dashboard.html">
+          <span class="quick-role-icon">CG</span>
+          <span>Chuy&#234;n gia</span>
+        </a>
+        <a class="quick-role-button" href="khach/index.html">
+          <span class="quick-role-icon">KH</span>
+          <span>Kh&#225;ch</span>
+        </a>
+      </div>
+    </div>
 
     <div class="footer">
       Chưa có tài khoản? <a href="register.html">Đăng ký ngay</a>
