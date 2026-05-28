@@ -433,7 +433,7 @@ document.addEventListener("click", (event) => {
 });
 
 logoutButton.addEventListener("click", () => {
-  window.location.href = "../home.html";
+  window.location.href = "../index.html";
 });
 
 renderQuestion();

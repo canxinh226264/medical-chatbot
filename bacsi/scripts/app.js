@@ -541,7 +541,7 @@ function closeMobileMenu() {
 }
 
 document.getElementById("logoutBtn").addEventListener("click", () => {
-  if (confirm("Bạn có chắc chắn muốn đăng xuất?")) window.location.href = "../home.html";
+  if (confirm("Bạn có chắc chắn muốn đăng xuất?")) window.location.href = "../index.html";
 });
 
 document.getElementById("mobileMenuToggle").addEventListener("click", () => {
