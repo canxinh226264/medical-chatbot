@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Danh sách ca - Chuyên gia</title>
+  <title>Danh sách phản hồi - Chuyên gia UI/UX</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -15,14 +15,14 @@
         </div>
         <div>
           <h1>Docah</h1>
-          <p>Hệ thống chuyên gia</p>
+          <p>Hệ thống Chuyên gia UI/UX</p>
         </div>
       </div>
       <nav class="nav-menu">
         <a class="nav-link" href="dashboard.html"><span class="icon">🏠</span><span>Trang chủ</span></a>
-        <a class="nav-link active" href="cases.html"><span class="icon">📋</span><span>Danh sách ca</span></a>
-        <a class="nav-link" href="responses.html"><span class="icon">💬</span><span>Phản hồi</span></a>
-        <a class="nav-link" href="reports.html"><span class="icon">📊</span><span>Báo cáo</span></a>
+        <a class="nav-link active" href="cases.html"><span class="icon">📋</span><span>Phản hồi</span></a>
+        <a class="nav-link" href="responses.html"><span class="icon">💬</span><span>Đề xuất</span></a>
+        <a class="nav-link" href="reports.html"><span class="icon">📊</span><span>UX Analytics</span></a>
         <a class="nav-link" href="profile.html"><span class="icon">👤</span><span>Hồ sơ cá nhân</span></a>
       </nav>
     </aside>
@@ -30,15 +30,15 @@
     <main class="content">
       <div class="topbar">
         <div class="topbar-title">
-          <h2>Danh sách ca</h2>
-          <p>Tìm kiếm, lọc trạng thái và mở nhanh hồ sơ cần tư vấn.</p>
+          <h2>Danh sách phản hồi</h2>
+          <p>Tìm kiếm, lọc trạng thái và mở nhanh chi tiết phản hồi, vấn đề trải nghiệm.</p>
         </div>
         <div class="account-menu">
           <button class="account-button" id="accountToggle" type="button">
             <div class="dot">A</div>
             <div>
-              <div style="font-weight:700;">BS. Nguyễn Văn A</div>
-              <div style="font-size:0.9rem; color: var(--muted);">Chuyên gia</div>
+              <div style="font-weight:700;">Nguyễn Văn A</div>
+              <div style="font-size:0.9rem; color: var(--muted);">Chuyên gia UI/UX</div>
             </div>
           </button>
           <div class="dropdown" id="accountDropdown">
@@ -52,17 +52,17 @@
       </div>
 
       <section class="card filter">
-        <input id="searchInput" placeholder="Tìm theo tên bệnh nhân hoặc vấn đề...">
+        <input id="searchInput" placeholder="Tìm theo tên người dùng hoặc vấn đề trải nghiệm...">
         <select id="statusFilter">
           <option value="all">Tất cả trạng thái</option>
-          <option>Mới</option>
+          <option>Chưa đọc</option>
           <option>Đang xử lý</option>
-          <option>Đã phản hồi</option>
-          <option>Đã hoàn thành</option>
+          <option>Chờ phản hồi</option>
+          <option>Đã xử lý</option>
         </select>
       </section>
       <section class="card">
-        <h3>Danh sách ca</h3>
+        <h3>Danh sách phản hồi</h3>
         <div id="caseList"></div>
       </section>
     </main>

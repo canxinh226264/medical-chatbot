@@ -3,17 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Đăng nhập - Chuyên gia</title>
+  <title>Đăng nhập - Chuyên gia UI/UX</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+  <a class="skip-link" href="#main-content">Bỏ qua tới nội dung</a>
   <section class="login-page">
-    <form class="login-card" onsubmit="location.href='dashboard.html';return false;">
+    <form id="main-content" class="login-card" onsubmit="location.href='dashboard.html';return false;">
       <div class="login-logo">
         <img src="logo.png" alt="Docah logo">
       </div>
-      <h1>Hệ thống chuyên gia</h1>
-      <p>Đăng nhập để tiếp nhận, đánh giá và phản hồi các ca bệnh được chuyển tới.</p>
+      <h1>Hệ thống Chuyên gia UI/UX</h1>
+      <p>Đăng nhập để theo dõi phản hồi người dùng, đánh giá trải nghiệm và gửi đề xuất cải tiến giao diện.</p>
       <label for="email">Email</label>
       <input id="email" type="email" value="expert@hospital.vn" required>
       <label for="password">Mật khẩu</label>
@@ -30,10 +31,12 @@
       button.addEventListener('click', () => {
         const input = document.getElementById(button.dataset.togglePassword);
         if (!input) return;
-        const isHidden = input.type === 'password';
-        input.type = isHidden ? 'text' : 'password';
-        button.textContent = isHidden ? '🙈' : '👁';
-        button.setAttribute('aria-label', isHidden ? 'Ẩn mật khẩu' : 'Hiện mật khẩu');
+        // Toggle type
+        input.type = input.type === 'password' ? 'text' : 'password';
+        // Set accessible label describing the next action
+        const isHiddenNow = input.type === 'password';
+        button.textContent = isHiddenNow ? '👁' : '🙈';
+        button.setAttribute('aria-label', isHiddenNow ? 'Hiện mật khẩu' : 'Ẩn mật khẩu');
         input.focus();
       });
     });
