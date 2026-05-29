@@ -141,6 +141,33 @@
           </div>
         </div>
       </section>
+
+      <section class="card password-change-card" style="margin-top: 24px;">
+        <h3>Thay đổi mật khẩu</h3>
+        <p style="color: var(--muted); margin-bottom: 18px;">Cập nhật mật khẩu mới để bảo mật tài khoản hệ thống chuyên gia.</p>
+        <form id="passwordForm">
+          <div class="form-grid">
+            <label>
+              Mật khẩu hiện tại
+              <div class="password-field">
+                <input id="oldPassword" type="password" placeholder="Nhập mật khẩu hiện tại..." required>
+                <button class="password-toggle" type="button" onclick="togglePassInput('oldPassword')">👁️</button>
+              </div>
+            </label>
+            <label>
+              Mật khẩu mới
+              <div class="password-field">
+                <input id="newPassword" type="password" placeholder="Nhập mật khẩu mới..." required>
+                <button class="password-toggle" type="button" onclick="togglePassInput('newPassword')">👁️</button>
+              </div>
+            </label>
+          </div>
+          <div class="form-actions" style="margin-top: 20px; display: flex; justify-content: flex-end;">
+            <button class="primary compact-primary" type="submit" style="width: auto;">Cập nhật mật khẩu</button>
+          </div>
+          <p id="passwordSaved" class="success hidden" style="color: var(--success); margin-top: 10px; font-weight: 600;">Đã cập nhật mật khẩu thành công.</p>
+        </form>
+      </section>
     </main>
   </div>
   <script src="app.js"></script>

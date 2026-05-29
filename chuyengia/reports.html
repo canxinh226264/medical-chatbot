@@ -54,11 +54,10 @@
       <section class="card report-toolbar">
         <h3>Dashboard UX</h3>
         <select id="timeRange">
-          <option value="week">Tuần này</option>
-          <option value="month" selected>Tháng này</option>
-          <option value="custom">Tùy chỉnh</option>
+          <option value="week" selected>Tuần này</option>
+          <option value="month">Tháng này</option>
         </select>
-        <button id="toggleAnalyticsDetails" class="secondary compact-button" type="button">Chi tiết</button>
+        <button id="toggleAnalyticsDetails" class="secondary compact-button" type="button" aria-expanded="false" aria-controls="analyticsDetails">Chi tiết</button>
         <button id="exportPdf" type="button">Xuất PDF</button>
       </section>
       <div class="stats">
@@ -76,7 +75,7 @@
         </div>
       </div>
 
-      <section class="card analytics-chart-card">
+      <section id="analyticsChart" class="card analytics-chart-card">
         <h3>Số phản hồi theo thời gian</h3>
         <div id="barChart" class="bar-chart">
           <!-- Bars will be rendered by JS -->

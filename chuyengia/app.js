@@ -2,6 +2,7 @@ const cases = [
   {
     id: 1,
     patientName: "Nguyễn Thị B",
+    role: "Bệnh nhân",
     issue: "Nút 'Gửi' không phản hồi trên trang mobile",
     channel: "Mobile Web",
     date: "29/04/2026",
@@ -15,6 +16,7 @@ const cases = [
   {
     id: 2,
     patientName: "Phạm Văn D",
+    role: "Bác sĩ",
     issue: "Luồng hội thoại bị lặp và gây nhầm lẫn",
     channel: "Chatbot (Web)",
     date: "28/04/2026",
@@ -27,6 +29,7 @@ const cases = [
   {
     id: 3,
     patientName: "Trần Văn F",
+    role: "Nhân viên y tế",
     issue: "Thanh điều hướng che nội dung chính trên tablet",
     channel: "Tablet App",
     date: "28/04/2026",
@@ -39,6 +42,7 @@ const cases = [
   {
     id: 4,
     patientName: "Lý Văn H",
+    role: "Bệnh nhân",
     issue: "Thông báo lỗi không rõ ràng",
     channel: "Web",
     date: "27/04/2026",
@@ -51,6 +55,7 @@ const cases = [
   {
     id: 5,
     patientName: "Bùi Thị K",
+    role: "Bệnh nhân",
     issue: "Người dùng rời giữa chừng khi yêu cầu nhập thông tin",
     channel: "Mobile Web",
     date: "27/04/2026",
@@ -63,6 +68,7 @@ const cases = [
   {
     id: 6,
     patientName: "Võ Văn M",
+    role: "Bác sĩ",
     issue: "Hình ảnh hướng dẫn mờ, khó đọc",
     channel: "Web",
     date: "26/04/2026",
@@ -75,6 +81,7 @@ const cases = [
   {
     id: 7,
     patientName: "Đặng Thị N",
+    role: "Bác sĩ",
     issue: "Không nhận diện được nút Quay lại trên mobile",
     channel: "Mobile Web",
     date: "25/04/2026",
@@ -88,6 +95,7 @@ const cases = [
   {
     id: 8,
     patientName: "Nguyễn Văn L",
+    role: "Nhân viên y tế",
     issue: "Thông báo lỗi khi submit form không rõ ràng",
     channel: "Web",
     date: "24/04/2026",
@@ -100,6 +108,7 @@ const cases = [
   {
     id: 9,
     patientName: "Phan Thị H",
+    role: "Bệnh nhân",
     issue: "Chuyển trang quá chậm trên tablet",
     channel: "Tablet App",
     date: "23/04/2026",
@@ -112,6 +121,7 @@ const cases = [
   {
     id: 10,
     patientName: "Lê Văn T",
+    role: "Bệnh nhân",
     issue: "Màu chữ xám quá mờ trên nền",
     channel: "Web",
     date: "22/04/2026",
@@ -227,7 +237,7 @@ function caseRow(c) {
   return `
     <div class="row">
       <div>
-        <h4>${c.patientName}</h4>
+        <h4>${c.patientName} <span class="badge blue" style="font-size: 0.75rem; padding: 3px 8px; margin-left: 8px;">${c.role || "Bệnh nhân"}</span></h4>
         <p>${c.issue}</p>
         <small>Nguồn: ${c.channel} • ${c.date}</small>
       </div>
@@ -298,7 +308,7 @@ function renderDetail() {
   box.innerHTML = `
     <section class="card detail-head">
       <div>
-        <h2>${c.patientName}</h2>
+        <h2>${c.patientName} <span class="badge blue" style="font-size: 0.85rem; padding: 4px 10px; margin-left: 10px; vertical-align: middle;">Vai trò: ${c.role || "Bệnh nhân"}</span></h2>
         <p>${c.issue}</p>
       </div>
       <span class="${badgeClass(c.status)}">${c.status}</span>
@@ -312,6 +322,7 @@ function renderDetail() {
           <button class="secondary outline" id="toggleInfo" type="button">Xem thêm</button>
         </div>
         <div class="info-grid hidden" id="moreInfo">
+          ${info("Vai trò người dùng", c.role || "Bệnh nhân")}
           ${info("Kênh", c.channel)}
           ${info("Ngày gửi", c.date)}
           ${info("SĐT", c.phone)}
@@ -447,25 +458,85 @@ function renderResponses() {
   const el = document.querySelector("#responseList");
   if (!el) return;
 
-  el.innerHTML = responses.map((r) => {
-    const disp = normalizeStatus(r.status);
-    return `
-    <div class="response">
-      <div class="response-top">
-        <div>
-          <h4>${r.patientName}</h4>
-          <p>Nguồn: ${r.channel} • ${r.date}</p>
-        </div>
-        <span class="${badgeClass(disp)}">${disp}</span>
-        <button type="button" onclick="toggleResponse(${r.id})">Xem chi tiết</button>
-      </div>
-      <p id="response-${r.id}" class="response-content hidden">${r.content}</p>
-    </div>
-  `}).join("");
+  const q = document.querySelector("#searchInput");
+  const st = document.querySelector("#statusFilter");
+  const ch = document.querySelector("#channelFilter");
+
+  function draw() {
+    const search = q ? q.value.toLowerCase() : "";
+    const status = st ? st.value : "all";
+    const channel = ch ? ch.value : "all";
+
+    const filtered = responses.filter((r) => {
+      const dispStatus = normalizeStatus(r.status);
+      const text = `${r.patientName} ${r.content} ${r.channel}`.toLowerCase();
+      
+      const matchSearch = text.includes(search);
+      const matchStatus = status === "all" || dispStatus === status;
+      const matchChannel = channel === "all" || r.channel === channel;
+
+      return matchSearch && matchStatus && matchChannel;
+    });
+
+    el.innerHTML = filtered.length
+      ? filtered.map((r) => {
+          const disp = normalizeStatus(r.status);
+          return `
+          <div class="response">
+            <div class="response-top">
+              <div>
+                <h4>${r.patientName}</h4>
+                <p>Nguồn: ${r.channel} • ${r.date}</p>
+              </div>
+              <div class="response-actions">
+                <select class="${badgeClass(disp)} suggestions-status-select" onchange="changeResponseStatus(this, ${r.id})">
+                  <option value="Chưa đọc" ${disp === "Chưa đọc" ? "selected" : ""}>Chưa đọc</option>
+                  <option value="Đang xử lý" ${disp === "Đang xử lý" ? "selected" : ""}>Đang xử lý</option>
+                  <option value="Chờ phản hồi" ${disp === "Chờ phản hồi" ? "selected" : ""}>Chờ phản hồi</option>
+                  <option value="Đã xử lý" ${disp === "Đã xử lý" ? "selected" : ""}>Đã xử lý</option>
+                </select>
+                <button type="button" onclick="toggleResponse(${r.id})">Xem chi tiết</button>
+              </div>
+            </div>
+            <p id="response-${r.id}" class="response-content hidden">${r.content}</p>
+          </div>
+          `;
+        }).join("")
+      : '<p class="empty">Không có đề xuất phù hợp.</p>';
+  }
+
+  if (q) q.addEventListener("input", draw);
+  if (st) st.addEventListener("change", draw);
+  if (ch) ch.addEventListener("change", draw);
+  
+  draw();
 }
 
 function toggleResponse(id) {
   document.querySelector(`#response-${id}`).classList.toggle("hidden");
+}
+
+function changeResponseStatus(selectEl, id) {
+  const newStatus = selectEl.value;
+  const r = responses.find((x) => x.id === id);
+  if (r) {
+    r.status = newStatus;
+    localStorage.setItem("uxResponses", JSON.stringify(responses));
+    
+    // Update select element class dynamically
+    selectEl.className = badgeClass(newStatus) + " suggestions-status-select";
+
+    // Synchronize with cases if there is a matching case
+    const matchingCase = cases.find((c) => c.patientName === r.patientName && c.channel === r.channel);
+    if (matchingCase) {
+      matchingCase.status = newStatus;
+      saveCaseStatus(matchingCase.id, newStatus);
+    }
+    
+    if (window.showToast) {
+      showToast("Đã cập nhật trạng thái", `Đề xuất của ${r.patientName} đã chuyển sang "${newStatus}".`);
+    }
+  }
 }
 
 function showCaseAttachmentName(input) {
@@ -563,11 +634,15 @@ function setupAnalytics() {
   if (!sel) return;
   const detailButton = document.querySelector('#toggleAnalyticsDetails');
   const details = document.querySelector('#analyticsDetails');
+  const chart = document.querySelector('#analyticsChart');
 
-  if (detailButton && details) {
+  if (detailButton && details && chart) {
     detailButton.addEventListener('click', () => {
-      const isOpen = !details.classList.toggle('hidden');
-      detailButton.textContent = isOpen ? 'Ẩn chi tiết' : 'Chi tiết';
+      const showDetails = details.classList.contains('hidden');
+      details.classList.toggle('hidden', !showDetails);
+      chart.classList.toggle('hidden', showDetails);
+      detailButton.textContent = showDetails ? 'Biểu đồ' : 'Chi tiết';
+      detailButton.setAttribute('aria-expanded', String(showDetails));
     });
   }
 
@@ -575,7 +650,7 @@ function setupAnalytics() {
     renderAnalytics(e.target.value);
   });
   // initial render
-  renderAnalytics(sel.value || 'month');
+  renderAnalytics(sel.value || 'week');
 }
 
 function setupAccountMenu() {
@@ -647,6 +722,37 @@ function setupProfileForm() {
   });
 }
 
+function togglePassInput(id) {
+  const el = document.getElementById(id);
+  if (el) el.type = el.type === "password" ? "text" : "password";
+}
+
+function setupPasswordForm() {
+  const form = document.querySelector("#passwordForm");
+  const success = document.querySelector("#passwordSaved");
+  if (!form) return;
+
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const oldPass = document.querySelector("#oldPassword");
+    const newPass = document.querySelector("#newPassword");
+    
+    if (oldPass && newPass) {
+      oldPass.value = "";
+      newPass.value = "";
+      
+      if (success) {
+        success.classList.remove("hidden");
+        setTimeout(() => success.classList.add("hidden"), 3000);
+      }
+      
+      if (window.showToast) {
+        showToast("Đã cập nhật mật khẩu", "Mật khẩu mới của bạn đã được lưu thành công.");
+      }
+    }
+  });
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   renderDashboard();
   renderCaseList();
@@ -656,4 +762,5 @@ document.addEventListener("DOMContentLoaded", () => {
   setupReport();
   setupAccountMenu();
   setupProfileForm();
+  setupPasswordForm();
 });

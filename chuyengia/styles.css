@@ -641,6 +641,12 @@ main.content {
   gap: 14px;
 }
 
+.filter-three {
+  display: grid;
+  grid-template-columns: 1fr 200px 200px;
+  gap: 14px;
+}
+
 input,
 select,
 textarea {
@@ -1316,6 +1322,7 @@ th {
   .chart-grid,
   .detail-grid,
   .filter,
+  .filter-three,
   .form-grid {
     grid-template-columns: 1fr;
   }
@@ -1349,4 +1356,99 @@ th {
     align-items: flex-start;
     flex-wrap: wrap;
   }
+}
+
+select.suggestions-status-select {
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  padding-right: 28px !important;
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23cbd5e1' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: right 10px center !important;
+  border-radius: 999px !important;
+  width: auto !important;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+select.suggestions-status-select:hover {
+  border-color: rgba(255, 255, 255, 0.25);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+select.suggestions-status-select:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
+}
+
+select.suggestions-status-select option {
+  background-color: #0f172a;
+  color: var(--text);
+  font-weight: normal;
+}
+
+.response-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.response-actions select.suggestions-status-select,
+.response-actions button {
+  height: 38px !important;
+  box-sizing: border-box !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin: 0 !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+.response-actions button {
+  padding-left: 16px !important;
+  padding-right: 16px !important;
+  font-size: 13px !important;
+  border-radius: 999px !important;
+}
+
+.filter select,
+.filter-three select {
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  padding-right: 36px !important;
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%239aa8bd' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: right 14px center !important;
+  border: 1px solid rgba(148, 163, 184, 0.16);
+  border-radius: 16px;
+  background-color: rgba(15, 23, 42, 0.72) !important;
+  color: var(--text);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.filter select:hover,
+.filter-three select:hover {
+  border-color: rgba(59, 130, 246, 0.4) !important;
+  background-color: rgba(30, 41, 59, 0.9) !important;
+}
+
+.filter select:focus,
+.filter-three select:focus {
+  border-color: var(--accent) !important;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2) !important;
+}
+
+.filter select option,
+.filter-three select option {
+  background-color: #0f172a;
+  color: var(--text);
 }
