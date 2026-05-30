@@ -29,8 +29,7 @@ const cases = [
   {
     id: 3,
     patientName: "Trần Văn F",
-    role: "Nhân viên y tế",
-    issue: "Thanh điều hướng che nội dung chính trên tablet",
+    role: "Bệnh nhân",
     channel: "Tablet App",
     date: "28/04/2026",
     status: "Chưa đọc",
@@ -95,8 +94,7 @@ const cases = [
   {
     id: 8,
     patientName: "Nguyễn Văn L",
-    role: "Nhân viên y tế",
-    issue: "Thông báo lỗi khi submit form không rõ ràng",
+    role: "Chủ phòng khám",
     channel: "Web",
     date: "24/04/2026",
     status: "Đã xử lý",
@@ -235,7 +233,7 @@ function normalizeStatus(s) {
 
 function caseRow(c) {
   return `
-    <div class="row">
+    <div class="row" id="case-row-${c.id}">
       <div>
         <h4>${c.patientName} <span class="badge blue" style="font-size: 0.75rem; padding: 3px 8px; margin-left: 8px;">${c.role || "Bệnh nhân"}</span></h4>
         <p>${c.issue}</p>
@@ -244,6 +242,7 @@ function caseRow(c) {
       <div>
         <span class="${badgeClass(c.status)}">${c.status}</span>
         <a class="btn" href="case-detail.html?id=${c.id}">Xem chi tiết</a>
+        <button class="delete-btn" type="button" onclick="deleteCase(${c.id})" title="Xóa phản hồi">🗑</button>
       </div>
     </div>
   `;
@@ -308,10 +307,10 @@ function renderDetail() {
   box.innerHTML = `
     <section class="card detail-head">
       <div>
-        <h2>${c.patientName} <span class="badge blue" style="font-size: 0.85rem; padding: 4px 10px; margin-left: 10px; vertical-align: middle;">Vai trò: ${c.role || "Bệnh nhân"}</span></h2>
+        <h2>${c.patientName} <span class="badge purple" style="font-size: 0.85rem; padding: 4px 10px; margin-left: 10px; vertical-align: middle;">${c.role || "Bệnh nhân"}</span></h2>
         <p>${c.issue}</p>
       </div>
-      <span class="${badgeClass(c.status)}">${c.status}</span>
+      <span id="statusBadge" class="${badgeClass(c.status)}">${c.status}</span>
     </section>
     <div class="detail-grid">
       <section class="card detail-left">
@@ -331,7 +330,7 @@ function renderDetail() {
           ${info("Thời lượng hội thoại", c.duration)}
         </div>
       </section>
-      <section class="card detail-right">
+      <section class="card detail-right ${showStep2 ? "step2-active" : ""}">
         <div id="step1" class="step-box ${showStep2 ? "hidden" : ""}">
           <h3>Bước 1: Tiếp nhận ca</h3>
           <p class="form-note">Giao diện chỉ hiện thông tin phản hồi của user và nút Bắt đầu xử lý. Nhấn nút để xác nhận tiếp nhận ca.</p>
@@ -339,7 +338,7 @@ function renderDetail() {
         </div>
         <div id="step2" class="step-box ${showStep2 ? "" : "hidden"}">
           <h3>Bước 2: Đưa ra giải pháp</h3>
-          <p class="form-note">Form đề xuất cải tiến sẽ mở sau khi bạn bắt đầu xử lý.</p>
+          <p class="form-note">Mô tả vấn đề UI/UX, đề xuất cách cải thiện hoặc hành động cần thực hiện.</p>
           <textarea id="note" placeholder="Nhập đề xuất UI/UX, mô tả cách tái thiết kế hoặc hành động cần thực hiện..."></textarea>
           <label class="attach-button detail-attach" for="caseAttachment">📎 Đính kèm ảnh/ghi âm</label>
           <input class="file-input" id="caseAttachment" type="file" onchange="showCaseAttachmentName(this)">
@@ -354,7 +353,7 @@ function renderDetail() {
     </div>
   `;
 
-  const statusSpan = box.querySelector(".badge");
+  const statusSpan = box.querySelector("#statusBadge");
   const startButton = box.querySelector("#startProcessing");
   const step1 = box.querySelector("#step1");
   const step2 = box.querySelector("#step2");
@@ -364,12 +363,10 @@ function renderDetail() {
     startButton.addEventListener("click", () => {
       c.status = "Đang xử lý";
       saveCaseStatus(c.id, c.status);
-      if (statusSpan) {
-        statusSpan.textContent = c.status;
-        statusSpan.className = badgeClass(c.status);
-      }
+      if (statusSpan) { statusSpan.textContent = c.status; statusSpan.className = badgeClass(c.status); }
       if (step1) step1.classList.add("hidden");
       if (step2) step2.classList.remove("hidden");
+      box.querySelector(".detail-right").classList.add("step2-active");
       if (window.showToast) {
         showToast("Đã bắt đầu xử lý", "Bạn có thể tiếp tục với form đề xuất.");
       }
@@ -381,12 +378,10 @@ function renderDetail() {
     cancelButton.addEventListener("click", () => {
       c.status = "Đã đọc";
       saveCaseStatus(c.id, c.status);
-      if (statusSpan) {
-        statusSpan.textContent = c.status;
-        statusSpan.className = badgeClass(c.status);
-      }
+      if (statusSpan) { statusSpan.textContent = c.status; statusSpan.className = badgeClass(c.status); }
       if (step2) step2.classList.add("hidden");
       if (step1) step1.classList.remove("hidden");
+      box.querySelector(".detail-right").classList.remove("step2-active");
       if (window.showToast) {
         showToast("Đã hủy tiếp nhận", "Ca phản hồi đã trở về trạng thái Đã đọc.");
       }
@@ -402,56 +397,35 @@ function renderDetail() {
     });
   }
 
-  document.querySelector("#sendResponse").addEventListener("click", () => {
+  document.querySelector("#sendResponse").onclick = () => {
     const note = document.querySelector("#note");
     const attachmentInput = document.querySelector("#caseAttachment");
     const attachmentName = document.querySelector("#caseAttachmentName");
     const success = document.querySelector("#successMsg");
-    const statusSpan = box.querySelector(".badge");
+    const statusSpan = box.querySelector("#statusBadge");
     const message = note.value.trim();
 
     if (!message) {
-      if (window.showToast) {
-        showToast("Vui lòng nhập đề xuất", "Mô tả đề xuất không được để trống.");
-      }
+      note.style.borderColor = "rgba(239,68,68,0.7)";
+      note.focus();
+      note.addEventListener("input", () => { note.style.borderColor = ""; }, { once: true });
+      if (window.showToast) showToast("Vui lòng nhập đề xuất", "Mô tả đề xuất không được để trống.");
       return;
     }
 
     const newId = responses.length ? Math.max(...responses.map((r) => r.id)) + 1 : 1;
-    const newResponse = {
-      id: newId,
-      patientName: c.patientName,
-      channel: c.channel,
-      date: new Date().toLocaleDateString("vi-VN"),
-      status: "Đã xử lý",
-      content: message
-    };
-
-    responses.push(newResponse);
+    responses.push({ id: newId, patientName: c.patientName, channel: c.channel, date: new Date().toLocaleDateString("vi-VN"), status: "Đã xử lý", content: message });
     localStorage.setItem("uxResponses", JSON.stringify(responses));
 
     c.status = "Đã xử lý";
     saveCaseStatus(c.id, c.status);
-
-    if (statusSpan) {
-      statusSpan.textContent = c.status;
-      statusSpan.className = badgeClass(c.status);
-    }
-    if (step1) step1.classList.add("hidden");
-
+    if (statusSpan) { statusSpan.textContent = c.status; statusSpan.className = badgeClass(c.status); }
     success.classList.remove("hidden");
     note.value = "";
-    if (attachmentInput) {
-      attachmentInput.value = "";
-    }
-    if (attachmentName) {
-      attachmentName.classList.add("hidden");
-    }
-
-    if (window.showToast) {
-      showToast("Đã lưu đề xuất", "Đề xuất của bạn đã được thêm vào Lịch sử đề xuất.");
-    }
-  });
+    if (attachmentInput) attachmentInput.value = "";
+    if (attachmentName) attachmentName.classList.add("hidden");
+    if (window.showToast) showToast("Đã lưu đề xuất", "Đề xuất của bạn đã được thêm vào Lịch sử đề xuất.");
+  };
 }
 
 function renderResponses() {
@@ -510,6 +484,15 @@ function renderResponses() {
   if (ch) ch.addEventListener("change", draw);
   
   draw();
+}
+
+function deleteCase(id) {
+  const idx = cases.findIndex(c => c.id === id);
+  if (idx === -1) return;
+  cases.splice(idx, 1);
+  const row = document.querySelector(`#case-row-${id}`);
+  if (row) row.remove();
+  if (window.showToast) showToast("Đã xóa phản hồi", "Phản hồi đã được xóa khỏi danh sách.");
 }
 
 function toggleResponse(id) {

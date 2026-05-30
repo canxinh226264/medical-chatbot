@@ -731,6 +731,26 @@ textarea {
   white-space: nowrap;
 }
 
+.delete-btn {
+  background: none;
+  border: none;
+  padding: 6px 8px;
+  font-size: 16px;
+  color: rgba(239, 68, 68, 0.4);
+  border-radius: 8px;
+  transition: color 0.2s ease;
+}
+.delete-btn:hover {
+  color: rgba(239, 68, 68, 1);
+  background: rgba(239, 68, 68, 0.08);
+  transform: none;
+}
+
+.row > div:last-child .badge {
+  padding: 11px 15px;
+  font-size: 13px;
+}
+
 .badge {
   display: inline-flex;
   align-items: center;
@@ -759,6 +779,12 @@ textarea {
   border-color: rgba(34, 197, 94, 0.24);
 }
 
+.purple {
+  background: rgba(139, 92, 246, 0.18);
+  color: #ddd6fe;
+  border-color: rgba(139, 92, 246, 0.28);
+}
+
 .back {
   width: fit-content;
   color: #bfdbfe;
@@ -775,15 +801,23 @@ textarea {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 32px;
-  align-items: start;
+  align-items: stretch;
 }
 
-.detail-left,
-.detail-right {
+.detail-left {
   display: flex;
   flex-direction: column;
   gap: 24px;
   min-height: 0;
+}
+
+.detail-right {
+  align-self: flex-start;
+}
+
+.detail-right.step2-active {
+  align-self: stretch;
+}
 }
 
 .detail-left {
@@ -875,6 +909,7 @@ textarea {
 .step-box {
   display: flex;
   flex-direction: column;
+  align-self: flex-start;
 }
 
 .step-box h3,
@@ -1370,8 +1405,9 @@ select.suggestions-status-select {
   border-radius: 999px !important;
   width: auto !important;
   font-family: inherit;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 700;
+  text-align: center;
   border: 1px solid rgba(255, 255, 255, 0.1);
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
@@ -1401,20 +1437,16 @@ select.suggestions-status-select option {
 
 .response-actions select.suggestions-status-select,
 .response-actions button {
-  height: 38px !important;
   box-sizing: border-box !important;
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
   margin: 0 !important;
-  padding-top: 0 !important;
-  padding-bottom: 0 !important;
+  padding: 8px 18px !important;
 }
 
 .response-actions button {
-  padding-left: 16px !important;
-  padding-right: 16px !important;
-  font-size: 13px !important;
+  font-size: 14px !important;
   border-radius: 999px !important;
 }
 
