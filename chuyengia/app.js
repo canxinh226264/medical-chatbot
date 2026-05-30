@@ -259,13 +259,15 @@ function renderCaseList() {
 
   const q = document.querySelector("#searchInput");
   const st = document.querySelector("#statusFilter");
+  const rl = document.querySelector("#roleFilter");
 
   function draw() {
     const search = q.value.toLowerCase();
     const status = st.value;
+    const role = rl.value;
     const filtered = cases.filter((c) => {
       const text = `${c.patientName} ${c.issue}`.toLowerCase();
-      return text.includes(search) && (status === "all" || c.status === status);
+      return text.includes(search) && (status === "all" || c.status === status) && (role === "all" || c.role === role);
     });
 
     list.innerHTML = filtered.length
@@ -275,6 +277,7 @@ function renderCaseList() {
 
   q.addEventListener("input", draw);
   st.addEventListener("change", draw);
+  if (rl) rl.addEventListener("change", draw);
   draw();
 }
 
@@ -414,16 +417,13 @@ function renderDetail() {
     }
 
     const newId = responses.length ? Math.max(...responses.map((r) => r.id)) + 1 : 1;
-    responses.push({ id: newId, patientName: c.patientName, channel: c.channel, date: new Date().toLocaleDateString("vi-VN"), status: "Đã xử lý", content: message });
+    responses.push({ id: newId, patientName: c.patientName, channel: c.channel, date: new Date().toLocaleDateString("vi-VN"), status: "Đang xử lý", content: message });
     localStorage.setItem("uxResponses", JSON.stringify(responses));
 
-    c.status = "Đã xử lý";
-    saveCaseStatus(c.id, c.status);
-    if (statusSpan) { statusSpan.textContent = c.status; statusSpan.className = badgeClass(c.status); }
-    success.classList.remove("hidden");
     note.value = "";
     if (attachmentInput) attachmentInput.value = "";
     if (attachmentName) attachmentName.classList.add("hidden");
+    if (success) success.classList.remove("hidden");
     if (window.showToast) showToast("Đã lưu đề xuất", "Đề xuất của bạn đã được thêm vào Lịch sử đề xuất.");
   };
 }
@@ -464,9 +464,7 @@ function renderResponses() {
               </div>
               <div class="response-actions">
                 <select class="${badgeClass(disp)} suggestions-status-select" onchange="changeResponseStatus(this, ${r.id})">
-                  <option value="Chưa đọc" ${disp === "Chưa đọc" ? "selected" : ""}>Chưa đọc</option>
                   <option value="Đang xử lý" ${disp === "Đang xử lý" ? "selected" : ""}>Đang xử lý</option>
-                  <option value="Chờ phản hồi" ${disp === "Chờ phản hồi" ? "selected" : ""}>Chờ phản hồi</option>
                   <option value="Đã xử lý" ${disp === "Đã xử lý" ? "selected" : ""}>Đã xử lý</option>
                 </select>
                 <button type="button" onclick="toggleResponse(${r.id})">Xem chi tiết</button>
@@ -505,17 +503,17 @@ function changeResponseStatus(selectEl, id) {
   if (r) {
     r.status = newStatus;
     localStorage.setItem("uxResponses", JSON.stringify(responses));
-    
+
     // Update select element class dynamically
     selectEl.className = badgeClass(newStatus) + " suggestions-status-select";
 
-    // Synchronize with cases if there is a matching case
+    // Synchronize with cases when status changes
     const matchingCase = cases.find((c) => c.patientName === r.patientName && c.channel === r.channel);
     if (matchingCase) {
       matchingCase.status = newStatus;
       saveCaseStatus(matchingCase.id, newStatus);
     }
-    
+
     if (window.showToast) {
       showToast("Đã cập nhật trạng thái", `Đề xuất của ${r.patientName} đã chuyển sang "${newStatus}".`);
     }
@@ -707,7 +705,22 @@ function setupProfileForm() {
 
 function togglePassInput(id) {
   const el = document.getElementById(id);
-  if (el) el.type = el.type === "password" ? "text" : "password";
+  if (!el) return;
+  el.type = el.type === "password" ? "text" : "password";
+
+  const btn = el.parentElement.querySelector(".password-toggle");
+  if (!btn) return;
+  const isText = el.type === "text";
+
+  if (id === "oldPassword") {
+    btn.innerHTML = isText
+      ? `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>`
+      : `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>`;
+  } else {
+    btn.innerHTML = isText
+      ? `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>`
+      : `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>`;
+  }
 }
 
 function setupPasswordForm() {
