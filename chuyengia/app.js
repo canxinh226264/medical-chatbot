@@ -485,6 +485,7 @@ function renderResponses() {
 }
 
 function deleteCase(id) {
+  if (!confirm("Bạn có chắc muốn xóa phản hồi này không?")) return;
   const idx = cases.findIndex(c => c.id === id);
   if (idx === -1) return;
   cases.splice(idx, 1);
