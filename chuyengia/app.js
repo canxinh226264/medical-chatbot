@@ -182,6 +182,8 @@ const baseResponses = [
   }
 ];
 
+
+
 const storedResponses = (() => {
   try {
     const parsed = JSON.parse(localStorage.getItem("uxResponses"));
@@ -628,11 +630,32 @@ function changeResponseStatus(event, optionButton, id) {
       });
     }
 
-    // Synchronize with cases when status changes
+    // Synchronize with cases: only mark "Đã xử lý" when ALL related responses are done
     const matchingCase = cases.find((c) => c.patientName === r.patientName && c.channel === r.channel);
     if (matchingCase) {
-      matchingCase.status = newStatus;
-      saveCaseStatus(matchingCase.id, newStatus);
+      const relatedResponses = responses.filter(
+        (x) => x.patientName === matchingCase.patientName && x.channel === matchingCase.channel
+      );
+      const allDone = relatedResponses.every((x) => normalizeStatus(x.status) === "Đã xử lý");
+      const anyProcessing = relatedResponses.some((x) => normalizeStatus(x.status) === "Đang xử lý");
+
+      let caseStatus;
+      if (allDone) {
+        caseStatus = "Đã xử lý";
+      } else if (anyProcessing || relatedResponses.some((x) => normalizeStatus(x.status) !== "Đã xử lý")) {
+        caseStatus = "Đang xử lý";
+      } else {
+        caseStatus = newStatus;
+      }
+
+      matchingCase.status = caseStatus;
+      saveCaseStatus(matchingCase.id, caseStatus);
+
+      const statusBadge = document.querySelector("#statusBadge");
+      if (statusBadge) {
+        statusBadge.textContent = caseStatus;
+        statusBadge.className = badgeClass(caseStatus);
+      }
     }
 
     if (window.showToast) {
