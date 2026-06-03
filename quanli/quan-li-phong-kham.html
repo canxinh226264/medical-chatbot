@@ -246,7 +246,7 @@
   <link rel="stylesheet" href="../shared-theme.css">
   <link rel="stylesheet" href="manager-visibility.css">
 </head>
-<body>
+<body class="manager-crud-page manager-clinic-page">
   <div class="page">
     <aside class="sidebar">
       <div class="brand">
@@ -320,7 +320,7 @@
         </div>
         <button class="add-button" id="addClinicBtn">Thêm cơ sở</button>
       </div>
-      <div class="card-summary">Hiện có 3 cơ sở phòng khám</div>
+      <div class="card-summary" id="clinicSummary">Hiện có 3 cơ sở phòng khám</div>
 
       <div class="clinic-grid" id="clinicGrid">
         <article class="clinic-card" data-id="1">
@@ -434,6 +434,7 @@
     const modalClose = document.getElementById('modalClose');
     const clinicGrid = document.getElementById('clinicGrid');
     const addClinicBtn = document.getElementById('addClinicBtn');
+    const clinicSummary = document.getElementById('clinicSummary');
 
     accountToggle.addEventListener('click', () => {
       accountDropdown.classList.toggle('show');
@@ -524,14 +525,87 @@
       `;
     }
 
+    function escapeHtml(value) {
+      return String(value ?? '')
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#039;');
+    }
+
+    function getClinicLocation(address) {
+      const parts = String(address || '').split(',').map(part => part.trim()).filter(Boolean);
+      return parts.length > 1 ? parts[parts.length - 1] : (parts[0] || 'Chưa cập nhật');
+    }
+
+    function renderClinicGrid() {
+      clinicSummary.textContent = `Hiện có ${clinicData.length} cơ sở phòng khám`;
+      clinicGrid.innerHTML = clinicData.length ? clinicData.map(clinic => {
+        const isActive = clinic.status === 'Đang hoạt động';
+        return `
+          <article class="clinic-card" data-id="${clinic.id}">
+            <div>
+              <h3>${escapeHtml(clinic.name)}</h3>
+              <div class="clinic-meta">
+                <span>${escapeHtml(getClinicLocation(clinic.address))}</span>
+                <span class="status-pill ${isActive ? 'status-active' : 'status-inactive'}">${escapeHtml(clinic.status)}</span>
+              </div>
+            </div>
+            <div class="clinic-meta">
+              <span>Địa chỉ: ${escapeHtml(clinic.address)}</span>
+              <span>Giờ mở: ${escapeHtml(clinic.workTime || 'Chưa cập nhật')}</span>
+            </div>
+            <div class="clinic-actions">
+              <button class="button btn-detail" data-action="detail">Chi tiết</button>
+              <button class="button btn-edit" data-action="edit">Chỉnh sửa</button>
+              <button class="button btn-delete" data-action="delete">Xóa</button>
+            </div>
+          </article>
+        `;
+      }).join('') : '<p class="card-summary">Chưa có cơ sở phòng khám nào. Bấm "Thêm cơ sở" để tạo mới.</p>';
+    }
+
+    function readClinicForm(clinic, isNew) {
+      return {
+        id: isNew ? Date.now() : clinic.id,
+        name: document.getElementById('clinicName').value.trim(),
+        address: document.getElementById('clinicAddress').value.trim(),
+        status: document.getElementById('clinicStatus').value,
+        workTime: document.getElementById('clinicWorkTime').value.trim(),
+        shift: document.getElementById('clinicShift').value.trim(),
+        schedule: document.getElementById('clinicSchedule').value.trim()
+      };
+    }
+
     function showDetailModal(clinic) {
-      modalTitle.textContent = `Chi tiết ${clinic.name}`;
+      modalTitle.textContent = 'Chi tiết cơ sở';
       modalBody.innerHTML = `
-        ${createField('Địa chỉ', clinic.address)}
-        ${createField('Trạng thái', clinic.status)}
-        ${createField('Giờ làm việc', clinic.workTime)}
-        ${createField('Ca trực', clinic.shift)}
-        ${createField('Lịch làm việc', clinic.schedule)}
+        <div class="crud-detail-hero">
+          <div class="crud-detail-mark">CS</div>
+          <div>
+            <h4>${escapeHtml(clinic.name)}</h4>
+            <span class="crud-pill ${clinic.status === 'Đang hoạt động' ? 'is-active' : 'is-paused'}">${escapeHtml(clinic.status)}</span>
+          </div>
+        </div>
+        <div class="crud-detail-grid">
+          <div class="crud-detail-item full">
+            <small>Địa chỉ</small>
+            <strong>${escapeHtml(clinic.address)}</strong>
+          </div>
+          <div class="crud-detail-item">
+            <small>Giờ làm việc</small>
+            <strong>${escapeHtml(clinic.workTime || 'Chưa cập nhật')}</strong>
+          </div>
+          <div class="crud-detail-item">
+            <small>Ca trực</small>
+            <strong>${escapeHtml(clinic.shift || 'Chưa cập nhật')}</strong>
+          </div>
+          <div class="crud-detail-item full">
+            <small>Lịch làm việc</small>
+            <strong>${escapeHtml(clinic.schedule || 'Chưa cập nhật')}</strong>
+          </div>
+        </div>
       `;
       modalFooter.innerHTML = `<button class="button btn-secondary" type="button" id="closeDetailBtn">Đóng</button>`;
       document.getElementById('closeDetailBtn').addEventListener('click', closeModal);
@@ -541,17 +615,35 @@
     function showEditModal(clinic, isNew = false) {
       modalTitle.textContent = isNew ? 'Thêm cơ sở mới' : `Chỉnh sửa ${clinic.name}`;
       modalBody.innerHTML = `
-        <div class="field"><label>Tên cơ sở</label><input type="text" id="clinicName" value="${clinic.name}" /></div>
-        <div class="field"><label>Địa chỉ</label><textarea id="clinicAddress">${clinic.address}</textarea></div>
-        <div class="field"><label>Trạng thái</label>
-          ${createPopupSelect('clinicStatus', [
-            { value: 'Đang hoạt động', label: 'Đang hoạt động' },
-            { value: 'Tạm ngưng', label: 'Tạm ngưng' }
-          ], clinic.status || 'Đang hoạt động')}
+        <div class="crud-form-grid">
+          <div class="field full">
+            <label>Tên cơ sở</label>
+            <input type="text" id="clinicName" placeholder="Ví dụ: Phòng khám Trung Tâm 1" value="${escapeHtml(clinic.name)}" />
+          </div>
+          <div class="field full">
+            <label>Địa chỉ</label>
+            <textarea id="clinicAddress" placeholder="Nhập địa chỉ chi tiết của cơ sở">${escapeHtml(clinic.address)}</textarea>
+          </div>
+          <div class="field">
+            <label>Trạng thái</label>
+            ${createPopupSelect('clinicStatus', [
+              { value: 'Đang hoạt động', label: 'Đang hoạt động' },
+              { value: 'Tạm ngưng', label: 'Tạm ngưng' }
+            ], clinic.status || 'Đang hoạt động')}
+          </div>
+          <div class="field">
+            <label>Ca trực</label>
+            <input type="text" id="clinicShift" placeholder="Ví dụ: Ca sáng/chiều" value="${escapeHtml(clinic.shift)}" />
+          </div>
+          <div class="field">
+            <label>Giờ làm việc</label>
+            <input type="text" id="clinicWorkTime" placeholder="Ví dụ: 08:00 - 18:00" value="${escapeHtml(clinic.workTime)}" />
+          </div>
+          <div class="field full">
+            <label>Lịch làm việc</label>
+            <textarea id="clinicSchedule" placeholder="Ví dụ: Thứ 2 - Thứ 6: 08:00 - 18:00">${escapeHtml(clinic.schedule)}</textarea>
+          </div>
         </div>
-        <div class="field"><label>Giờ làm việc</label><input type="text" id="clinicWorkTime" value="${clinic.workTime}" /></div>
-        <div class="field"><label>Ca trực</label><input type="text" id="clinicShift" value="${clinic.shift}" /></div>
-        <div class="field"><label>Lịch làm việc</label><textarea id="clinicSchedule">${clinic.schedule}</textarea></div>
       `;
       modalFooter.innerHTML = `
         <button class="button btn-secondary" type="button" id="cancelEditBtn">Hủy</button>
@@ -559,8 +651,20 @@
       `;
       document.getElementById('cancelEditBtn').addEventListener('click', closeModal);
       document.getElementById('saveEditBtn').addEventListener('click', () => {
+        const updatedClinic = readClinicForm(clinic, isNew);
+        if (!updatedClinic.name || !updatedClinic.address) {
+          alert('Vui lòng nhập tên cơ sở và địa chỉ.');
+          return;
+        }
+        if (isNew) {
+          clinicData.push(updatedClinic);
+        } else {
+          const targetIndex = clinicData.findIndex(item => item.id === clinic.id);
+          if (targetIndex >= 0) clinicData[targetIndex] = updatedClinic;
+        }
+        renderClinicGrid();
         if (window.showToast) {
-          showToast('Lưu cơ sở thành công', 'Thông tin phòng khám đã được cập nhật.');
+          showToast(isNew ? 'Đã thêm cơ sở mới' : 'Lưu cơ sở thành công', 'Danh sách phòng khám đã được cập nhật.');
         }
         closeModal();
       });
@@ -568,11 +672,18 @@
     }
 
     function showDeleteModal(clinic) {
-      modalTitle.textContent = `Xác nhận xóa`;
+      modalTitle.textContent = 'Xác nhận xóa';
       modalBody.innerHTML = `
-        <div class="field"><label>Cơ sở</label><div class="value">${clinic.name}</div></div>
-        <div class="field"><label>Địa chỉ</label><div class="value">${clinic.address}</div></div>
-        <p style="color:#94a3b8; line-height:1.6;">Bạn có chắc muốn xóa cơ sở này? Hành động này không thể hoàn tác.</p>
+        <div class="crud-delete-card">
+          <div class="crud-delete-mark">!</div>
+          <h4>Xóa cơ sở phòng khám?</h4>
+          <p>Hành động này không thể hoàn tác. Vui lòng kiểm tra lại thông tin trước khi xác nhận.</p>
+          <div class="crud-delete-target">
+            <small>Cơ sở</small>
+            <strong>${escapeHtml(clinic.name)}</strong>
+            <span>${escapeHtml(clinic.address)}</span>
+          </div>
+        </div>
       `;
       modalFooter.innerHTML = `
         <button class="button btn-secondary" type="button" id="cancelDeleteBtn">Hủy</button>
@@ -580,6 +691,11 @@
       `;
       document.getElementById('cancelDeleteBtn').addEventListener('click', closeModal);
       document.getElementById('confirmDeleteBtn').addEventListener('click', () => {
+        const index = clinicData.findIndex(item => item.id === clinic.id);
+        if (index >= 0) {
+          clinicData.splice(index, 1);
+          renderClinicGrid();
+        }
         if (window.showToast) {
           showToast('Đã xóa cơ sở', 'Cơ sở đã được xóa khỏi danh sách mô phỏng.');
         }
@@ -592,6 +708,8 @@
     logoutButton.addEventListener('click', () => {
       window.location.href = '../index.html';
     });
+
+    renderClinicGrid();
   </script>
   <script src="../shared-toast.js"></script>
 </body>

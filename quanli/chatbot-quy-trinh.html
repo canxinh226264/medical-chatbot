@@ -1837,7 +1837,7 @@
           </div>
 
           <div style="margin-top: 18px; text-align: right;">
-            <button class="button button-secondary" type="button">Chỉnh quy tắc</button>
+            <button class="button button-secondary" type="button" id="editRiskRulesBtn">Chỉnh quy tắc</button>
           </div>
         </div>
       </section>
@@ -2056,6 +2056,7 @@
     const addPackageBtn = document.getElementById('addPackageBtn');
     const packageList = document.getElementById('packageList');
     const togglePaywallBtn = document.getElementById('togglePaywallBtn');
+    const editRiskRulesBtn = document.getElementById('editRiskRulesBtn');
     let popupAction = null;
     let formContext = null;
     let activeManagerBodyPart = null;
@@ -2063,6 +2064,13 @@
     let managerBodyGender = 'female';
     let managerPatientAge = 30;
     let paywallActive = false;
+    let riskRuleSettings = {
+      lowMax: 30,
+      highMin: 70,
+      lowOutcome: 'Theo dõi nhà',
+      mediumOutcome: 'Đặt lịch',
+      highOutcome: 'Nhập viện ngay'
+    };
 
     function showPopup(title, message, action) {
       popupTitle.textContent = title;
@@ -2105,6 +2113,32 @@
     }
 
     function renderFormFields(kind, data) {
+      if (kind === 'riskRules') {
+        formFields.innerHTML = `
+          <label>
+            Ngưỡng tối đa Low
+            <input id="riskLowMax" type="number" min="1" max="99" value="${riskRuleSettings.lowMax}" />
+          </label>
+          <label>
+            Ngưỡng bắt đầu High
+            <input id="riskHighMin" type="number" min="2" max="100" value="${riskRuleSettings.highMin}" />
+          </label>
+          <label>
+            Hành động Low
+            <input id="riskLowOutcome" type="text" value="${riskRuleSettings.lowOutcome}" />
+          </label>
+          <label>
+            Hành động Medium
+            <input id="riskMediumOutcome" type="text" value="${riskRuleSettings.mediumOutcome}" />
+          </label>
+          <label>
+            Hành động High
+            <input id="riskHighOutcome" type="text" value="${riskRuleSettings.highOutcome}" />
+          </label>
+        `;
+        return;
+      }
+
       formFields.innerHTML = `
           <label>
             Tên gói
@@ -2126,6 +2160,25 @@
             ], data.type || 'basic')}
           </label>
         `;
+    }
+
+    function showRiskRulesForm() {
+      formContext = { kind: 'riskRules' };
+      formBackdrop.classList.add('visible');
+      formTitle.textContent = 'Chỉnh quy tắc phân loại';
+      renderFormFields('riskRules', riskRuleSettings);
+    }
+
+    function renderRiskRuleSummary() {
+      const outcomes = document.querySelectorAll('#screen-3 .rule-outcome');
+      if (outcomes[0]) outcomes[0].textContent = riskRuleSettings.lowOutcome;
+      if (outcomes[1]) outcomes[1].textContent = riskRuleSettings.mediumOutcome;
+      if (outcomes[2]) outcomes[2].textContent = riskRuleSettings.highOutcome;
+
+      const summaryLines = document.querySelectorAll('#screen-3 .natural-paywall > div > div');
+      if (summaryLines[0]) summaryLines[0].textContent = `Điểm nguy cơ < ${riskRuleSettings.lowMax} → Low`;
+      if (summaryLines[1]) summaryLines[1].textContent = `${riskRuleSettings.lowMax} ≤ Điểm < ${riskRuleSettings.highMin} → Medium`;
+      if (summaryLines[2]) summaryLines[2].textContent = `Điểm ≥ ${riskRuleSettings.highMin} → High`;
     }
 
     function createQuestionElement(question, description, type) {
@@ -2362,6 +2415,24 @@
       if (formContext.kind === 'question') {
         closeForm();
         return;
+      } else if (formContext.kind === 'riskRules') {
+        const lowMax = Number(document.getElementById('riskLowMax').value);
+        const highMin = Number(document.getElementById('riskHighMin').value);
+        if (!lowMax || !highMin || lowMax >= highMin) {
+          alert('Ngưỡng Low phải nhỏ hơn ngưỡng High.');
+          return;
+        }
+        riskRuleSettings = {
+          lowMax,
+          highMin,
+          lowOutcome: document.getElementById('riskLowOutcome').value.trim() || 'Theo dõi nhà',
+          mediumOutcome: document.getElementById('riskMediumOutcome').value.trim() || 'Đặt lịch',
+          highOutcome: document.getElementById('riskHighOutcome').value.trim() || 'Nhập viện ngay'
+        };
+        renderRiskRuleSummary();
+        closeForm();
+        showPopup('Đã lưu quy tắc', 'Quy tắc phân loại nguy cơ đã được cập nhật trên màn hình.', null);
+        return;
       } else {
         const name = document.getElementById('formPackageName').value.trim();
         const price = document.getElementById('formPackagePrice').value.trim();
@@ -2497,6 +2568,8 @@
       showForm('package', null, { name: '', price: '', description: '', type: 'basic' });
     });
 
+    editRiskRulesBtn.addEventListener('click', showRiskRulesForm);
+
     togglePaywallBtn.addEventListener('click', () => {
       if (!paywallActive) {
         showPopup('Kích hoạt paywall', 'Bật paywall sẽ hiển thị gợi ý nâng cấp cho người dùng. Tiếp tục?', () => {
@@ -2514,6 +2587,7 @@
       window.location.href = '../index.html';
     });
   </script>
+  <script src="account-sync.js"></script>
   <script src="../shared-toast.js"></script>
 </body>
 </html>

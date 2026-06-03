@@ -801,3 +801,457 @@ svg text,
   background: #fff1f2 !important;
   color: #b4232f !important;
 }
+
+/* Clean CRUD modals for clinic and staff pages. */
+body.manager-crud-page {
+  padding: 24px 24px 24px 0 !important;
+  background:
+    radial-gradient(circle at 10% 4%, rgba(39, 185, 197, 0.13), transparent 28%),
+    linear-gradient(180deg, #ffffff 0%, #f6fbfc 100%) !important;
+}
+
+.manager-crud-page .page {
+  width: calc(100% - 24px) !important;
+  margin: 0 !important;
+  grid-template-columns: 280px minmax(0, 1fr) !important;
+  gap: 24px !important;
+}
+
+.manager-crud-page .content {
+  gap: 24px !important;
+  min-width: 0 !important;
+}
+
+.manager-crud-page .sidebar {
+  min-height: calc(100vh - 48px) !important;
+  position: sticky !important;
+  top: 24px !important;
+}
+
+.manager-crud-page .topbar,
+.manager-crud-page .panel-header,
+.manager-staff-page .filter-panel,
+.manager-staff-page .table-card {
+  border-radius: 28px !important;
+  border: 1px solid rgba(25, 127, 182, 0.14) !important;
+  background:
+    radial-gradient(circle at 92% 12%, rgba(39, 185, 197, 0.12), transparent 30%),
+    linear-gradient(135deg, #ffffff 0%, #f7fcfd 100%) !important;
+  box-shadow: 0 18px 44px rgba(36, 106, 125, 0.09) !important;
+}
+
+.manager-crud-page .topbar,
+.manager-crud-page .panel-header {
+  padding: 24px !important;
+}
+
+.manager-crud-page .topbar-title h2 {
+  font-size: clamp(1.45rem, 2vw, 1.9rem) !important;
+  letter-spacing: -0.025em !important;
+}
+
+.manager-crud-page .topbar-title p,
+.manager-crud-page .panel-header .subtitle {
+  max-width: 720px !important;
+  margin-top: 8px !important;
+  line-height: 1.6 !important;
+}
+
+.manager-crud-page .account-button {
+  min-height: 56px !important;
+  border-radius: 20px !important;
+  background: #ffffff !important;
+  border-color: rgba(25, 127, 182, 0.18) !important;
+  box-shadow: 0 12px 28px rgba(36, 106, 125, 0.08) !important;
+}
+
+.manager-crud-page .add-button {
+  min-height: 50px !important;
+  padding: 0 22px !important;
+  border-radius: 18px !important;
+  border: 0 !important;
+  background: linear-gradient(135deg, #1f6fb2, #27b9c5) !important;
+  color: #ffffff !important;
+  box-shadow: 0 16px 32px rgba(25, 127, 182, 0.22) !important;
+}
+
+.manager-clinic-page .card-summary,
+.manager-staff-page .summary {
+  display: inline-flex !important;
+  align-items: center !important;
+  width: fit-content !important;
+  min-height: 48px !important;
+  padding: 12px 18px !important;
+  border-radius: 18px !important;
+  border: 1px solid rgba(25, 127, 182, 0.14) !important;
+  background: #ffffff !important;
+  color: #315e6d !important;
+  box-shadow: 0 10px 24px rgba(36, 106, 125, 0.07) !important;
+  font-weight: 800 !important;
+}
+
+.manager-clinic-page .clinic-grid {
+  grid-template-columns: repeat(auto-fit, minmax(310px, 1fr)) !important;
+  gap: 18px !important;
+}
+
+.manager-clinic-page .clinic-card {
+  min-height: 235px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 18px !important;
+  padding: 22px !important;
+  border-radius: 26px !important;
+}
+
+.manager-clinic-page .clinic-actions {
+  margin-top: auto !important;
+  justify-content: flex-start !important;
+}
+
+.manager-staff-page .filter-panel {
+  padding: 22px !important;
+}
+
+.manager-staff-page .filter-panel::before {
+  position: static !important;
+  display: inline-flex !important;
+  margin-bottom: 16px !important;
+  padding: 7px 12px !important;
+  border-radius: 999px !important;
+  border: 1px solid rgba(25, 127, 182, 0.14) !important;
+  background: #e6f8ff !important;
+  color: #0a5f7e !important;
+  font-weight: 850 !important;
+}
+
+.manager-staff-page .filter-row {
+  grid-template-columns: minmax(240px, 1.35fr) repeat(3, minmax(160px, 1fr)) !important;
+  gap: 14px !important;
+}
+
+.manager-staff-page .table-card .table-header {
+  padding: 20px 22px !important;
+  border-bottom: 1px solid rgba(25, 127, 182, 0.12) !important;
+  background: #ffffff !important;
+}
+
+.manager-crud-page .button {
+  min-height: 42px !important;
+  border-radius: 14px !important;
+  border: 1px solid rgba(25, 127, 182, 0.16) !important;
+  font-weight: 800 !important;
+}
+
+.manager-crud-page .btn-detail {
+  background: #e6f8ff !important;
+  color: #0a5f7e !important;
+}
+
+.manager-crud-page .btn-edit {
+  background: #dcf8ef !important;
+  color: #126b58 !important;
+}
+
+.manager-crud-page .btn-delete,
+.manager-crud-page .btn-danger {
+  border-color: rgba(220, 38, 38, 0.18) !important;
+  background: #fff1f2 !important;
+  color: #b4232f !important;
+}
+
+.manager-crud-page .btn-primary {
+  border-color: transparent !important;
+  background: linear-gradient(135deg, #1f6fb2, #27b9c5) !important;
+  color: #ffffff !important;
+}
+
+.manager-crud-page .modal-backdrop {
+  display: flex !important;
+  align-items: center !important;
+  padding: 28px 18px !important;
+  background: rgba(11, 38, 52, 0.42) !important;
+  backdrop-filter: blur(14px) !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  transition: opacity 0.2s ease, visibility 0.2s ease !important;
+}
+
+.manager-crud-page .modal-backdrop.show {
+  visibility: visible !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
+
+.manager-crud-page .modal {
+  width: min(680px, calc(100vw - 32px)) !important;
+  max-height: min(780px, calc(100vh - 42px)) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  border-radius: 30px !important;
+  background: #ffffff !important;
+  border: 1px solid rgba(25, 127, 182, 0.18) !important;
+  box-shadow: 0 34px 96px rgba(11, 38, 52, 0.26) !important;
+  overflow: hidden !important;
+}
+
+.manager-staff-page .modal {
+  width: min(760px, calc(100vw - 32px)) !important;
+}
+
+.manager-crud-page .modal-header {
+  padding: 22px 26px 18px !important;
+  border-bottom: 1px solid rgba(25, 127, 182, 0.12) !important;
+  background:
+    radial-gradient(circle at 92% 0%, rgba(39, 185, 197, 0.13), transparent 34%),
+    linear-gradient(180deg, #ffffff 0%, #f3fbfc 100%) !important;
+}
+
+.manager-crud-page .modal-header h3 {
+  color: #073044 !important;
+  font-size: 1.25rem !important;
+  line-height: 1.3 !important;
+  letter-spacing: -0.02em !important;
+}
+
+.manager-crud-page .modal-close {
+  width: 42px !important;
+  height: 42px !important;
+  border-radius: 16px !important;
+  background: #eaf9fb !important;
+  color: #0d4055 !important;
+  font-size: 1.35rem !important;
+  font-weight: 900 !important;
+}
+
+.manager-crud-page .modal-body {
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  padding: 22px 26px !important;
+  gap: 18px !important;
+  background: #ffffff !important;
+  overflow-y: auto !important;
+}
+
+.manager-crud-page .modal-footer {
+  padding: 16px 26px 22px !important;
+  border-top: 1px solid rgba(25, 127, 182, 0.12) !important;
+  background: linear-gradient(180deg, #ffffff 0%, #f7fcfd 100%) !important;
+}
+
+.manager-crud-page .modal-footer .button {
+  min-width: 112px !important;
+}
+
+.manager-crud-page .crud-form-grid {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 16px !important;
+}
+
+.manager-crud-page .crud-form-grid .full {
+  grid-column: 1 / -1 !important;
+}
+
+.manager-crud-page .modal .field {
+  gap: 8px !important;
+}
+
+.manager-crud-page .modal .field label {
+  color: #315e6d !important;
+  font-size: 0.9rem !important;
+  font-weight: 850 !important;
+}
+
+.manager-crud-page .modal input,
+.manager-crud-page .modal textarea,
+.manager-crud-page .modal .popup-select-button {
+  min-height: 54px !important;
+  border-radius: 17px !important;
+  border-color: rgba(25, 127, 182, 0.2) !important;
+  background: #ffffff !important;
+  color: #123b4a !important;
+  box-shadow: 0 10px 24px rgba(36, 106, 125, 0.06) !important;
+}
+
+.manager-crud-page .modal textarea {
+  min-height: 94px !important;
+  resize: vertical !important;
+}
+
+.manager-crud-page .modal .popup-select-menu {
+  position: static !important;
+  display: none !important;
+  max-height: 190px !important;
+  margin-top: 8px !important;
+  padding: 8px !important;
+  border-radius: 16px !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  transform: none !important;
+  overflow-y: auto !important;
+}
+
+.manager-crud-page .modal .popup-select.open .popup-select-menu {
+  display: grid !important;
+}
+
+.crud-detail-hero {
+  display: flex !important;
+  align-items: center !important;
+  gap: 16px !important;
+  padding: 18px !important;
+  border-radius: 22px !important;
+  border: 1px solid rgba(39, 185, 197, 0.22) !important;
+  background: linear-gradient(135deg, #e6f8ff 0%, #ddfbf5 100%) !important;
+}
+
+.crud-detail-mark,
+.crud-delete-mark {
+  width: 56px !important;
+  height: 56px !important;
+  display: grid !important;
+  place-items: center !important;
+  flex: 0 0 auto !important;
+  border-radius: 18px !important;
+  background: #ffffff !important;
+  border: 1px solid rgba(25, 127, 182, 0.16) !important;
+  color: #0a5f7e !important;
+  font-weight: 950 !important;
+  box-shadow: 0 12px 24px rgba(36, 106, 125, 0.1) !important;
+}
+
+.crud-detail-hero h4,
+.crud-delete-card h4 {
+  margin: 0 0 8px !important;
+  color: #073044 !important;
+  font-size: 1.1rem !important;
+}
+
+.crud-pill-row {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 8px !important;
+}
+
+.crud-pill {
+  display: inline-flex !important;
+  align-items: center !important;
+  min-height: 30px !important;
+  padding: 6px 11px !important;
+  border-radius: 999px !important;
+  font-size: 0.82rem !important;
+  font-weight: 900 !important;
+}
+
+.crud-pill.is-active {
+  border: 1px solid rgba(20, 166, 124, 0.22) !important;
+  background: #dcf8ef !important;
+  color: #126b58 !important;
+}
+
+.crud-pill.is-paused {
+  border: 1px solid rgba(217, 119, 6, 0.22) !important;
+  background: #fff7ed !important;
+  color: #a85d05 !important;
+}
+
+.crud-detail-grid {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 14px !important;
+}
+
+.crud-detail-item,
+.crud-delete-target {
+  padding: 16px !important;
+  border-radius: 18px !important;
+  border: 1px solid rgba(25, 127, 182, 0.13) !important;
+  background: #f7fcfd !important;
+}
+
+.crud-detail-item.full {
+  grid-column: 1 / -1 !important;
+}
+
+.crud-detail-item small,
+.crud-delete-target small {
+  display: block !important;
+  margin-bottom: 6px !important;
+  color: #0a7892 !important;
+  font-weight: 900 !important;
+  font-size: 0.78rem !important;
+  letter-spacing: 0.05em !important;
+  text-transform: uppercase !important;
+}
+
+.crud-detail-item strong,
+.crud-delete-target strong {
+  color: #123b4a !important;
+  font-weight: 800 !important;
+  line-height: 1.45 !important;
+}
+
+.crud-delete-card {
+  padding: 22px !important;
+  border-radius: 24px !important;
+  border: 1px solid rgba(220, 38, 38, 0.18) !important;
+  background: linear-gradient(180deg, #ffffff 0%, #fff7f7 100%) !important;
+  text-align: center !important;
+}
+
+.crud-delete-mark {
+  margin: 0 auto 14px !important;
+  border-color: rgba(220, 38, 38, 0.16) !important;
+  background: #fff1f2 !important;
+  color: #b4232f !important;
+}
+
+.crud-delete-card p,
+.crud-delete-target span {
+  color: #647d86 !important;
+  line-height: 1.55 !important;
+}
+
+@media (max-width: 1100px) {
+  .manager-crud-page .page {
+    grid-template-columns: 1fr !important;
+  }
+
+  .manager-crud-page .sidebar {
+    position: relative !important;
+    top: 0 !important;
+    min-height: auto !important;
+  }
+
+  .manager-staff-page .filter-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}
+
+@media (max-width: 720px) {
+  body.manager-crud-page {
+    padding: 14px !important;
+  }
+
+  .manager-crud-page .crud-form-grid,
+  .manager-crud-page .crud-detail-grid,
+  .manager-staff-page .filter-row {
+    grid-template-columns: 1fr !important;
+  }
+
+  .manager-crud-page .modal {
+    width: calc(100vw - 24px) !important;
+    max-height: calc(100vh - 24px) !important;
+    border-radius: 24px !important;
+  }
+
+  .manager-crud-page .modal-header,
+  .manager-crud-page .modal-body,
+  .manager-crud-page .modal-footer {
+    padding-left: 18px !important;
+    padding-right: 18px !important;
+  }
+}

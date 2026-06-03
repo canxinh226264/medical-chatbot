@@ -640,8 +640,15 @@
       const fields = document.querySelectorAll('#fullName, #email');
       fields.forEach(f => f.disabled = !isEditing);
       document.getElementById('btnEdit').textContent = isEditing ? 'Lưu thay đổi' : 'Chỉnh sửa';
-      if (!isEditing && window.showToast) {
-        showToast('Cập nhật tài khoản thành công', 'Thông tin tài khoản đã được lưu.');
+      if (!isEditing) {
+        const nextName = document.getElementById('fullName').value.trim();
+        document.getElementById('displayName').textContent = nextName;
+        if (window.syncDocahManagerAccountName) {
+          window.syncDocahManagerAccountName(nextName);
+        }
+        if (window.showToast) {
+          showToast('Cập nhật tài khoản thành công', 'Thông tin tài khoản đã được lưu.');
+        }
       }
     });
 
@@ -703,6 +710,7 @@
       window.location.href = '../index.html';
     });
   </script>
+  <script src="account-sync.js"></script>
   <script src="../shared-toast.js"></script>
 </body>
 </html>

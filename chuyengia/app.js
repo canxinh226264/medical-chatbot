@@ -760,10 +760,34 @@ function setupAnalytics() {
   renderAnalytics(sel.value || 'week');
 }
 
+const expertAccountNameKey = "docahExpertAccountName";
+
+function getAccountInitials(name, fallback = "A") {
+  const parts = String(name || "").trim().split(/\s+/).filter(Boolean);
+  if (!parts.length) return fallback;
+  const initials = parts.length === 1 ? parts[0].slice(0, 1) : `${parts[0][0]}${parts[parts.length - 1][0]}`;
+  return initials.toUpperCase();
+}
+
+function syncExpertAccountName(name) {
+  const nextName = String(name || localStorage.getItem(expertAccountNameKey) || "Nguyễn Văn A").trim();
+  document.querySelectorAll(".account-button .dot + div > div:first-child").forEach((node) => {
+    node.textContent = nextName;
+  });
+  document.querySelectorAll(".account-button .dot, .profile-avatar").forEach((node) => {
+    node.textContent = getAccountInitials(nextName);
+  });
+  const profileTitle = document.querySelector(".profile-header h3");
+  if (profileTitle) profileTitle.textContent = nextName;
+  localStorage.setItem(expertAccountNameKey, nextName);
+}
+
 function setupAccountMenu() {
   const accountToggle = document.querySelector("#accountToggle");
   const accountDropdown = document.querySelector("#accountDropdown");
   const logoutButton = document.querySelector("#logoutButton");
+
+  syncExpertAccountName();
 
   if (accountToggle && accountDropdown) {
     accountToggle.addEventListener("click", () => {
@@ -793,6 +817,10 @@ function setupProfileForm() {
   const fields = Array.from(document.querySelectorAll(".profile-field"));
 
   if (!form || !editButton || !actions || fields.length === 0) return;
+
+  const savedName = localStorage.getItem(expertAccountNameKey);
+  if (savedName && fields[0]) fields[0].value = savedName;
+  syncExpertAccountName(fields[0]?.value);
 
   const originalValues = new Map(fields.map((field) => [field, field.value]));
 
@@ -824,6 +852,7 @@ function setupProfileForm() {
     fields.forEach((field) => {
       originalValues.set(field, field.value);
     });
+    syncExpertAccountName(fields[0]?.value);
     setEditing(false);
     if (saved) saved.classList.remove("hidden");
   });

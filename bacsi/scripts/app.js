@@ -497,6 +497,12 @@ const doctorBodyProfilesByPatientId = {
   },
 };
 
+const doctorAccountNameKey = "docahDoctorAccountName";
+const savedDoctorAccountName = localStorage.getItem(doctorAccountNameKey);
+if (savedDoctorAccountName) {
+  state.profile.fullName = savedDoctorAccountName;
+}
+
 const doctorAlertBodyProfiles = [
   {
     summary: "Tim và ngực trái có dấu hiệu cấp cứu",
@@ -730,6 +736,7 @@ function bindPageEvents() {
       state.profile[input.name] = input.value;
     });
     state.profileEditing = false;
+    syncDoctorAccountName(state.profile.fullName);
     render();
   });
   const changePassword = document.getElementById("changePassword");
@@ -934,6 +941,23 @@ function closeMobileMenu() {
   document.getElementById("mobileOverlay").classList.remove("active");
 }
 
+function getAccountInitials(name) {
+  const cleanName = String(name || "").replace(/^BS\.\s*/i, "").trim();
+  const parts = cleanName.split(/\s+/).filter(Boolean);
+  if (!parts.length) return "BS";
+  const initials = parts.length === 1 ? parts[0].slice(0, 2) : `${parts[0][0]}${parts[parts.length - 1][0]}`;
+  return initials.toUpperCase();
+}
+
+function syncDoctorAccountName(name = state.profile.fullName) {
+  const nextName = String(name || "BS. Nguyễn Văn A").trim();
+  const accountName = document.querySelector("#accountToggle strong");
+  const accountDot = document.querySelector("#accountToggle .dot");
+  if (accountName) accountName.textContent = nextName;
+  if (accountDot) accountDot.textContent = getAccountInitials(nextName);
+  localStorage.setItem(doctorAccountNameKey, nextName);
+}
+
 document.getElementById("logoutBtn").addEventListener("click", () => {
   if (confirm("Bạn có chắc chắn muốn đăng xuất?")) window.location.href = "../index.html";
 });
@@ -972,4 +996,5 @@ modal.addEventListener("click", (event) => {
   if (event.target === modal) closeModal();
 });
 
+syncDoctorAccountName();
 render();

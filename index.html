@@ -51,7 +51,7 @@
     }
 
     .container {
-      width: min(1180px, calc(100% - 40px));
+      width: min(1440px, calc(100% - 48px));
       margin: 0 auto;
     }
 
@@ -265,13 +265,13 @@
     }
 
     .hero {
-      padding: 76px 0 50px;
+      padding: 72px 0 54px;
     }
 
     .hero-grid {
       display: grid;
-      grid-template-columns: minmax(0, 1.02fr) minmax(390px, 0.98fr);
-      gap: 44px;
+      grid-template-columns: minmax(0, 1.04fr) minmax(460px, 0.96fr);
+      gap: clamp(34px, 4.5vw, 78px);
       align-items: center;
     }
 
@@ -327,7 +327,7 @@
     }
 
     .hero-lead {
-      max-width: 650px;
+      max-width: 760px;
       margin: 0 0 30px;
       color: #496f7b;
       font-size: 1.13rem;
@@ -345,7 +345,7 @@
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 14px;
-      max-width: 680px;
+      max-width: 760px;
     }
 
     .proof-card {
@@ -402,7 +402,7 @@
     .dashboard-card {
       position: relative;
       z-index: 1;
-      padding: 22px;
+      padding: clamp(22px, 2.2vw, 32px);
       border: 1px solid #bee8ef;
       border-radius: var(--radius-xl);
       background: rgba(255, 255, 255, 0.88);
@@ -640,7 +640,7 @@
     }
 
     .section {
-      padding: 54px 0;
+      padding: 58px 0;
     }
 
     .section-heading {

@@ -167,6 +167,19 @@ const saveProfile = document.getElementById("saveProfile");
 const resetProfile = document.getElementById("resetProfile");
 const profileInputs = Array.from(document.querySelectorAll("#view-profile .profile-grid input"));
 const initialProfileValues = profileInputs.map((input) => input.value);
+const customerAccountNameKey = "docahCustomerAccountName";
+
+function syncCustomerAccountName(name) {
+  const nextName = (name || profileInputs[0]?.value || "Nguyễn Minh Anh").trim();
+  const nameNode = accountToggle?.querySelector(".dot + div > div:first-child");
+  if (nameNode) nameNode.textContent = nextName;
+  if (profileInputs[0] && profileInputs[0].value !== nextName) {
+    profileInputs[0].value = nextName;
+  }
+  localStorage.setItem(customerAccountNameKey, nextName);
+}
+
+syncCustomerAccountName(localStorage.getItem(customerAccountNameKey) || profileInputs[0]?.value);
 
 function setView(name) {
   views.forEach((view) => view.classList.toggle("active", view.id === `view-${name}`));
@@ -1069,6 +1082,7 @@ bodyPartModal.addEventListener("click", (event) => {
 });
 
 saveProfile.addEventListener("click", () => {
+  syncCustomerAccountName(profileInputs[0]?.value);
   showToast("Cập nhật hồ sơ thành công", "Thông tin cá nhân và sức khỏe đã được lưu trên màn hình.");
 });
 
@@ -1076,6 +1090,7 @@ resetProfile.addEventListener("click", () => {
   profileInputs.forEach((input, index) => {
     input.value = initialProfileValues[index];
   });
+  syncCustomerAccountName(profileInputs[0]?.value);
   showToast("Đã hoàn tác chỉnh sửa", "Hồ sơ đã quay về thông tin ban đầu.");
 });
 

@@ -391,7 +391,7 @@
   <link rel="stylesheet" href="../shared-theme.css">
   <link rel="stylesheet" href="manager-visibility.css">
 </head>
-<body>
+<body class="manager-crud-page manager-staff-page">
   <div class="page">
     <aside class="sidebar">
       <div class="brand">
@@ -743,16 +743,48 @@
       });
     }
 
+    function escapeHtml(value) {
+      return String(value ?? '')
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#039;');
+    }
+
     function showDetailModal(staff) {
-      modalTitle.textContent = `Chi tiết ${staff.name}`;
+      modalTitle.textContent = staff.role === 'Bác sĩ' ? 'Chi tiết bác sĩ' : 'Chi tiết nhân sự';
       modalBody.innerHTML = `
-        ${createField('Tên nhân sự', staff.name)}
-        ${createField('Cơ sở', staff.facility)}
-        ${createField('Vai trò', staff.role)}
-        ${staff.role === 'Bác sĩ' ? createField('Chuyên môn', staff.specialty) : ''}
-        ${createField('Lịch làm việc', staff.schedule)}
-        ${createField('Giờ làm việc', staff.workTime)}
-        ${createField('Trạng thái', staff.status)}
+        <div class="crud-detail-hero">
+          <div class="crud-detail-mark">${staff.role === 'Bác sĩ' ? 'BS' : 'NS'}</div>
+          <div>
+            <h4>${escapeHtml(staff.name)}</h4>
+            <div class="crud-pill-row">
+              <span class="crud-pill is-active">${escapeHtml(staff.role)}</span>
+              <span class="crud-pill ${staff.status === 'Đang hoạt động' ? 'is-active' : 'is-paused'}">${escapeHtml(staff.status)}</span>
+            </div>
+          </div>
+        </div>
+        <div class="crud-detail-grid">
+          <div class="crud-detail-item">
+            <small>Cơ sở</small>
+            <strong>${escapeHtml(staff.facility)}</strong>
+          </div>
+          ${staff.role === 'Bác sĩ' ? `
+          <div class="crud-detail-item">
+            <small>Chuyên môn</small>
+            <strong>${escapeHtml(staff.specialty || 'Chưa cập nhật')}</strong>
+          </div>
+          ` : ''}
+          <div class="crud-detail-item">
+            <small>Giờ làm việc</small>
+            <strong>${escapeHtml(staff.workTime || 'Chưa cập nhật')}</strong>
+          </div>
+          <div class="crud-detail-item full">
+            <small>Lịch làm việc</small>
+            <strong>${escapeHtml(staff.schedule || 'Chưa cập nhật')}</strong>
+          </div>
+        </div>
       `;
       modalFooter.innerHTML = `<button class="button btn-secondary" type="button" id="closeDetailBtn">Đóng</button>`;
       document.getElementById('closeDetailBtn').addEventListener('click', closeModal);
@@ -762,28 +794,44 @@
     function showEditModal(staff, isNew = false) {
       modalTitle.textContent = isNew ? 'Thêm nhân sự mới' : `Chỉnh sửa ${staff.name}`;
       modalBody.innerHTML = `
-        <div class="field"><label>Tên nhân sự</label><input type="text" id="staffName" value="${staff.name || ''}" /></div>
-        <div class="field"><label>Cơ sở</label><input type="text" id="staffFacility" value="${staff.facility || ''}" /></div>
-        <div class="field"><label>Vai trò</label>
-          ${createPopupSelect('staffRole', [
-            { value: 'Bác sĩ', label: 'Bác sĩ' },
-            { value: 'Y tá', label: 'Y tá' }
-          ], staff.role || 'Bác sĩ')}
-        </div>
-        <div class="field ${staff.role === 'Bác sĩ' ? '' : 'hidden'}" id="specialtyField">
-          <label>Chuyên môn</label>
-          ${createPopupSelect('staffSpecialty', [
-            { value: '', label: 'Chọn chuyên môn' },
-            ...specialties.map(option => ({ value: option, label: option }))
-          ], staff.specialty || '')}
-        </div>
-        <div class="field"><label>Lịch làm việc</label><textarea id="staffSchedule">${staff.schedule || ''}</textarea></div>
-        <div class="field"><label>Giờ làm việc</label><input type="text" id="staffWorkTime" value="${staff.workTime || ''}" /></div>
-        <div class="field"><label>Trạng thái</label>
-          ${createPopupSelect('staffStatus', [
-            { value: 'Đang hoạt động', label: 'Đang hoạt động' },
-            { value: 'Tạm ngưng', label: 'Tạm ngưng' }
-          ], staff.status || 'Đang hoạt động')}
+        <div class="crud-form-grid">
+          <div class="field full">
+            <label>Tên nhân sự</label>
+            <input type="text" id="staffName" placeholder="Ví dụ: Nguyễn Văn A" value="${escapeHtml(staff.name || '')}" />
+          </div>
+          <div class="field">
+            <label>Cơ sở</label>
+            <input type="text" id="staffFacility" placeholder="Ví dụ: Phòng khám Trung Tâm 1" value="${escapeHtml(staff.facility || '')}" />
+          </div>
+          <div class="field">
+            <label>Vai trò</label>
+            ${createPopupSelect('staffRole', [
+              { value: 'Bác sĩ', label: 'Bác sĩ' },
+              { value: 'Y tá', label: 'Y tá' }
+            ], staff.role || 'Bác sĩ')}
+          </div>
+          <div class="field ${staff.role === 'Bác sĩ' ? '' : 'hidden'}" id="specialtyField">
+            <label>Chuyên môn</label>
+            ${createPopupSelect('staffSpecialty', [
+              { value: '', label: 'Chọn chuyên môn' },
+              ...specialties.map(option => ({ value: option, label: option }))
+            ], staff.specialty || '')}
+          </div>
+          <div class="field">
+            <label>Giờ làm việc</label>
+            <input type="text" id="staffWorkTime" placeholder="Ví dụ: 08:00 - 17:00" value="${escapeHtml(staff.workTime || '')}" />
+          </div>
+          <div class="field">
+            <label>Trạng thái</label>
+            ${createPopupSelect('staffStatus', [
+              { value: 'Đang hoạt động', label: 'Đang hoạt động' },
+              { value: 'Tạm ngưng', label: 'Tạm ngưng' }
+            ], staff.status || 'Đang hoạt động')}
+          </div>
+          <div class="field full">
+            <label>Lịch làm việc</label>
+            <textarea id="staffSchedule" placeholder="Ví dụ: T2 - T6: 08:00 - 17:00">${escapeHtml(staff.schedule || '')}</textarea>
+          </div>
         </div>
       `;
 
@@ -832,7 +880,17 @@
           if (targetIndex >= 0) staffData[targetIndex] = updatedStaff;
         }
         buildFacilityOptions();
+        if (isNew) {
+          filterName.value = '';
+          setPopupSelectValue(filterFacility, '');
+          setPopupSelectValue(filterRole, '');
+          setPopupSelectValue(filterSpecialty, '');
+        }
+        toggleSpecialtyFilter();
         renderStaffTable();
+        if (window.showToast) {
+          showToast(isNew ? 'Đã thêm nhân sự mới' : 'Đã lưu nhân sự', 'Danh sách nhân sự và bác sĩ đã được cập nhật.');
+        }
         closeModal();
       });
 
@@ -840,13 +898,18 @@
     }
 
     function showDeleteModal(staff) {
-      modalTitle.textContent = `Xác nhận xóa`;
+      modalTitle.textContent = 'Xác nhận xóa';
       modalBody.innerHTML = `
-        ${createField('Tên nhân sự', staff.name)}
-        ${createField('Cơ sở', staff.facility)}
-        ${createField('Vai trò', staff.role)}
-        ${staff.role === 'Bác sĩ' ? createField('Chuyên môn', staff.specialty) : ''}
-        <p style="color:#94a3b8; line-height:1.6;">Bạn có chắc muốn xóa nhân sự này? Hành động này không thể hoàn tác.</p>
+        <div class="crud-delete-card">
+          <div class="crud-delete-mark">!</div>
+          <h4>Xóa nhân sự này?</h4>
+          <p>Hành động này không thể hoàn tác. Vui lòng kiểm tra lại thông tin trước khi xác nhận.</p>
+          <div class="crud-delete-target">
+            <small>Nhân sự</small>
+            <strong>${escapeHtml(staff.name)}</strong>
+            <span>${escapeHtml(staff.role)}${staff.specialty ? ` - ${escapeHtml(staff.specialty)}` : ''}</span>
+          </div>
+        </div>
       `;
       modalFooter.innerHTML = `
         <button class="button btn-secondary" type="button" id="cancelDeleteBtn">Hủy</button>
@@ -859,6 +922,9 @@
           staffData.splice(index, 1);
           buildFacilityOptions();
           renderStaffTable();
+        }
+        if (window.showToast) {
+          showToast('Đã xóa nhân sự', 'Nhân sự đã được xóa khỏi danh sách.');
         }
         closeModal();
       });
