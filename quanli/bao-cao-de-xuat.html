@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Báo cáo & đề xuất - Docah</title>
+  <link rel="stylesheet" href="../shared-theme.css">
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; min-height: 100vh; padding: 24px 24px 24px 0; font-family: Inter, "Segoe UI", Arial, sans-serif; background: radial-gradient(circle at top, rgba(59, 130, 246, 0.14), transparent 25%), linear-gradient(180deg, #020617 0%, #111827 100%); color: #e2e8f0; }
+    .page { width: calc(100% - 24px); display: grid; grid-template-columns: 280px minmax(0, 1fr); gap: 24px; align-items: start; }
+    .sidebar { min-height: calc(100vh - 48px); position: sticky; top: 24px; display: flex; flex-direction: column; gap: 24px; padding: 28px 22px; border: 1px solid rgba(148, 163, 184, 0.14); border-radius: 32px; background: rgba(255,255,255,0.04); }
+    .brand { display: flex; align-items: center; gap: 14px; padding-bottom: 4px; border-bottom: 1px solid rgba(148, 163, 184, 0.1); }
+    .brand-logo { width: 120px; height: 56px; display: grid; place-items: center; border: 3px solid rgba(255,255,255,0.72); border-radius: 20px; background: rgba(255,255,255,0.08); box-shadow: 0 18px 48px rgba(37, 99, 235, 0.18); overflow: hidden; }
+    .brand-logo img { width: 100%; height: auto; object-fit: contain; display: block; }
+    .nav-menu { display: flex; flex-direction: column; gap: 10px; }
+    .nav-link { width: 100%; display: inline-flex; align-items: center; justify-content: flex-start; gap: 12px; padding: 14px 18px; border: 1px solid transparent; border-radius: 18px; background: rgba(255,255,255,0.04); color: #e2e8f0; text-decoration: none; font-weight: 600; transition: all 0.25s ease; }
+    .nav-link:hover, .nav-link.active { background: rgba(59, 130, 246, 0.16); border-color: rgba(59, 130, 246, 0.28); color: #ffffff; }
+    .nav-link .icon { width: 34px; height: 34px; display: grid; place-items: center; flex: 0 0 34px; border-radius: 12px; background: rgba(59,130,246,0.14); color: #e0f2fe; font-size: 1rem; }
+    .nav-link span { color: #e2e8f0; font-size: 0.95rem; margin: 0; }
+    .content { display: grid; align-content: start; gap: 20px; }
+    .topbar { display: flex; justify-content: space-between; align-items: center; gap: 20px; padding: 18px 20px; border: 1px solid var(--docah-border); border-radius: 22px; background: #fff; box-shadow: 0 12px 30px rgba(36,106,125,.06); }
+    h2 { margin: 0; }
+    .topbar p { margin: 7px 0 0; color: var(--docah-muted); }
+    .account { display: inline-grid; place-items: center; width: 44px; height: 44px; border-radius: 14px; background: var(--docah-gradient); color: #fff; font-weight: 800; }
+    .report-copy { padding: 18px 20px; border: 1px solid rgba(39,185,197,.2); border-radius: 18px; background: #f2fcfd; color: var(--docah-text-soft); line-height: 1.55; }
+    .report-copy strong { display: block; margin-bottom: 5px; color: var(--docah-text); }
+    .input { min-height: 46px; padding: 12px 14px; }
+    textarea.input { min-height: 150px; resize: vertical; }
+    .actions { display: flex; justify-content: flex-end; gap: 10px; }
+    .btn { min-height: 44px; padding: 11px 16px; border: 1px solid var(--docah-border); border-radius: 14px; cursor: pointer; font-weight: 800; }
+    .btn.secondary { background: #eef8f9; color: var(--docah-text-soft); }
+    .btn.primary { border-color: transparent; background: var(--docah-gradient); color: #fff; }
+    .success { display: none; padding: 14px 16px; border: 1px solid rgba(35,169,136,.3); border-radius: 16px; background: #dcf8ef; color: #126b58; font-weight: 700; }
+    .success.show { display: block; }
+    @media (max-width: 900px) { body { padding: 16px; } .page { width: 100%; grid-template-columns: 1fr; } .sidebar { min-height: auto; position: relative; top: 0; } }
+  </style>
+  <link rel="stylesheet" href="manager-visibility.css">
+</head>
+<body>
+  <div class="page">
+    <aside class="sidebar">
+      <div class="brand"><div class="brand-logo"><img src="logo.png" alt="Docah logo"></div></div>
+      <nav class="nav-menu">
+        <a class="nav-link" href="dashboard.html"><span class="icon">&#127968;</span><span>Trang chủ</span></a>
+        <a class="nav-link" href="quan-li-phong-kham.html"><span class="icon">&#127973;</span><span>Phòng khám</span></a>
+        <a class="nav-link" href="nhan-su-bac-si.html"><span class="icon">&#128105;&#8205;&#9877;&#65039;</span><span>Nhân sự &amp; bác sĩ</span></a>
+        <a class="nav-link" href="chatbot-quy-trinh.html"><span class="icon">&#129302;</span><span>Chatbot &amp; quy trình</span></a>
+        <a class="nav-link" href="bao-cao-phan-tich.html"><span class="icon">&#128202;</span><span>Báo cáo &amp; phân tích</span></a>
+        <a class="nav-link" href="chinh-sua-tai-khoan.html"><span class="icon">&#128100;</span><span>Chỉnh sửa tài khoản</span></a>
+        <a class="nav-link" href="cai-dat-he-thong.html"><span class="icon">&#9881;&#65039;</span><span>Cài đặt hệ thống</span></a>
+        <a class="nav-link active" href="bao-cao-de-xuat.html"><span class="icon">&#128161;</span><span>Báo cáo &amp; đề xuất</span></a>
+      </nav>
+    </aside>
+    <main class="content">
+      <header class="topbar">
+        <div><h2>Báo cáo UI/UX &amp; đề xuất cải tiến</h2><p>Tiếp nhận phản hồi từ góc nhìn quản lý hệ thống.</p></div>
+        <span class="account">QL</span>
+      </header>
+      <div class="report-copy"><strong>Giúp Docah hoạt động rõ ràng và hiệu quả hơn</strong>Mô tả lỗi giao diện, vướng mắc khi thao tác hoặc đề xuất cải tiến quy trình. Phản hồi sẽ được chuyển đến đội ngũ sản phẩm để xem xét.</div>
+      <div class="success" id="reportSuccess">Đã gửi phản hồi. Đội ngũ sản phẩm sẽ xem xét báo cáo của bạn.</div>
+      <form class="product-report-form" id="managerReportForm">
+        <div class="report-form-grid">
+          <label>Loại phản hồi<select class="input" required><option>Lỗi giao diện UI/UX</option><option>Đề xuất cải tiến</option><option>Lỗi chức năng</option></select></label>
+          <label>Khu vực gặp vấn đề<select class="input" required><option>Dashboard</option><option>Quản lý phòng khám</option><option>Nhân sự & bác sĩ</option><option>Chatbot & quy trình</option><option>Khác</option></select></label>
+          <label>Mức ưu tiên<select class="input" required><option>Thông thường</option><option>Ảnh hưởng vận hành</option><option>Không thể tiếp tục thao tác</option></select></label>
+          <label>Tiêu đề<input class="input" required placeholder="Tóm tắt ngắn vấn đề hoặc đề xuất"></label>
+        </div>
+        <label>Mô tả chi tiết<textarea class="input" required placeholder="Mô tả thao tác, vấn đề hiện tại và mong muốn cải tiến..."></textarea></label>
+        <div class="actions"><button class="btn secondary" type="reset">Làm mới</button><button class="btn primary" type="submit">Gửi phản hồi</button></div>
+      </form>
+    </main>
+  </div>
+  <script>
+    document.getElementById("managerReportForm").addEventListener("submit", (event) => {
+      event.preventDefault();
+      event.currentTarget.reset();
+      document.getElementById("reportSuccess").classList.add("show");
+    });
+  </script>
+</body>
+</html>

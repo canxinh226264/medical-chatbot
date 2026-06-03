@@ -109,6 +109,107 @@
     gap: 1rem;
 }
 
+.dashboard-charts {
+    min-width: 0;
+}
+
+.dashboard-lower {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: minmax(15rem, 0.72fr) minmax(0, 2.28fr);
+    gap: 1.5rem;
+    align-items: stretch;
+}
+
+.dashboard-lower .card {
+    height: 100%;
+}
+
+.due-records-card {
+    padding: 1rem;
+}
+
+.due-records-card .card-title {
+    margin-bottom: 0.75rem;
+    font-size: 1rem;
+}
+
+.due-records-card .list-container {
+    gap: 0.5rem;
+}
+
+.due-records-card .list-item {
+    gap: 0.5rem;
+    padding: 0.65rem 0.7rem;
+}
+
+.due-records-card .list-item-left {
+    min-width: 0;
+}
+
+.due-records-card .list-item-left p:first-child {
+    font-size: 0.82rem;
+}
+
+.due-records-card .list-item-left p:last-child,
+.due-records-card .list-item-right p {
+    font-size: 0.72rem;
+}
+
+.due-records-card .list-item-left p:last-child {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.due-records-card .list-item-right {
+    flex: 0 0 auto;
+}
+
+.due-records-card .list-item-right button {
+    font-size: 0.7rem;
+    font-weight: 700;
+}
+
+.latest-feedback-card {
+    padding: 1.15rem;
+}
+
+.latest-feedback-list {
+    display: grid;
+    gap: 0.65rem;
+}
+
+.latest-feedback-item {
+    padding: 0.9rem !important;
+    border: 1px solid rgba(25, 127, 182, 0.16);
+    border-radius: 1rem;
+    background: linear-gradient(135deg, #f5fbfc, #ffffff) !important;
+    box-shadow: 0 8px 18px rgba(36, 106, 125, 0.06);
+}
+
+.latest-feedback-item .feedback-header {
+    gap: 0.75rem;
+    margin-bottom: 0.35rem;
+}
+
+.latest-feedback-item .feedback-patient {
+    color: #285f70 !important;
+    font-size: 0.82rem;
+    font-weight: 800;
+}
+
+.latest-feedback-item .feedback-comment {
+    color: #557681 !important;
+    font-size: 0.76rem;
+    line-height: 1.55;
+}
+
+.latest-feedback-item .stars {
+    color: #e89a16;
+    font-size: 0.86rem;
+}
+
 .metric-card {
     padding: 1rem;
     border: 1px solid var(--border-primary);
@@ -460,5 +561,769 @@
 
     .profile-top {
         flex-direction: column;
+    }
+
+    .dashboard-lower {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Match the shared Docah dashboard language used by the other roles. */
+:root {
+    --bg-primary: #0f172a;
+    --bg-secondary: rgba(255, 255, 255, 0.04);
+    --bg-tertiary: rgba(51, 65, 85, 0.72);
+    --bg-card: rgba(255, 255, 255, 0.06);
+    --border-primary: rgba(148, 163, 184, 0.16);
+    --border-secondary: rgba(148, 163, 184, 0.24);
+    --radius-lg: 1rem;
+    --radius-xl: 1.5rem;
+    --sidebar-width: 17.5rem;
+}
+
+body {
+    background-color: #0f172a;
+    background:
+        radial-gradient(circle at top, rgba(59, 130, 246, 0.1), transparent 25%),
+        linear-gradient(180deg, #111827 0%, #0f172a 100%);
+    padding: 1.5rem 1.5rem 1.5rem 0;
+}
+
+.app-container {
+    width: calc(100vw - 1.5rem);
+    height: calc(100vh - 3rem);
+    gap: 1.5rem;
+    overflow: visible;
+}
+
+.sidebar {
+    min-height: calc(100vh - 3rem);
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(148, 163, 184, 0.14);
+    border-radius: 2rem;
+    overflow: hidden;
+}
+
+.sidebar-header {
+    padding: 1.75rem 1.375rem 1rem;
+    border-bottom-color: rgba(148, 163, 184, 0.1);
+}
+
+.logo-container {
+    gap: 0.875rem;
+}
+
+.logo-pill {
+    width: 7.5rem;
+    height: 3.5rem;
+    flex: 0 0 auto;
+}
+
+.logo-text h1 {
+    color: #fff;
+}
+
+.sidebar-nav {
+    padding: 1rem 1.375rem;
+}
+
+.nav-item {
+    gap: 0.75rem;
+    padding: 0.875rem 1rem;
+    margin-bottom: 0.625rem;
+    border: 1px solid transparent;
+    border-radius: 1.125rem;
+    color: var(--text-secondary);
+}
+
+.nav-item:hover,
+.nav-item.active {
+    background: rgba(59, 130, 246, 0.16);
+    border-color: rgba(59, 130, 246, 0.28);
+    color: #fff;
+}
+
+.nav-item span {
+    font-weight: 600;
+}
+
+.sidebar-footer {
+    padding: 1rem 1.375rem 1.375rem;
+    border-top-color: rgba(148, 163, 184, 0.1);
+}
+
+.user-info {
+    padding: 0.75rem 0;
+}
+
+.user-avatar {
+    border-radius: 0.875rem;
+    background: linear-gradient(135deg, #2563eb, #60a5fa);
+    font-weight: 800;
+}
+
+.logout-btn {
+    padding: 0.75rem 1rem;
+    border: 1px solid rgba(248, 113, 113, 0.28);
+    border-radius: 0.875rem;
+    background: rgba(239, 68, 68, 0.12);
+    color: #fecaca;
+}
+
+.logout-btn:hover {
+    background: rgba(239, 68, 68, 0.24);
+}
+
+.main-content {
+    border-radius: 2rem;
+    background: transparent;
+}
+
+.doctor-topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.25rem;
+    padding: 0.25rem 0 1.25rem;
+}
+
+.doctor-topbar h2 {
+    margin: 0;
+    color: #fff;
+    font-size: 1.5rem;
+}
+
+.doctor-topbar p {
+    margin: 0.5rem 0 0;
+    color: var(--text-tertiary);
+    font-size: 0.95rem;
+}
+
+.account-menu {
+    position: relative;
+    flex: 0 0 auto;
+}
+
+.account-button {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    border: 1px solid rgba(148, 163, 184, 0.2);
+    border-radius: 1.125rem;
+    background: rgba(255, 255, 255, 0.05);
+    color: #fff;
+    text-align: left;
+}
+
+.account-button:hover {
+    border-color: rgba(59, 130, 246, 0.36);
+    background: rgba(59, 130, 246, 0.16);
+}
+
+.account-button span:not(.user-avatar) {
+    display: grid;
+    gap: 0.2rem;
+}
+
+.account-button small,
+.account-dropdown-header small {
+    color: var(--text-tertiary);
+    font-size: 0.75rem;
+}
+
+.account-chevron {
+    color: var(--text-tertiary);
+    font-size: 1rem;
+}
+
+.account-dropdown {
+    position: absolute;
+    top: calc(100% + 0.75rem);
+    right: 0;
+    z-index: 20;
+    width: 17rem;
+    padding: 0.75rem;
+    border: 1px solid rgba(148, 163, 184, 0.2);
+    border-radius: 1.125rem;
+    background: rgba(15, 23, 42, 0.98);
+    box-shadow: 0 1.5rem 4rem rgba(0, 0, 0, 0.38);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(0.5rem);
+    transition: opacity 0.18s ease, transform 0.18s ease, visibility 0.18s ease;
+}
+
+.account-dropdown.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.account-dropdown-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.account-dropdown-header div {
+    display: grid;
+    gap: 0.2rem;
+}
+
+.account-dropdown-item.logout-btn {
+    margin: 0;
+}
+
+.page-content {
+    min-width: 0;
+}
+
+.page {
+    padding: 0.25rem 0;
+}
+
+.page-header {
+    padding: 0.25rem 0;
+}
+
+.page-title {
+    color: #fff;
+}
+
+.card,
+.metric-card {
+    border-color: rgba(148, 163, 184, 0.16);
+    border-radius: 1.75rem;
+    background: rgba(255, 255, 255, 0.06);
+    transition: transform 0.25s ease, border-color 0.25s ease;
+}
+
+.card:hover,
+.metric-card:hover {
+    border-color: rgba(59, 130, 246, 0.4);
+    transform: translateY(-3px);
+}
+
+.btn {
+    border-radius: 0.875rem;
+    font-weight: 700;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #2563eb, #3b82f6);
+}
+
+.search-input,
+.select-field,
+.input-field,
+.textarea-field {
+    min-height: 2.75rem;
+    border-color: rgba(148, 163, 184, 0.2);
+    border-radius: 1rem;
+    background: rgba(15, 23, 42, 0.72);
+}
+
+.list-item,
+.feedback-item,
+.history-card,
+.info-box,
+.patient-button {
+    border: 1px solid rgba(148, 163, 184, 0.12);
+    border-radius: 1rem;
+    background: rgba(255, 255, 255, 0.045);
+}
+
+.panel,
+.chat-actions,
+.chat-input {
+    background: rgba(255, 255, 255, 0.04);
+}
+
+.modal {
+    background: rgba(2, 6, 23, 0.72);
+    backdrop-filter: blur(0.4rem);
+}
+
+.modal-content {
+    border-radius: 1.75rem;
+    background: #111827;
+    box-shadow: 0 1.75rem 4.5rem rgba(0, 0, 0, 0.38);
+}
+
+.modal-header {
+    background: rgba(255, 255, 255, 0.04);
+}
+
+.doctor-topbar .account-menu {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.doctor-topbar .account-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 18px;
+    border: 1px solid rgba(148, 163, 184, 0.2);
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.05);
+    color: #fff;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
+}
+
+.doctor-topbar .account-button:hover {
+    background: rgba(59, 130, 246, 0.16);
+    border-color: rgba(96, 165, 250, 0.34);
+    transform: translateY(-1px);
+}
+
+.doctor-topbar .account-button > div:last-child {
+    display: grid;
+    gap: 4px;
+    text-align: left;
+}
+
+.doctor-topbar .account-button .dot {
+    width: 34px;
+    height: 34px;
+    display: grid;
+    place-items: center;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #3b82f6, #60a5fa);
+    color: #fff;
+    font-weight: 800;
+}
+
+.doctor-topbar .account-dropdown {
+    display: block;
+    visibility: hidden;
+    position: absolute;
+    right: 0;
+    top: calc(100% + 12px);
+    width: min(280px, calc(100vw - 32px));
+    padding: 12px;
+    border: 1px solid rgba(148, 163, 184, 0.22);
+    border-radius: 18px;
+    background: linear-gradient(180deg, rgba(15, 23, 42, 0.98), rgba(17, 24, 39, 0.96));
+    box-shadow: 0 24px 70px rgba(0, 0, 0, 0.38), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    backdrop-filter: blur(18px);
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(8px) scale(0.98);
+    transform-origin: top right;
+    transition: opacity 0.18s ease, transform 0.18s ease, visibility 0.18s ease;
+    z-index: 60;
+}
+
+.doctor-topbar .account-dropdown.show {
+    visibility: visible;
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0) scale(1);
+}
+
+.doctor-topbar .dropdown-illustration {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid rgba(148, 163, 184, 0.12);
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.045);
+}
+
+.doctor-topbar .dropdown-illustration img {
+    width: 48px;
+    height: 48px;
+    padding: 8px;
+    border-radius: 18px;
+    object-fit: cover;
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.doctor-topbar .dropdown-illustration div {
+    display: grid;
+    gap: 4px;
+}
+
+.doctor-topbar .dropdown-illustration strong {
+    color: #fff;
+}
+
+.doctor-topbar .dropdown-illustration span {
+    color: var(--text-tertiary);
+    font-size: 0.9rem;
+}
+
+.doctor-topbar .dropdown-item {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 44px;
+    padding: 11px 15px;
+    border: 1px solid rgba(96, 165, 250, 0.2);
+    border-radius: 14px;
+    background: rgba(59, 130, 246, 0.1);
+    color: #fff;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+}
+
+.doctor-topbar .dropdown-item:hover {
+    background: rgba(59, 130, 246, 0.18);
+    border-color: rgba(96, 165, 250, 0.34);
+    transform: translateY(-1px);
+}
+
+.doctor-triage-page {
+    display: grid;
+    gap: 1.25rem;
+}
+
+.doctor-triage-header {
+    margin-bottom: 0;
+}
+
+.doctor-record-layout {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+    align-items: start;
+}
+
+.doctor-record-main,
+.doctor-context-rail {
+    display: grid;
+    gap: 1rem;
+}
+
+.triage-panel,
+.context-rail .mini-panel,
+.doctor-record-card,
+.doctor-alert-card {
+    border: 1px solid rgba(25, 127, 182, 0.16);
+    border-radius: 1.5rem;
+    background: linear-gradient(180deg, #ffffff 0%, #f8fdff 100%);
+    color: #173b49;
+    box-shadow: 0 16px 34px rgba(36, 106, 125, 0.08);
+}
+
+.doctor-filter-panel {
+    padding: 1.25rem;
+}
+
+.panel-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.panel-head h3,
+.doctor-record-card h4,
+.doctor-alert-card h4,
+.mini-panel h4 {
+    margin: 0;
+    color: #123b4a;
+}
+
+.flow-badge {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2rem;
+    padding: 0.35rem 0.75rem;
+    border: 1px solid rgba(39, 185, 197, 0.22);
+    border-radius: 999px;
+    background: #e4fbfc;
+    color: #0a7892;
+    font-size: 0.82rem;
+    font-weight: 800;
+}
+
+.doctor-filter-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 13rem;
+    gap: 0.75rem;
+}
+
+.doctor-triage-page .search-input,
+.doctor-triage-page .select-field {
+    border-color: rgba(25, 127, 182, 0.2);
+    background: #ffffff;
+    color: #123b4a;
+}
+
+.doctor-status-strip {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+    margin: 0;
+}
+
+.doctor-status-strip > div {
+    min-height: auto;
+    padding: 1rem;
+    border-color: rgba(25, 127, 182, 0.14);
+    background: #f2fcfd;
+    color: #173b49;
+}
+
+.status-dot {
+    width: 0.7rem;
+    height: 0.7rem;
+    display: inline-block;
+    margin-right: 0.5rem;
+    border-radius: 999px;
+}
+
+.status-dot.free {
+    background: #23a988;
+}
+
+.status-dot.paid {
+    background: #f97316;
+}
+
+.status-dot.safety {
+    background: #1f6fb2;
+}
+
+.doctor-record-grid,
+.doctor-alert-grid {
+    display: grid;
+    gap: 1rem;
+}
+
+.doctor-record-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.doctor-record-card,
+.doctor-alert-card {
+    padding: 1.1rem;
+}
+
+.doctor-record-card {
+    cursor: pointer;
+    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.doctor-record-card:hover,
+.doctor-alert-card:hover {
+    border-color: rgba(39, 185, 197, 0.38);
+    transform: translateY(-2px);
+    box-shadow: 0 20px 42px rgba(36, 106, 125, 0.12);
+}
+
+.doctor-record-top,
+.doctor-alert-head,
+.doctor-body-head {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: 0.8rem;
+    align-items: start;
+}
+
+.doctor-record-top p,
+.doctor-alert-head p,
+.doctor-body-part p,
+.doctor-body-head small,
+.doctor-ai-note p,
+.doctor-alert-action p,
+.doctor-status-strip p,
+.mini-panel p,
+.check-list {
+    color: #587883;
+}
+
+.doctor-patient-avatar,
+.doctor-alert-icon,
+.doctor-body-icon,
+.mini-icon {
+    width: 2.7rem;
+    height: 2.7rem;
+    display: grid;
+    place-items: center;
+    border-radius: 1rem;
+    background: #e4fbfc;
+    color: #0a7892;
+    font-weight: 900;
+}
+
+.doctor-body-summary,
+.doctor-alert-diagnosis,
+.doctor-ai-note,
+.doctor-alert-action {
+    margin-top: 1rem;
+    padding: 0.9rem;
+    border: 1px solid rgba(25, 127, 182, 0.12);
+    border-radius: 1rem;
+    background: #f2fcfd;
+}
+
+.doctor-body-head strong,
+.doctor-alert-diagnosis strong,
+.doctor-body-part strong,
+.doctor-vital-grid b {
+    color: #123b4a;
+}
+
+.doctor-duration-pill,
+.doctor-body-part span {
+    display: inline-flex;
+    align-items: center;
+    width: max-content;
+    padding: 0.35rem 0.65rem;
+    border: 1px solid rgba(20, 166, 124, 0.24);
+    border-radius: 999px;
+    background: #dcf8ef;
+    color: #126b58;
+    font-size: 0.8rem;
+    font-weight: 800;
+}
+
+.doctor-body-part-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+    margin-top: 0.9rem;
+}
+
+.doctor-body-part {
+    display: grid;
+    gap: 0.45rem;
+    padding: 0.8rem;
+    border: 1px solid rgba(25, 127, 182, 0.12);
+    border-radius: 0.95rem;
+    background: #ffffff;
+}
+
+.doctor-body-part small,
+.doctor-alert-diagnosis small,
+.doctor-vital-grid small {
+    color: #607f88;
+    font-weight: 700;
+}
+
+.doctor-alert-diagnosis {
+    display: grid;
+    gap: 0.35rem;
+}
+
+.doctor-vital-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.65rem;
+    margin-top: 1rem;
+}
+
+.doctor-vital-grid span {
+    display: grid;
+    gap: 0.25rem;
+    padding: 0.75rem;
+    border: 1px solid rgba(25, 127, 182, 0.12);
+    border-radius: 0.9rem;
+    background: #ffffff;
+}
+
+.doctor-card-actions,
+.doctor-alert-action > div {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.7rem;
+    margin-top: 1rem;
+    flex-wrap: wrap;
+}
+
+.doctor-triage-page .badge {
+    border-color: rgba(25, 127, 182, 0.16);
+    background: #e6f8ff;
+    color: #0b6484;
+}
+
+.doctor-alert-card.is-emergency {
+    border-color: rgba(220, 38, 38, 0.22);
+}
+
+.doctor-alert-card.is-emergency .doctor-alert-icon {
+    background: #fff1f2;
+    color: #b4232f;
+}
+
+.doctor-alert-card.is-high .doctor-alert-icon {
+    background: #fff7ed;
+    color: #c2410c;
+}
+
+.mini-head {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    margin-bottom: 0.8rem;
+}
+
+.check-list {
+    display: grid;
+    gap: 0.7rem;
+    margin: 0;
+    padding-left: 1.1rem;
+}
+
+.doctor-alert-action .btn + .btn {
+    margin-left: 0;
+}
+
+@media (max-width: 1180px) {
+    .doctor-record-layout,
+    .doctor-record-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    body {
+        padding: 1rem;
+    }
+
+    .app-container {
+        width: 100%;
+        height: calc(100vh - 2rem);
+        gap: 0;
+    }
+
+    .sidebar {
+        min-height: 100vh;
+        border-radius: 0 2rem 2rem 0;
+    }
+
+    .main-content {
+        border-radius: 0;
+    }
+
+    .doctor-topbar {
+        align-items: flex-end;
+        flex-direction: column-reverse;
+        padding-top: 0;
+    }
+
+    .doctor-topbar > div:first-child {
+        align-self: stretch;
+    }
+
+    .account-button span:not(.user-avatar):not(.account-chevron) {
+        display: none;
+    }
+
+    .page {
+        padding: 1rem 0;
     }
 }

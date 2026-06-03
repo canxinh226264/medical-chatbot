@@ -18,12 +18,13 @@ const state = {
 };
 
 const menuItems = [
-  ["dashboard", "▦", "Dashboard"],
-  ["consultations", "▣", "Tư vấn Online"],
-  ["records", "▤", "Hồ sơ bệnh nhân"],
-  ["feedback", "★", "Phản hồi"],
-  ["ai-alerts", "!", "Cảnh báo AI"],
-  ["profile", "●", "Hồ sơ cá nhân"],
+  ["dashboard", "🏠", "Dashboard"],
+  ["consultations", "💬", "Tư vấn Online"],
+  ["records", "📋", "Hồ sơ bệnh nhân"],
+  ["feedback", "⭐", "Phản hồi"],
+  ["ai-alerts", "🚨", "Cảnh báo AI"],
+  ["profile", "👤", "Hồ sơ cá nhân"],
+  ["product-report", "💡", "Báo cáo & đề xuất"],
 ];
 
 const consultations = [
@@ -178,6 +179,7 @@ function render() {
     feedback: renderFeedback,
     "ai-alerts": renderAIAlerts,
     profile: renderProfile,
+    "product-report": renderProductReport,
   };
   app.innerHTML = pages[state.activeMenu]();
   bindPageEvents();
@@ -205,7 +207,12 @@ function renderDashboard() {
           <h2 class="card-title">Tư vấn online đang chờ</h2>
           <div class="table-container"><table class="data-table"><thead><tr><th>Bệnh nhân</th><th>Loại hình</th><th>Trạng thái tư vấn</th></tr></thead><tbody>${consultRows}</tbody></table></div>
         </div>
-        <div class="card">
+      </div>
+      <div class="dashboard-right">
+        <div class="card latest-feedback-card"><h2 class="card-title">Phản hồi mới nhất</h2><div class="latest-feedback-list">${feedbacks.slice(0, 3).map((item) => `<div class="feedback-card latest-feedback-item"><div class="feedback-header"><p class="feedback-patient">${item.patientName}</p>${stars(item.rating)}</div><p class="feedback-comment">${item.comment}</p></div>`).join("")}</div></div>
+      </div>
+      <div class="dashboard-lower">
+        <div class="card due-records-card">
           <h2 class="card-title">Hồ sơ bệnh nhân đến hạn</h2>
           <div class="list-container">${patients.slice(1, 5).map((record) => `
             <div class="list-item">
@@ -214,13 +221,10 @@ function renderDashboard() {
             </div>
           `).join("")}</div>
         </div>
-        <div class="charts-grid">
+        <div class="charts-grid dashboard-charts">
           <div class="card"><h2 class="card-title">Lượt tư vấn mỗi ngày</h2><div class="chart-bars">${barData.map(([day, count]) => `<div class="bar-wrap chart-tip" data-tip="${day}: ${count} lượt tư vấn"><div class="bar" style="height:${count * 7}px"></div><span class="tiny muted">${day}</span></div>`).join("")}</div></div>
           <div class="card"><h2 class="card-title">Độ phức tạp của ca bệnh</h2><div class="donut-wrap"><div><svg class="donut-chart" viewBox="0 0 200 200" aria-label="Độ phức tạp của ca bệnh"><circle class="donut-bg" cx="100" cy="100" r="40"></circle><path class="donut-segment" fill="#3b82f6" d="M 101.56 36.02 A 64 64 0 0 1 121.26 160.37 L 113.29 137.73 A 40 40 0 0 0 100.98 60.01 Z" data-tip="${complexityData[0][3]}"></path><path class="donut-segment" fill="#ef4444" d="M 118.28 161.33 A 64 64 0 0 1 36.02 101.56 L 60.01 100.98 A 40 40 0 0 0 111.43 138.33 Z" data-tip="${complexityData[1][3]}"></path><path class="donut-segment" fill="#f97316" d="M 36.02 98.44 A 64 64 0 0 1 98.44 36.02 L 99.02 60.01 A 40 40 0 0 0 60.01 99.02 Z" data-tip="${complexityData[2][3]}"></path></svg><div class="legend">${complexityData.map(([label, , color, tip]) => `<span data-tip="${tip}"><i class="dot" style="background:${color}"></i>${label}</span>`).join("")}</div></div></div></div>
         </div>
-      </div>
-      <div class="dashboard-right">
-        <div class="card"><h2 class="card-title">Phản hồi mới nhất</h2>${feedbacks.slice(0, 3).map((item) => `<div class="feedback-card"><div class="feedback-header"><p class="feedback-patient">${item.patientName}</p>${stars(item.rating)}</div><p class="feedback-comment">${item.comment}</p></div>`).join("")}</div>
       </div>
     </div>
   </section>`;
@@ -252,7 +256,7 @@ function renderChat(selected) {
   return `<div class="ai-summary"><strong>AI Tóm tắt</strong><p class="small muted">${selected.aiSummary}</p></div>
     <div class="chat-actions"><button class="btn btn-success">Kết nối Video</button><button class="btn btn-primary">Gọi điện</button><span class="muted" style="margin-left:auto">Đang chờ: 15 phút</span></div>
     <div class="chat-history" id="chatHistory">${selected.chat.map(([sender, message, time]) => renderChatMessage(sender, message, time)).join("")}</div>
-    <div class="chat-input"><input class="input-field" id="chatMessageInput" placeholder="Nhập tin nhắn với bệnh nhân..."><button class="btn btn-primary" id="sendChatMessage" type="button">Gửi</button></div>`;
+    <div class="chat-input"><input class="input-field" id="chatMessageInput" placeholder="Nhập tin nhắn với bệnh nhân..."><button class="btn btn-primary" id="sendChatMessage" type="button" data-toast="off">Gửi</button></div>`;
 }
 
 function renderChatMessage(sender, message, time) {
@@ -351,6 +355,22 @@ function renderProfile() {
   </section>`;
 }
 
+function renderProductReport() {
+  return `<section class="page active">
+    <div class="page-header"><div><h1 class="page-title">Báo cáo UI/UX & đề xuất cải tiến</h1><p class="page-subtitle">Gửi lỗi giao diện, vấn đề thao tác hoặc ý tưởng giúp Docah hỗ trợ bác sĩ tốt hơn.</p></div></div>
+    <form class="card product-report-form" id="doctorReportForm">
+      <div class="report-form-grid">
+        <div class="field"><label>Loại phản hồi</label><select class="select-field" required><option>Lỗi giao diện UI/UX</option><option>Đề xuất cải tiến</option><option>Lỗi chức năng</option></select></div>
+        <div class="field"><label>Khu vực gặp vấn đề</label><select class="select-field" required><option>Dashboard</option><option>Tư vấn Online</option><option>Hồ sơ bệnh nhân</option><option>Cảnh báo AI</option><option>Khác</option></select></div>
+        <div class="field"><label>Mức ưu tiên</label><select class="select-field" required><option>Thông thường</option><option>Ảnh hưởng công việc</option><option>Không thể tiếp tục thao tác</option></select></div>
+        <div class="field"><label>Tiêu đề</label><input class="input-field" required placeholder="Tóm tắt ngắn vấn đề hoặc đề xuất"></div>
+      </div>
+      <div class="field"><label>Mô tả chi tiết</label><textarea class="textarea-field" required rows="7" placeholder="Mô tả thao tác, kết quả hiện tại và mong muốn cải tiến..."></textarea></div>
+      <div class="report-form-actions"><button class="btn btn-secondary" type="reset">Làm mới</button><button class="btn btn-primary" type="submit">Gửi phản hồi</button></div>
+    </form>
+  </section>`;
+}
+
 function profileFields(fields) {
   return `<div class="form-row">${fields.map(([name, label, type]) => `<div class="field"><label>${label}</label>${state.profileEditing ? `<input class="input-field" name="${name}" type="${type}" value="${escapeHtml(state.profile[name])}">` : `<div class="readonly-value">${name === "dateOfBirth" ? new Date(state.profile[name]).toLocaleDateString("vi-VN") : state.profile[name]}</div>`}</div>`).join("")}</div>`;
 }
@@ -362,6 +382,285 @@ function renderPasswordForm() {
     <div class="password-field"><input class="input-field" type="password" id="confirmPassword" placeholder="Xác nhận mật khẩu mới"><button class="password-toggle" type="button" data-toggle-password="confirmPassword" aria-label="Hiện xác nhận mật khẩu" title="Hiện mật khẩu">👁</button></div>
     <div><button class="btn btn-success" id="savePassword">Lưu mật khẩu</button> <button class="btn btn-secondary" id="cancelPassword">Hủy</button></div>
   </div>`;
+}
+
+function renderRecords() {
+  return `<section class="page active">
+    <div class="doctor-triage-page">
+      <div class="page-header doctor-triage-header"><div><p class="eyebrow">Theo dõi điều trị</p><h1 class="page-title">Hồ sơ bệnh nhân</h1><p class="page-subtitle">Tra cứu hồ sơ, xem tóm tắt AI và ưu tiên các ca cần bác sĩ theo dõi.</p></div></div>
+      <div class="doctor-record-layout">
+        <section class="doctor-record-main">
+          <div class="triage-panel doctor-filter-panel">
+            <div class="panel-head"><div><p class="eyebrow">Bộ lọc hồ sơ</p><h3>Tìm bệnh nhân cần theo dõi</h3></div><span class="flow-badge">${patients.length} hồ sơ</span></div>
+            <div class="doctor-filter-row"><input class="search-input" id="recordSearch" placeholder="Tìm theo tên hoặc triệu chứng..."><select class="select-field" id="riskFilter"><option value="all">Tất cả mức độ</option><option value="low">Nguy cơ thấp</option><option value="medium">Theo dõi</option><option value="high">Nguy cơ cao</option></select></div>
+          </div>
+          <div class="doctor-record-grid" id="recordRows">${renderRecordRows(patients)}</div>
+        </section>
+        <aside class="context-rail doctor-context-rail">
+          <div class="status-strip doctor-status-strip">
+            <div><span class="status-dot paid"></span><strong>Nguy cơ cao</strong><p>${patients.filter((item) => item.riskLevel === "high").length} hồ sơ cần xem trước trong ca trực.</p></div>
+            <div><span class="status-dot safety"></span><strong>Theo dõi</strong><p>${patients.filter((item) => item.riskLevel === "medium").length} hồ sơ có triệu chứng cần cập nhật định kỳ.</p></div>
+            <div><span class="status-dot free"></span><strong>Ổn định</strong><p>${patients.filter((item) => item.riskLevel === "low").length} hồ sơ đang kiểm soát tốt.</p></div>
+          </div>
+          <section class="mini-panel calm"><div class="mini-head"><span class="mini-icon">AI</span><h4>Gợi ý đọc nhanh</h4></div><ul class="check-list"><li>Ưu tiên hồ sơ có ghi nhận AI nguy cơ cao</li><li>Kiểm tra sinh hiệu và ghi chú điều trị gần nhất</li><li>Mở chi tiết để xem lịch sử khám và hướng xử trí</li></ul></section>
+        </aside>
+      </div>
+    </div>
+  </section>`;
+}
+
+function renderRecordRows(items) {
+  if (!items.length) return `<div class="empty-state">Không tìm thấy hồ sơ phù hợp.</div>`;
+  return items.map((item) => `<article class="doctor-record-card" data-open-patient="${item.id}">
+    <div class="doctor-record-top"><span class="doctor-patient-avatar">${item.name.split(" ").slice(-1)[0].charAt(0)}</span><div><h4>${item.name}</h4><p>${item.age} tuổi • ${item.gender} • Khám cuối ${item.lastVisit}</p></div><span class="${badgeClass(item.healthStatus)}">${item.healthStatus}</span></div>
+    <div class="doctor-record-summary"><strong>Triệu chứng gần nhất</strong><p>${item.recentSymptoms}</p></div>
+    <div class="doctor-vital-grid"><span><small>Huyết áp</small><b>${item.vitals.bloodPressure}</b></span><span><small>Nhịp tim</small><b>${item.vitals.heartRate}</b></span><span><small>Nhiệt độ</small><b>${item.vitals.temperature}</b></span></div>
+    <div class="doctor-card-actions"><button class="btn btn-primary btn-sm" data-open-patient="${item.id}">Xem chi tiết</button></div>
+  </article>`).join("");
+}
+
+function renderAIAlerts() {
+  return `<section class="page active">
+    <div class="doctor-triage-page">
+      <div class="page-header doctor-triage-header"><div><p class="eyebrow">Tín hiệu từ AI</p><h1 class="page-title">Cảnh báo AI - ca cần xử lý</h1><p class="page-subtitle">Các cảnh báo được trình bày như luồng sàng lọc ban đầu để bác sĩ đọc nhanh triệu chứng, sinh hiệu và hành động khuyến nghị.</p></div></div>
+      <div class="status-strip doctor-status-strip">
+        <div><span class="status-dot paid"></span><strong>Khẩn cấp</strong><p>${aiAlerts.filter((a) => a.riskLevel === "Kháº©n cáº¥p").length} ca cần tiếp nhận ngay.</p></div>
+        <div><span class="status-dot safety"></span><strong>Nguy cơ cao</strong><p>${aiAlerts.filter((a) => a.riskLevel === "Cao").length} ca cần bác sĩ chuyên khoa đánh giá.</p></div>
+        <div><span class="status-dot free"></span><strong>Phản hồi TB</strong><p>8 phút từ lúc AI chuyển cảnh báo.</p></div>
+      </div>
+      <div class="triage-panel doctor-filter-panel">
+        <div class="panel-head"><div><p class="eyebrow">Bộ lọc cảnh báo</p><h3>Tìm nhanh ca nguy cơ</h3></div><span class="flow-badge">Tổng ${aiAlerts.length} cảnh báo</span></div>
+        <div class="doctor-filter-row"><input class="search-input" id="alertSearch" placeholder="Tìm theo tên bệnh nhân hoặc triệu chứng..."><select class="select-field" id="alertRisk"><option value="all">Tất cả mức độ</option><option value="Kháº©n cáº¥p">Khẩn cấp</option><option value="Cao">Cao</option></select></div>
+      </div>
+      <div class="doctor-alert-grid" id="alertGrid">${renderAlertCards(aiAlerts)}</div>
+    </div>
+  </section>`;
+}
+
+function renderAlertCards(items) {
+  if (!items.length) return `<div class="empty-state" style="grid-column:1/-1">Không tìm thấy cảnh báo phù hợp.</div>`;
+  return items.map((item) => `<article class="doctor-alert-card ${item.riskLevel === "Kháº©n cáº¥p" ? "is-emergency" : "is-high"}">
+    <div class="doctor-alert-head"><span class="doctor-alert-icon">${item.riskLevel === "Kháº©n cáº¥p" ? "!" : "AI"}</span><div><h4>${item.patientName}</h4><p>${item.age} tuổi • ${item.gender} • ${item.timeElapsed}</p></div><span class="${badgeClass(item.riskLevel)}">${item.riskLevel}</span></div>
+    <div class="doctor-alert-diagnosis"><small>Chẩn đoán nghi ngờ</small><strong>${item.criticalSymptom}</strong></div>
+    <div class="pill-list doctor-symptom-pills">${item.symptoms.map((symptom) => `<span class="badge">${symptom}</span>`).join("")}</div>
+    <div class="doctor-vital-grid">${Object.entries(item.vitalSigns).map(([key, value]) => `<span><small>${key}</small><b>${value}</b></span>`).join("")}</div>
+    <div class="mini-panel doctor-ai-note"><div class="mini-head"><span class="mini-icon">AI</span><h4>Đánh giá AI</h4></div><p>${item.aiAssessment}</p></div>
+    <div class="doctor-alert-action"><p><strong>Khuyến nghị:</strong> ${item.recommendedAction}</p><div><button class="btn btn-danger">Tiếp nhận ngay</button><button class="btn btn-secondary">Video</button></div></div>
+  </article>`).join("");
+}
+
+const doctorBodyProfilesByPatientId = {
+  1: {
+    summary: "Ngực trái và tim có dấu hiệu nguy cơ cao",
+    duration: "2 giờ",
+    parts: [
+      { part: "Tim", symptoms: ["Đau thắt ngực", "Khó thở", "Đau lan xuống tay"], duration: "2 giờ" },
+      { part: "Vai trái", symptoms: ["Đau lan xuống vai", "Vã mồ hôi"], duration: "2 giờ" },
+    ],
+  },
+  2: {
+    summary: "Đầu có triệu chứng kéo dài cần theo dõi",
+    duration: "3 ngày",
+    parts: [
+      { part: "Đầu", symptoms: ["Đau đầu", "Chóng mặt", "Choáng váng"], duration: "3 ngày" },
+      { part: "Mắt", symptoms: ["Mờ mắt khi đứng lên"], duration: "1 ngày" },
+    ],
+  },
+  3: {
+    summary: "Ngực và hô hấp có dấu hiệu nhiễm trùng nặng",
+    duration: "2 ngày",
+    parts: [
+      { part: "Ngực và hô hấp", symptoms: ["Ho có đờm", "Ho ra máu", "Khó thở"], duration: "2 ngày" },
+      { part: "Toàn thân", symptoms: ["Sốt cao 39°C", "Mệt nhiều"], duration: "2 ngày" },
+    ],
+  },
+  4: {
+    summary: "Bụng dưới bên phải cần loại trừ viêm ruột thừa",
+    duration: "1 ngày",
+    parts: [
+      { part: "Bụng", symptoms: ["Đau bụng", "Buồn nôn", "Chán ăn"], duration: "1 ngày" },
+    ],
+  },
+  5: {
+    summary: "Theo dõi bệnh nền, chưa ghi nhận triệu chứng cấp",
+    duration: "Tái khám định kỳ",
+    parts: [
+      { part: "Toàn thân", symptoms: ["Không có triệu chứng bất thường", "Theo dõi đường huyết"], duration: "Định kỳ" },
+    ],
+  },
+  6: {
+    summary: "Khám định kỳ, các chỉ số ổn định",
+    duration: "Định kỳ",
+    parts: [
+      { part: "Toàn thân", symptoms: ["Không ghi nhận khó chịu", "Sinh hiệu ổn định"], duration: "Định kỳ" },
+    ],
+  },
+};
+
+const doctorAlertBodyProfiles = [
+  {
+    summary: "Tim và ngực trái có dấu hiệu cấp cứu",
+    duration: "2 giờ",
+    parts: [
+      { part: "Tim", symptoms: ["Đau thắt ngực", "Khó thở", "Vã mồ hôi"], duration: "2 giờ" },
+      { part: "Vai trái", symptoms: ["Đau lan ra vai"], duration: "2 giờ" },
+    ],
+  },
+  {
+    summary: "Ngực và hô hấp có biểu hiện nguy hiểm",
+    duration: "2 ngày",
+    parts: [
+      { part: "Ngực và hô hấp", symptoms: ["Sốt cao", "Ho ra máu", "Khó thở"], duration: "2 ngày" },
+    ],
+  },
+  {
+    summary: "Đầu, miệng và nửa người có dấu hiệu đột quỵ",
+    duration: "15 phút",
+    parts: [
+      { part: "Đầu", symptoms: ["Chóng mặt dữ dội", "Nghi ngờ đột quỵ"], duration: "15 phút" },
+      { part: "Miệng", symptoms: ["Nói khó"], duration: "15 phút" },
+      { part: "Tay/chân", symptoms: ["Liệt nửa người"], duration: "15 phút" },
+    ],
+  },
+  {
+    summary: "Bụng dưới có dấu hiệu ngoại khoa",
+    duration: "45 phút",
+    parts: [
+      { part: "Bụng", symptoms: ["Đau bụng dữ dội", "Buồn nôn", "Sốt nhẹ"], duration: "45 phút" },
+    ],
+  },
+  {
+    summary: "Đầu và mắt có triệu chứng thần kinh cấp",
+    duration: "25 phút",
+    parts: [
+      { part: "Đầu", symptoms: ["Đau đầu dữ dội", "Buồn nôn"], duration: "25 phút" },
+      { part: "Mắt", symptoms: ["Nhìn mờ"], duration: "25 phút" },
+    ],
+  },
+  {
+    summary: "Tim và ngực cần đánh giá chuyên khoa",
+    duration: "1 giờ",
+    parts: [
+      { part: "Tim", symptoms: ["Đau ngực khi gắng sức", "Khó thở", "Mệt mỏi"], duration: "1 giờ" },
+    ],
+  },
+];
+
+function isEmergencyAlert(item) {
+  return item.riskLevel !== "Cao";
+}
+
+function renderAlertRiskOptions() {
+  const emergencyValue = aiAlerts.find(isEmergencyAlert)?.riskLevel || "Khẩn cấp";
+  return `<option value="all">Tất cả mức độ</option><option value="${escapeHtml(emergencyValue)}">Khẩn cấp</option><option value="Cao">Cao</option>`;
+}
+
+function renderDoctorBodySummary(profile) {
+  return `<div class="doctor-body-summary">
+    <div class="doctor-body-head">
+      <span class="doctor-body-icon">CT</span>
+      <div><small>Thông tin từ kiểm tra ban đầu</small><strong>${profile.summary}</strong></div>
+      <span class="doctor-duration-pill">${profile.duration}</span>
+    </div>
+    <div class="doctor-body-part-list">
+      ${profile.parts.map((part) => `<article class="doctor-body-part">
+        <div><small>Bộ phận</small><strong>${part.part}</strong></div>
+        <p>${part.symptoms.join(", ")}</p>
+        <span>${part.duration}</span>
+      </article>`).join("")}
+    </div>
+  </div>`;
+}
+
+function getDoctorBodyProfileForRecord(record) {
+  return doctorBodyProfilesByPatientId[record.id] || {
+    summary: record.recentSymptoms,
+    duration: "Chưa rõ",
+    parts: [{ part: "Toàn thân", symptoms: [record.recentSymptoms], duration: "Chưa rõ" }],
+  };
+}
+
+function getDoctorBodyProfileForAlert(alertItem) {
+  return doctorAlertBodyProfiles[aiAlerts.indexOf(alertItem)] || {
+    summary: alertItem.criticalSymptom,
+    duration: alertItem.timeElapsed,
+    parts: [{ part: "Vùng liên quan", symptoms: alertItem.symptoms, duration: alertItem.timeElapsed }],
+  };
+}
+
+function getDoctorBodySearchText(profile) {
+  return `${profile.summary} ${profile.duration} ${profile.parts.map((part) => `${part.part} ${part.duration} ${part.symptoms.join(" ")}`).join(" ")}`;
+}
+
+function renderRecords() {
+  return `<section class="page active">
+    <div class="doctor-triage-page">
+      <div class="page-header doctor-triage-header"><div><p class="eyebrow">Theo dõi điều trị</p><h1 class="page-title">Hồ sơ bệnh nhân</h1><p class="page-subtitle">Hiển thị lại thông tin bệnh nhân gửi từ kiểm tra ban đầu: bộ phận, triệu chứng, thời gian bị và mức độ ưu tiên.</p></div></div>
+      <div class="doctor-record-layout">
+        <section class="doctor-record-main">
+          <div class="triage-panel doctor-filter-panel">
+            <div class="panel-head"><div><p class="eyebrow">Bộ lọc hồ sơ</p><h3>Tìm bệnh nhân theo triệu chứng đã chọn</h3></div><span class="flow-badge">${patients.length} hồ sơ</span></div>
+            <div class="doctor-filter-row"><input class="search-input" id="recordSearch" placeholder="Tìm theo tên, bộ phận hoặc triệu chứng..."><select class="select-field" id="riskFilter"><option value="all">Tất cả mức độ</option><option value="low">Nguy cơ thấp</option><option value="medium">Theo dõi</option><option value="high">Nguy cơ cao</option></select></div>
+          </div>
+          <div class="doctor-record-grid" id="recordRows">${renderRecordRows(patients)}</div>
+        </section>
+        <aside class="context-rail doctor-context-rail">
+          <div class="status-strip doctor-status-strip">
+            <div><span class="status-dot paid"></span><strong>Nguy cơ cao</strong><p>${patients.filter((item) => item.riskLevel === "high").length} hồ sơ có vùng cơ thể cần xem trước.</p></div>
+            <div><span class="status-dot safety"></span><strong>Theo dõi</strong><p>${patients.filter((item) => item.riskLevel === "medium").length} hồ sơ có triệu chứng kéo dài hoặc cần cập nhật.</p></div>
+            <div><span class="status-dot free"></span><strong>Ổn định</strong><p>${patients.filter((item) => item.riskLevel === "low").length} hồ sơ chưa có dấu hiệu cấp.</p></div>
+          </div>
+          <section class="mini-panel calm"><div class="mini-head"><span class="mini-icon">AI</span><h4>Cách đọc nhanh</h4></div><ul class="check-list"><li>Xem bộ phận bệnh nhân đã chọn trên bản đồ cơ thể</li><li>Đối chiếu triệu chứng và thời gian bị bệnh</li><li>Mở chi tiết để kiểm tra sinh hiệu, ghi chú AI và lịch sử khám</li></ul></section>
+        </aside>
+      </div>
+    </div>
+  </section>`;
+}
+
+function renderRecordRows(items) {
+  if (!items.length) return `<div class="empty-state">Không tìm thấy hồ sơ phù hợp.</div>`;
+  return items.map((item) => {
+    const bodyProfile = getDoctorBodyProfileForRecord(item);
+    return `<article class="doctor-record-card" data-open-patient="${item.id}">
+      <div class="doctor-record-top"><span class="doctor-patient-avatar">${item.name.split(" ").slice(-1)[0].charAt(0)}</span><div><h4>${item.name}</h4><p>${item.age} tuổi • ${item.gender} • Khám cuối ${item.lastVisit}</p></div><span class="${badgeClass(item.healthStatus)}">${item.healthStatus}</span></div>
+      ${renderDoctorBodySummary(bodyProfile)}
+      <div class="doctor-vital-grid"><span><small>Huyết áp</small><b>${item.vitals.bloodPressure}</b></span><span><small>Nhịp tim</small><b>${item.vitals.heartRate}</b></span><span><small>Nhiệt độ</small><b>${item.vitals.temperature}</b></span></div>
+      <div class="doctor-card-actions"><button class="btn btn-primary btn-sm" data-open-patient="${item.id}">Xem chi tiết</button></div>
+    </article>`;
+  }).join("");
+}
+
+function renderAIAlerts() {
+  return `<section class="page active">
+    <div class="doctor-triage-page">
+      <div class="page-header doctor-triage-header"><div><p class="eyebrow">Tín hiệu từ kiểm tra ban đầu</p><h1 class="page-title">Cảnh báo AI - ca cần xử lý</h1><p class="page-subtitle">Mỗi cảnh báo thể hiện vùng cơ thể bệnh nhân đã chọn, triệu chứng, thời gian bị bệnh và khuyến nghị xử trí.</p></div></div>
+      <div class="status-strip doctor-status-strip">
+        <div><span class="status-dot paid"></span><strong>Khẩn cấp</strong><p>${aiAlerts.filter(isEmergencyAlert).length} ca có dấu hiệu cần tiếp nhận ngay.</p></div>
+        <div><span class="status-dot safety"></span><strong>Nguy cơ cao</strong><p>${aiAlerts.filter((a) => a.riskLevel === "Cao").length} ca cần bác sĩ chuyên khoa đánh giá.</p></div>
+        <div><span class="status-dot free"></span><strong>Phản hồi TB</strong><p>8 phút từ lúc AI chuyển cảnh báo.</p></div>
+      </div>
+      <div class="triage-panel doctor-filter-panel">
+        <div class="panel-head"><div><p class="eyebrow">Bộ lọc cảnh báo</p><h3>Tìm nhanh theo bộ phận hoặc triệu chứng</h3></div><span class="flow-badge">Tổng ${aiAlerts.length} cảnh báo</span></div>
+        <div class="doctor-filter-row"><input class="search-input" id="alertSearch" placeholder="Tìm theo tên bệnh nhân hoặc triệu chứng..."><select class="select-field" id="alertRisk">${renderAlertRiskOptions()}</select></div>
+      </div>
+      <div class="doctor-alert-grid" id="alertGrid">${renderAlertCards(aiAlerts)}</div>
+    </div>
+  </section>`;
+}
+
+function renderAlertCards(items) {
+  if (!items.length) return `<div class="empty-state" style="grid-column:1/-1">Không tìm thấy cảnh báo phù hợp.</div>`;
+  return items.map((item) => {
+    const bodyProfile = getDoctorBodyProfileForAlert(item);
+    return `<article class="doctor-alert-card ${isEmergencyAlert(item) ? "is-emergency" : "is-high"}">
+      <div class="doctor-alert-head"><span class="doctor-alert-icon">${isEmergencyAlert(item) ? "!" : "AI"}</span><div><h4>${item.patientName}</h4><p>${item.age} tuổi • ${item.gender} • ${item.timeElapsed}</p></div><span class="${badgeClass(item.riskLevel)}">${item.riskLevel}</span></div>
+      <div class="doctor-alert-diagnosis"><small>Chẩn đoán nghi ngờ</small><strong>${item.criticalSymptom}</strong></div>
+      ${renderDoctorBodySummary(bodyProfile)}
+      <div class="doctor-vital-grid">${Object.entries(item.vitalSigns).map(([key, value]) => `<span><small>${key}</small><b>${value}</b></span>`).join("")}</div>
+      <div class="mini-panel doctor-ai-note"><div class="mini-head"><span class="mini-icon">AI</span><h4>Đánh giá AI</h4></div><p>${item.aiAssessment}</p></div>
+      <div class="doctor-alert-action"><p><strong>Khuyến nghị:</strong> ${item.recommendedAction}</p><div><button class="btn btn-danger">Tiếp nhận ngay</button><button class="btn btn-secondary">Video</button></div></div>
+    </article>`;
+  }).join("");
 }
 
 function bindPageEvents() {
@@ -390,7 +689,7 @@ function bindPageEvents() {
     const update = () => {
       const term = recordSearch.value.toLowerCase();
       const risk = riskFilter.value;
-      const filtered = patients.filter((item) => `${item.name} ${item.recentSymptoms}`.toLowerCase().includes(term) && (risk === "all" || item.riskLevel === risk));
+      const filtered = patients.filter((item) => `${item.name} ${item.recentSymptoms} ${getDoctorBodySearchText(getDoctorBodyProfileForRecord(item))}`.toLowerCase().includes(term) && (risk === "all" || item.riskLevel === risk));
       document.getElementById("recordRows").innerHTML = renderRecordRows(filtered);
       bindOpenPatientButtons();
     };
@@ -404,7 +703,7 @@ function bindPageEvents() {
     const update = () => {
       const term = alertSearch.value.toLowerCase();
       const risk = alertRisk.value;
-      const filtered = aiAlerts.filter((item) => `${item.patientName} ${item.criticalSymptom} ${item.symptoms.join(" ")}`.toLowerCase().includes(term) && (risk === "all" || item.riskLevel === risk));
+      const filtered = aiAlerts.filter((item) => `${item.patientName} ${item.criticalSymptom} ${item.symptoms.join(" ")} ${getDoctorBodySearchText(getDoctorBodyProfileForAlert(item))}`.toLowerCase().includes(term) && (risk === "all" || item.riskLevel === risk));
       document.getElementById("alertGrid").innerHTML = renderAlertCards(filtered);
     };
     alertSearch.addEventListener("input", update);
@@ -465,6 +764,15 @@ function bindPageEvents() {
     button.setAttribute("aria-label", isHidden ? "Ẩn mật khẩu" : "Hiện mật khẩu");
     input.focus();
   }));
+
+  const doctorReportForm = document.getElementById("doctorReportForm");
+  if (doctorReportForm) doctorReportForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    doctorReportForm.reset();
+    if (window.showToast) {
+      showToast("Đã gửi phản hồi", "Báo cáo UI/UX hoặc đề xuất cải tiến đã được chuyển đến đội ngũ sản phẩm.");
+    }
+  });
 }
 
 function bindChatEvents() {
@@ -485,9 +793,6 @@ function bindChatEvents() {
     input.value = "";
     history.scrollTop = history.scrollHeight;
 
-    if (window.showToast) {
-      showToast("Đã gửi tin nhắn", "Tin nhắn đã hiển thị trong cuộc trò chuyện.");
-    }
   };
 
   sendButton.addEventListener("click", sendMessage);
@@ -535,6 +840,95 @@ function closeModal() {
   modal.innerHTML = "";
 }
 
+function renderRecords() {
+  return `<section class="page active">
+    <div class="doctor-triage-page">
+      <div class="page-header doctor-triage-header"><div><p class="eyebrow">Theo dõi điều trị</p><h1 class="page-title">Hồ sơ bệnh nhân</h1><p class="page-subtitle">Hiển thị lại thông tin bệnh nhân gửi từ kiểm tra ban đầu: bộ phận, triệu chứng, thời gian bị và mức độ ưu tiên.</p></div></div>
+      <div class="doctor-record-layout">
+        <section class="doctor-record-main">
+          <div class="triage-panel doctor-filter-panel">
+            <div class="panel-head"><div><p class="eyebrow">Bộ lọc hồ sơ</p><h3>Tìm bệnh nhân theo triệu chứng đã chọn</h3></div><span class="flow-badge">${patients.length} hồ sơ</span></div>
+            <div class="doctor-filter-row"><input class="search-input" id="recordSearch" placeholder="Tìm theo tên, bộ phận hoặc triệu chứng..."><select class="select-field" id="riskFilter"><option value="all">Tất cả mức độ</option><option value="low">Nguy cơ thấp</option><option value="medium">Theo dõi</option><option value="high">Nguy cơ cao</option></select></div>
+          </div>
+          <div class="doctor-record-grid" id="recordRows">${renderRecordRows(patients)}</div>
+        </section>
+      </div>
+    </div>
+  </section>`;
+}
+
+function renderRecordRows(items) {
+  if (!items.length) return `<div class="empty-state">Không tìm thấy hồ sơ phù hợp.</div>`;
+  return items.map((item) => {
+    const bodyProfile = getDoctorBodyProfileForRecord(item);
+    return `<article class="doctor-record-card" data-open-patient="${item.id}">
+      <div class="doctor-record-top"><span class="doctor-patient-avatar">${item.name.split(" ").slice(-1)[0].charAt(0)}</span><div><h4>${item.name}</h4><p>${item.age} tuổi - ${item.gender} - Khám cuối ${item.lastVisit}</p></div><span class="${badgeClass(item.healthStatus)}">${item.healthStatus}</span></div>
+      ${renderDoctorBodySummary(bodyProfile)}
+      <div class="doctor-vital-grid"><span><small>Huyết áp</small><b>${item.vitals.bloodPressure}</b></span><span><small>Nhịp tim</small><b>${item.vitals.heartRate}</b></span><span><small>Nhiệt độ</small><b>${item.vitals.temperature}</b></span></div>
+      <div class="doctor-card-actions"><button class="btn btn-primary btn-sm" data-open-patient="${item.id}">Xem chi tiết</button></div>
+    </article>`;
+  }).join("");
+}
+
+function renderAIAlerts() {
+  return `<section class="page active">
+    <div class="doctor-triage-page">
+      <div class="page-header doctor-triage-header"><div><p class="eyebrow">Tín hiệu từ kiểm tra ban đầu</p><h1 class="page-title">Cảnh báo AI - ca cần xử lý</h1><p class="page-subtitle">Mỗi cảnh báo thể hiện vùng cơ thể bệnh nhân đã chọn, triệu chứng, thời gian bị bệnh và khuyến nghị xử trí.</p></div></div>
+      <div class="status-strip doctor-status-strip">
+        <div><span class="status-dot paid"></span><strong>Khẩn cấp</strong><p>${aiAlerts.filter(isEmergencyAlert).length} ca có dấu hiệu cần tiếp nhận ngay.</p></div>
+        <div><span class="status-dot safety"></span><strong>Nguy cơ cao</strong><p>${aiAlerts.filter((a) => a.riskLevel === "Cao").length} ca cần bác sĩ chuyên khoa đánh giá.</p></div>
+        <div><span class="status-dot free"></span><strong>Phản hồi TB</strong><p>8 phút từ lúc AI chuyển cảnh báo.</p></div>
+      </div>
+      <div class="triage-panel doctor-filter-panel">
+        <div class="panel-head"><div><p class="eyebrow">Bộ lọc cảnh báo</p><h3>Tìm nhanh theo bộ phận hoặc triệu chứng</h3></div><span class="flow-badge">Tổng ${aiAlerts.length} cảnh báo</span></div>
+        <div class="doctor-filter-row"><input class="search-input" id="alertSearch" placeholder="Tìm theo tên bệnh nhân hoặc triệu chứng..."><select class="select-field" id="alertRisk">${renderAlertRiskOptions()}</select></div>
+      </div>
+      <div class="doctor-alert-grid" id="alertGrid">${renderAlertCards(aiAlerts)}</div>
+    </div>
+  </section>`;
+}
+
+function renderAlertCards(items) {
+  if (!items.length) return `<div class="empty-state" style="grid-column:1/-1">Không tìm thấy cảnh báo phù hợp.</div>`;
+  return items.map((item) => {
+    const bodyProfile = getDoctorBodyProfileForAlert(item);
+    const alertIndex = aiAlerts.indexOf(item);
+    return `<article class="doctor-alert-card ${isEmergencyAlert(item) ? "is-emergency" : "is-high"}">
+      <div class="doctor-alert-head"><span class="doctor-alert-icon">${isEmergencyAlert(item) ? "!" : "AI"}</span><div><h4>${item.patientName}</h4><p>${item.age} tuổi - ${item.gender} - ${item.timeElapsed}</p></div><span class="${badgeClass(item.riskLevel)}">${item.riskLevel}</span></div>
+      <div class="doctor-alert-diagnosis"><small>Chẩn đoán nghi ngờ</small><strong>${item.criticalSymptom}</strong></div>
+      ${renderDoctorBodySummary(bodyProfile)}
+      <div class="doctor-vital-grid">${Object.entries(item.vitalSigns).map(([key, value]) => `<span><small>${key}</small><b>${value}</b></span>`).join("")}</div>
+      <div class="mini-panel doctor-ai-note"><div class="mini-head"><span class="mini-icon">AI</span><h4>Đánh giá AI</h4></div><p>${item.aiAssessment}</p></div>
+      <div class="doctor-alert-action"><p><strong>Khuyến nghị:</strong> ${item.recommendedAction}</p><div><button class="btn btn-danger" data-accept-alert="${alertIndex}">Tiếp nhận ngay</button><button class="btn btn-secondary">Video</button></div></div>
+    </article>`;
+  }).join("");
+}
+
+function openAlertChat(alertIndex) {
+  const alertItem = aiAlerts[alertIndex];
+  if (!alertItem) return;
+  let consultation = consultations.find((item) => item.name === alertItem.patientName);
+  if (!consultation) {
+    consultation = {
+      id: Math.max(...consultations.map((item) => item.id)) + 1,
+      name: alertItem.patientName,
+      type: "AI Referral",
+      status: alertItem.riskLevel === "Cao" ? "Nguy cơ cao" : "Khẩn cấp",
+      priority: "high",
+      symptoms: alertItem.symptoms.join(", "),
+      aiSummary: `${alertItem.age} tuổi, ${alertItem.gender}. ${alertItem.aiAssessment} Khuyến nghị: ${alertItem.recommendedAction}`,
+      chat: [
+        ["user", `Tôi đang gặp các triệu chứng: ${alertItem.symptoms.join(", ")}`, alertItem.timeElapsed],
+        ["ai", alertItem.aiAssessment, alertItem.timeElapsed],
+      ],
+    };
+    consultations.unshift(consultation);
+  }
+  state.selectedConsultationId = consultation.id;
+  state.activeMenu = "consultations";
+  render();
+}
+
 function closeMobileMenu() {
   document.getElementById("sidebar").classList.remove("mobile-open");
   document.getElementById("mobileOverlay").classList.remove("active");
@@ -542,6 +936,30 @@ function closeMobileMenu() {
 
 document.getElementById("logoutBtn").addEventListener("click", () => {
   if (confirm("Bạn có chắc chắn muốn đăng xuất?")) window.location.href = "../index.html";
+});
+
+const accountToggle = document.getElementById("accountToggle");
+const accountDropdown = document.getElementById("accountDropdown");
+
+accountToggle.addEventListener("click", (event) => {
+  event.stopPropagation();
+  const isOpen = accountDropdown.classList.toggle("show");
+  accountToggle.setAttribute("aria-expanded", String(isOpen));
+});
+
+document.addEventListener("click", (event) => {
+  if (!accountDropdown.contains(event.target)) {
+    accountDropdown.classList.remove("show");
+    accountToggle.setAttribute("aria-expanded", "false");
+  }
+});
+
+document.addEventListener("click", (event) => {
+  const acceptButton = event.target.closest("[data-accept-alert]");
+  if (!acceptButton) return;
+  event.preventDefault();
+  event.stopPropagation();
+  openAlertChat(Number(acceptButton.dataset.acceptAlert));
 });
 
 document.getElementById("mobileMenuToggle").addEventListener("click", () => {

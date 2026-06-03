@@ -4,11 +4,12 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Docah Dashboard</title>
+    <title>Dashboard Bác sĩ - Docah</title>
     <link rel="stylesheet" href="public/styles/main.css" />
     <link rel="stylesheet" href="public/styles/components.css" />
     <link rel="stylesheet" href="public/styles/responsive.css" />
     <link rel="stylesheet" href="styles/app.css" />
+    <link rel="stylesheet" href="../shared-theme.css" />
   </head>
   <body>
     <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Mở menu">☰</button>
@@ -18,27 +19,40 @@
         <div class="sidebar-header">
           <div class="logo-container">
             <div class="logo-pill">
-              <img class="logo-image" src="public/assets/logo.png" alt="Docah Logo" />
-            </div>
-            <div class="logo-text">
-              <h1>Docah</h1>
-              <p>Hệ thống quản lý</p>
+              <img class="logo-image" src="../logo.png" alt="Docah Logo" />
             </div>
           </div>
         </div>
         <nav class="sidebar-nav" id="sidebarNav"></nav>
-        <div class="sidebar-footer">
-          <div class="user-info">
-            <div class="user-avatar">BS</div>
-            <div>
-              <p class="user-name">BS. Nguyễn Văn A</p>
-              <p class="user-role">Bác sĩ nội khoa</p>
+      </aside>
+      <main class="main-content">
+        <header class="doctor-topbar">
+          <div>
+            <h2>Không gian bác sĩ</h2>
+            <p>Quản lý tư vấn, hồ sơ bệnh nhân và cảnh báo y tế.</p>
+          </div>
+          <div class="account-menu">
+            <button class="account-button" id="accountToggle" type="button" aria-expanded="false">
+              <div class="dot">BS</div>
+              <div>
+                <strong>BS. Nguyễn Văn A</strong>
+                <small>Bác sĩ nội khoa</small>
+              </div>
+            </button>
+            <div class="account-dropdown dropdown" id="accountDropdown">
+              <div class="dropdown-illustration">
+                <img src="../logo.png" alt="Docah logo" />
+                <div>
+                  <strong>Đăng xuất</strong>
+                  <span>Thoát khỏi phiên bác sĩ hiện tại</span>
+                </div>
+              </div>
+              <button class="account-dropdown-item dropdown-item logout-btn" id="logoutBtn" type="button">Đăng xuất</button>
             </div>
           </div>
-          <button class="logout-btn" id="logoutBtn">Đăng xuất</button>
-        </div>
-      </aside>
-      <main class="main-content" id="app"></main>
+        </header>
+        <div class="page-content" id="app"></div>
+      </main>
     </div>
     <div class="modal" id="modal"></div>
     <script src="scripts/app.js"></script>

@@ -241,7 +241,7 @@ function caseRow(c) {
       </div>
       <div>
         <span class="${badgeClass(c.status)}">${c.status}</span>
-        <a class="btn" href="case-detail.html?id=${c.id}">Xem chi tiết</a>
+        <a class="btn case-detail-button" href="case-detail.html?id=${c.id}">Xem chi tiết</a>
         <button class="delete-btn" type="button" onclick="deleteCase(${c.id})" title="Xóa phản hồi">🗑</button>
       </div>
     </div>
@@ -463,11 +463,8 @@ function renderResponses() {
                 <p>Nguồn: ${r.channel} • ${r.date}</p>
               </div>
               <div class="response-actions">
-                <select class="${badgeClass(disp)} suggestions-status-select" onchange="changeResponseStatus(this, ${r.id})">
-                  <option value="Đang xử lý" ${disp === "Đang xử lý" ? "selected" : ""}>Đang xử lý</option>
-                  <option value="Đã xử lý" ${disp === "Đã xử lý" ? "selected" : ""}>Đã xử lý</option>
-                </select>
-                <button type="button" onclick="toggleResponse(${r.id})">Xem chi tiết</button>
+                ${responseStatusDropdown(r.id, disp)}
+                <button class="response-detail-button" type="button" onclick="toggleResponse(${r.id})">Xem chi tiết</button>
               </div>
             </div>
             <p id="response-${r.id}" class="response-content hidden">${r.content}</p>
@@ -498,15 +495,138 @@ function toggleResponse(id) {
   document.querySelector(`#response-${id}`).classList.toggle("hidden");
 }
 
-function changeResponseStatus(selectEl, id) {
-  const newStatus = selectEl.value;
+function responseStatusDropdown(responseId, status) {
+  const options = ["Đang xử lý", "Đã xử lý"];
+  const tone = status === "Đã xử lý" ? "is-done" : "is-processing";
+
+  return `
+    <div class="suggestions-status-dropdown ${tone}">
+      <button class="suggestions-status-trigger" type="button" aria-expanded="false" onclick="toggleResponseStatusMenu(event, this)">
+        <span>${status}</span>
+        <svg aria-hidden="true" viewBox="0 0 24 24"><path d="m7 10 5 5 5-5"/></svg>
+      </button>
+      <div class="suggestions-status-menu">
+        ${options.map((option) => `
+          <button class="suggestions-status-option ${option === status ? "active" : ""}" type="button" data-status="${option}" onclick="changeResponseStatus(event, this, ${responseId})">
+            ${option}
+          </button>
+        `).join("")}
+      </div>
+    </div>
+  `;
+}
+
+function closeExpertSelectMenus(except = null) {
+  document.querySelectorAll(".expert-select.open").forEach((dropdown) => {
+    if (dropdown === except) return;
+    dropdown.classList.remove("open");
+    dropdown.querySelector(".expert-select-trigger")?.setAttribute("aria-expanded", "false");
+  });
+}
+
+function enhanceExpertSelect(select) {
+  if (!select || select.dataset.enhancedSelect === "true") return;
+  select.dataset.enhancedSelect = "true";
+  select.classList.add("expert-select-native");
+  select.tabIndex = -1;
+  select.setAttribute("aria-hidden", "true");
+
+  const dropdown = document.createElement("div");
+  dropdown.className = "expert-select";
+  select.parentNode.insertBefore(dropdown, select);
+  dropdown.appendChild(select);
+
+  const trigger = document.createElement("button");
+  trigger.className = "expert-select-trigger";
+  trigger.type = "button";
+  trigger.setAttribute("aria-expanded", "false");
+  trigger.innerHTML = '<span></span><svg aria-hidden="true" viewBox="0 0 24 24"><path d="m7 10 5 5 5-5"/></svg>';
+  dropdown.appendChild(trigger);
+
+  const menu = document.createElement("div");
+  menu.className = "expert-select-menu";
+  dropdown.appendChild(menu);
+
+  Array.from(select.options).forEach((option) => {
+    const item = document.createElement("button");
+    item.className = "expert-select-option";
+    item.type = "button";
+    item.dataset.value = option.value;
+    item.textContent = option.textContent;
+    item.addEventListener("click", (event) => {
+      event.stopPropagation();
+      select.value = option.value;
+      select.dispatchEvent(new Event("change", { bubbles: true }));
+      dropdown.classList.remove("open");
+      trigger.setAttribute("aria-expanded", "false");
+      trigger.focus();
+    });
+    menu.appendChild(item);
+  });
+
+  const sync = () => {
+    const selected = select.options[select.selectedIndex];
+    trigger.querySelector("span").textContent = selected ? selected.textContent : "";
+    menu.querySelectorAll(".expert-select-option").forEach((item) => {
+      item.classList.toggle("active", item.dataset.value === select.value);
+    });
+  };
+
+  trigger.addEventListener("click", (event) => {
+    event.stopPropagation();
+    const shouldOpen = !dropdown.classList.contains("open");
+    closeResponseStatusMenus();
+    closeExpertSelectMenus(dropdown);
+    dropdown.classList.toggle("open", shouldOpen);
+    trigger.setAttribute("aria-expanded", String(shouldOpen));
+  });
+
+  select.addEventListener("change", sync);
+  sync();
+}
+
+function setupExpertSelects() {
+  document.querySelectorAll(".filter select, .filter-three select, .report-toolbar select").forEach(enhanceExpertSelect);
+}
+
+function closeResponseStatusMenus(except = null) {
+  document.querySelectorAll(".suggestions-status-dropdown.open").forEach((dropdown) => {
+    if (dropdown === except) return;
+    dropdown.classList.remove("open");
+    dropdown.querySelector(".suggestions-status-trigger")?.setAttribute("aria-expanded", "false");
+  });
+}
+
+function toggleResponseStatusMenu(event, trigger) {
+  event.stopPropagation();
+  const dropdown = trigger.closest(".suggestions-status-dropdown");
+  if (!dropdown) return;
+
+  const shouldOpen = !dropdown.classList.contains("open");
+  closeExpertSelectMenus();
+  closeResponseStatusMenus(dropdown);
+  dropdown.classList.toggle("open", shouldOpen);
+  trigger.setAttribute("aria-expanded", String(shouldOpen));
+}
+
+function changeResponseStatus(event, optionButton, id) {
+  event.stopPropagation();
+  const newStatus = optionButton.dataset.status;
   const r = responses.find((x) => x.id === id);
   if (r) {
     r.status = newStatus;
     localStorage.setItem("uxResponses", JSON.stringify(responses));
 
-    // Update select element class dynamically
-    selectEl.className = badgeClass(newStatus) + " suggestions-status-select";
+    const dropdown = optionButton.closest(".suggestions-status-dropdown");
+    if (dropdown) {
+      dropdown.classList.remove("is-processing", "is-done", "open");
+      dropdown.classList.add(newStatus === "Đã xử lý" ? "is-done" : "is-processing");
+      dropdown.querySelector(".suggestions-status-trigger span").textContent = newStatus;
+      dropdown.querySelector(".suggestions-status-trigger").setAttribute("aria-expanded", "false");
+      dropdown.querySelectorAll(".suggestions-status-option").forEach((option) => {
+        option.classList.toggle("active", option.dataset.status === newStatus);
+      });
+    }
 
     // Synchronize with cases when status changes
     const matchingCase = cases.find((c) => c.patientName === r.patientName && c.channel === r.channel);
@@ -520,6 +640,11 @@ function changeResponseStatus(selectEl, id) {
     }
   }
 }
+
+document.addEventListener("click", () => {
+  closeResponseStatusMenus();
+  closeExpertSelectMenus();
+});
 
 function showCaseAttachmentName(input) {
   const target = document.querySelector("#caseAttachmentName");
@@ -756,6 +881,7 @@ document.addEventListener("DOMContentLoaded", () => {
   renderDetail();
   renderResponses();
   setupAnalytics();
+  setupExpertSelects();
   setupReport();
   setupAccountMenu();
   setupProfileForm();

@@ -500,104 +500,6 @@
       transform: translateY(-1px);
     }
 
-    .chat-preview {
-      display: grid;
-      gap: 18px;
-    }
-
-    .chat-bubble {
-      max-width: 68%;
-      border-radius: 24px;
-      padding: 16px 20px;
-      line-height: 1.6;
-      position: relative;
-    }
-
-    .chat-bubble.user {
-      margin-left: auto;
-      background: rgba(59,130,246,0.16);
-      color: white;
-      border-bottom-right-radius: 6px;
-    }
-
-    .chat-bubble.bot {
-      background: rgba(255,255,255,0.06);
-      color: #e2e8f0;
-      border-bottom-left-radius: 6px;
-    }
-
-    .quick-replies {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 8px;
-    }
-
-    .quick-reply {
-      border: 1px solid rgba(148,163,184,0.16);
-      background: rgba(255,255,255,0.06);
-      color: #e2e8f0;
-      border-radius: 18px;
-      padding: 10px 14px;
-      cursor: pointer;
-      transition: background 0.2s ease, transform 0.2s ease;
-    }
-
-    .quick-reply:hover {
-      background: rgba(59,130,246,0.16);
-      transform: translateY(-1px);
-    }
-
-    .progress-track {
-      display: grid;
-      gap: 10px;
-      margin-top: 16px;
-    }
-
-    .track-bar {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .track-line {
-      flex: 1;
-      height: 8px;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.08);
-      overflow: hidden;
-    }
-
-    .track-fill {
-      width: 54%;
-      height: 100%;
-      background: linear-gradient(135deg, var(--accent-strong), var(--accent));
-      border-radius: 999px;
-    }
-
-    .chat-preview.mobile-mode {
-      position: relative;
-      max-width: 340px;
-      width: 100%;
-      margin: 0 auto;
-      padding: 28px 20px 24px;
-      border-radius: 42px;
-      background: rgba(15,23,42,0.24);
-      box-shadow: inset 0 0 0 1px rgba(148,163,184,0.16);
-    }
-
-    .chat-preview.mobile-mode::before {
-      content: '';
-      position: absolute;
-      top: -18px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 100px;
-      height: 14px;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.08);
-    }
-
     .popup-backdrop {
       position: fixed;
       inset: 0;
@@ -1003,11 +905,637 @@
       color: white;
     }
 
+    .body-manager-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 18px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .screen-tabs .step-card {
+      border-color: rgba(25, 127, 182, 0.14);
+      background: linear-gradient(180deg, #ffffff 0%, #f4fbfc 100%);
+      color: #173b49;
+      box-shadow: 0 12px 28px rgba(36, 106, 125, 0.06);
+    }
+
+    .screen-tabs .step-card.active,
+    .screen-tabs .step-card:hover {
+      border-color: rgba(39, 185, 197, 0.38);
+      background: linear-gradient(180deg, #e9fbfd 0%, #ffffff 100%);
+      box-shadow: 0 16px 34px rgba(36, 106, 125, 0.1);
+      transform: translateY(-1px);
+    }
+
+    .screen-tabs .step-title {
+      color: #173b49;
+    }
+
+    .screen-tabs .step-description {
+      color: #607f88;
+    }
+
+    .screen-tabs .step-label {
+      border: 1px solid rgba(25, 127, 182, 0.18);
+      background: #dff5f7;
+      color: #145f88;
+    }
+
+    .screen-tabs .step-card.active .step-label {
+      border-color: rgba(35, 169, 136, 0.34);
+      background: #dcf8ef;
+      color: #126b58;
+    }
+
+    .body-manager-head h3,
+    .body-manager-head p,
+    .manager-body-intro h4,
+    .manager-body-intro p {
+      margin: 0;
+    }
+
+    .body-manager-head p,
+    .manager-body-intro p {
+      margin-top: 8px;
+      color: #607f88;
+      line-height: 1.6;
+    }
+
+    .body-manager-head h3,
+    .manager-body-intro h4 {
+      color: #173b49;
+    }
+
+    .manager-body-intro {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 16px;
+      padding: 18px 20px;
+      border: 1px solid rgba(39, 185, 197, 0.24);
+      border-radius: 18px;
+      background: #f2fcfd;
+    }
+
+    .patient-controls {
+      min-width: min(360px, 100%);
+      display: grid;
+      gap: 12px;
+    }
+
+    .gender-control,
+    .age-control {
+      display: grid;
+      gap: 8px;
+      color: #315e6d;
+      font-size: 0.86rem;
+      font-weight: 900;
+    }
+
+    .gender-toggle {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 6px;
+      padding: 4px;
+      border: 1px solid rgba(25, 127, 182, 0.16);
+      border-radius: 15px;
+      background: #ffffff;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.72);
+    }
+
+    .gender-option {
+      min-height: 38px;
+      border: 0;
+      border-radius: 12px;
+      background: #f1f5f9;
+      color: #315e6d;
+      font: inherit;
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    .gender-option.active {
+      background: linear-gradient(135deg, #19a7b8, #16b8a8);
+      color: #ffffff;
+      box-shadow: 0 10px 18px rgba(25, 127, 182, 0.16);
+    }
+
+    .age-control span {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .age-control output {
+      color: #176a91;
+    }
+
+    .age-control input {
+      accent-color: #27b9c5;
+      cursor: pointer;
+    }
+
+    .body-map-head,
+    .selection-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .body-map-head h4,
+    .body-map-head p,
+    .selection-head h4,
+    .selection-head p {
+      margin: 0;
+    }
+
+    .body-map-head h4,
+    .selection-head h4 {
+      color: #173b49;
+    }
+
+    .body-map-head p,
+    .selection-head p {
+      margin-top: 7px;
+      color: #607f88;
+      line-height: 1.5;
+    }
+
+    .flow-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(25, 127, 182, 0.2);
+      background: #dff5f7;
+      color: #145f88;
+      font-size: 0.8rem;
+      font-weight: 900;
+    }
+
+    .flow-badge {
+      min-height: 34px;
+      padding: 7px 11px;
+      border-radius: 999px;
+      white-space: nowrap;
+    }
+
+    #screen-1 .panel-card,
+    #screen-2 .panel-card {
+      border-color: rgba(25, 127, 182, 0.16);
+      background: linear-gradient(180deg, #ffffff 0%, #f7fcfd 100%);
+      box-shadow: 0 18px 44px rgba(36, 106, 125, 0.08);
+    }
+
+    #screen-1 .status-pill {
+      border-color: rgba(35, 169, 136, 0.28);
+      background: #dcf8ef;
+      color: #126b58;
+    }
+
+    .manager-body-workspace {
+      display: block;
+    }
+
+    .manager-body-card,
+    .body-config-card {
+      border: 1px solid rgba(25, 127, 182, 0.16);
+      border-radius: 20px;
+      background: #ffffff;
+      box-shadow: 0 12px 28px rgba(36, 106, 125, 0.055);
+    }
+
+    .manager-body-card {
+      padding: 16px;
+    }
+
+    .body-region-guide {
+      display: grid;
+      gap: 10px;
+      margin-top: 14px;
+      padding: 13px;
+      border: 1px solid rgba(39, 185, 197, 0.24);
+      border-radius: 16px;
+      background: #f2fcfd;
+    }
+
+    .body-region-guide > strong {
+      color: #315e6d;
+      font-size: 0.9rem;
+    }
+
+    .body-region-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+    }
+
+    .body-region-chip {
+      min-height: 32px;
+      padding: 6px 10px;
+      border: 1px solid rgba(25, 127, 182, 0.18);
+      border-radius: 999px;
+      background: #ffffff;
+      color: #41636d;
+      font-size: 0.78rem;
+      font-weight: 900;
+      cursor: pointer;
+      transition: color 0.2s ease, background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+    }
+
+    .body-region-chip:hover,
+    .body-region-chip:focus,
+    .body-region-chip.active {
+      border-color: rgba(35, 169, 136, 0.48);
+      background: #dcf8ef;
+      color: #126b58;
+      transform: translateY(-1px);
+    }
+
+    .body-hover-card {
+      min-height: 92px;
+      display: grid;
+      align-content: start;
+      margin-top: 12px;
+      padding: 13px 15px;
+      border: 1px solid rgba(39, 185, 197, 0.24);
+      border-radius: 16px;
+      background: #f2fcfd;
+    }
+
+    .body-hover-card strong {
+      color: #176a91;
+    }
+
+    .body-hover-card p {
+      margin: 6px 0 0;
+      color: #607f88;
+      line-height: 1.45;
+    }
+
+    .body-view-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .body-view {
+      min-height: 590px;
+      display: grid;
+      align-content: start;
+      place-items: center;
+      padding: 10px;
+      overflow: hidden;
+      border: 1px solid rgba(39, 185, 197, 0.22);
+      border-radius: 18px;
+      background: linear-gradient(180deg, #f2fcfd 0%, #f8fdff 100%);
+    }
+
+    .body-view-label {
+      align-self: start;
+      justify-self: stretch;
+      padding: 0;
+      color: #176a91;
+      font-size: 0.78rem;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-align: center;
+      text-transform: uppercase;
+    }
+
+    .body-view-label small {
+      display: inline-flex;
+      margin-left: 6px;
+      padding: 3px 7px;
+      border-radius: 999px;
+      background: rgba(20, 184, 166, 0.12);
+      color: #0f766e;
+      font-size: 0.68rem;
+      letter-spacing: 0.04em;
+      vertical-align: middle;
+    }
+
+    .manager-body-figure {
+      width: min(280px, 100%);
+      height: 535px;
+      margin-top: 8px;
+      overflow: visible;
+      filter: drop-shadow(0 12px 20px rgba(36, 106, 125, 0.16));
+    }
+
+    .body-detail {
+      fill: none;
+      stroke: rgba(15, 118, 110, 0.52);
+      stroke-linecap: round;
+      stroke-width: 2;
+      pointer-events: none;
+    }
+
+    .manager-body-zone {
+      fill: rgba(125, 211, 252, 0.48);
+      stroke: rgba(14, 116, 144, 0.64);
+      stroke-width: 2;
+      cursor: pointer;
+      outline: none;
+      transition: transform 0.2s ease, fill 0.2s ease, filter 0.2s ease, stroke 0.2s ease;
+      transform-box: fill-box;
+      transform-origin: center;
+    }
+
+    .manager-body-zone:hover,
+    .manager-body-zone:focus,
+    .manager-body-zone.is-active {
+      fill: rgba(34, 211, 238, 0.78);
+      stroke: #0891b2;
+      filter: drop-shadow(0 7px 7px rgba(8, 145, 178, 0.28));
+      transform: scale(1.055);
+    }
+
+    .manager-body-zone.configured {
+      fill: rgba(20, 184, 166, 0.82);
+      stroke: #0f766e;
+    }
+
+    .manager-body-zone.face-zone {
+      fill: rgba(253, 186, 116, 0.6);
+    }
+
+    .manager-body-zone.feature-zone {
+      fill: rgba(251, 113, 133, 0.56);
+    }
+
+    .manager-body-zone.torso-zone {
+      fill: rgba(253, 164, 175, 0.56);
+    }
+
+    .manager-body-zone.abdomen-zone,
+    .manager-body-zone.back-zone {
+      fill: rgba(196, 181, 253, 0.56);
+    }
+
+    .manager-body-zone.limb-zone {
+      fill: rgba(254, 240, 138, 0.62);
+    }
+
+    .manager-body-zone.joint-zone {
+      fill: rgba(253, 186, 116, 0.66);
+    }
+
+    .manager-body-zone.heart-zone {
+      fill: rgba(251, 113, 133, 0.72);
+      stroke: rgba(190, 24, 93, 0.74);
+    }
+
+    .manager-body-zone.heart-zone:hover,
+    .manager-body-zone.heart-zone:focus,
+    .manager-body-zone.heart-zone.is-active {
+      fill: rgba(244, 63, 94, 0.94);
+      stroke: #be123c;
+      filter: drop-shadow(0 7px 7px rgba(225, 29, 72, 0.24));
+    }
+
+    .body-config-grid,
+    .manager-symptom-editor {
+      display: grid;
+      gap: 12px;
+    }
+
+    .body-config-card {
+      padding: 14px;
+    }
+
+    .body-config-card p {
+      margin: 8px 0 0;
+      color: #557681;
+      line-height: 1.5;
+    }
+
+    .body-config-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .body-config-card {
+      display: grid;
+      gap: 10px;
+      border-radius: 18px;
+      background: linear-gradient(180deg, #ffffff 0%, #f7fcfd 100%);
+    }
+
+    .body-config-card strong {
+      color: #173b49;
+    }
+
+    #screen-1 .button-secondary,
+    #screen-2 .button-secondary,
+    .body-part-popup .button-secondary {
+      border: 1px solid rgba(25, 127, 182, 0.18);
+      background: #eef8f9;
+      color: #315e6d;
+      box-shadow: 0 7px 16px rgba(36, 106, 125, 0.08);
+    }
+
+    #screen-1 .button-secondary:hover,
+    #screen-2 .button-secondary:hover,
+    .body-part-popup .button-secondary:hover {
+      background: #dff5f7;
+      color: #145f88;
+    }
+
+    #screen-1 .button-primary,
+    #screen-2 .button-primary,
+    .body-part-popup .button-primary {
+      border-color: transparent;
+      background: linear-gradient(135deg, #1f6fb2, #27b9c5);
+      color: #ffffff;
+      box-shadow: 0 12px 26px rgba(25, 127, 182, 0.2);
+    }
+
+    .body-config-card header {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .severity-pill {
+      padding: 6px 10px;
+      border: 1px solid rgba(25, 127, 182, 0.18);
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 800;
+    }
+
+    .severity-pill.low { border-color: rgba(35, 169, 136, 0.34); background: #dcf8ef; color: #126b58; }
+    .severity-pill.medium { border-color: rgba(217, 119, 6, 0.34); background: #fef3c7; color: #965208; }
+    .severity-pill.high { border-color: rgba(220, 38, 38, 0.34); background: #fee2e2; color: #b4232f; }
+
+    .body-part-popup {
+      width: min(560px, calc(100vw - 32px));
+      padding: 0;
+      overflow: hidden;
+      background: #ffffff;
+      color: #173b49;
+      border-color: rgba(25, 127, 182, 0.16);
+      box-shadow: 0 30px 80px rgba(15, 23, 42, 0.26);
+    }
+
+    .body-part-popup-head {
+      padding: 24px 26px 18px;
+      background: linear-gradient(180deg, #ffffff 0%, #f7fcfd 100%);
+      border-bottom: 1px solid rgba(25, 127, 182, 0.1);
+    }
+
+    .popup-kicker {
+      display: inline-flex;
+      margin-bottom: 9px;
+      padding: 6px 10px;
+      border: 1px solid rgba(35, 169, 136, 0.26);
+      border-radius: 999px;
+      background: #dcf8ef;
+      color: #126b58;
+      font-size: 0.76rem;
+      font-weight: 900;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .body-part-popup h4 {
+      margin: 0;
+      color: #173b49;
+      font-size: 1.28rem;
+    }
+
+    .body-part-popup-copy {
+      margin: 8px 0 0;
+      color: #607f88;
+      line-height: 1.55;
+    }
+
+    .body-duration-control {
+      display: grid;
+      gap: 10px;
+      margin: 18px 26px 14px;
+      padding: 16px;
+      border: 1px solid rgba(39, 185, 197, 0.24);
+      border-radius: 18px;
+      background: #f2fcfd;
+    }
+
+    .body-duration-control span {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      color: #315e6d;
+    }
+
+    .body-duration-control output {
+      color: #176a91;
+      font-weight: 800;
+    }
+
+    .body-duration-control input[type="range"] {
+      accent-color: #27b9c5;
+      cursor: pointer;
+    }
+
+    .body-part-popup label {
+      color: #315e6d;
+      font-weight: 800;
+    }
+
+    .body-popup-field {
+      display: grid;
+      gap: 8px;
+      margin: 0 26px 14px;
+    }
+
+    .body-part-popup input,
+    .body-part-popup select {
+      width: 100%;
+      min-height: 46px;
+      padding: 12px 14px;
+      border: 1px solid rgba(25, 127, 182, 0.2);
+      border-radius: 14px;
+      background: #ffffff;
+      color: #173b49;
+      font: inherit;
+    }
+
+    .body-part-popup select {
+      appearance: none;
+      background-image: linear-gradient(45deg, transparent 50%, #197fb6 50%), linear-gradient(135deg, #197fb6 50%, transparent 50%);
+      background-position: calc(100% - 18px) calc(50% - 2px), calc(100% - 14px) calc(50% - 2px);
+      background-size: 6px 6px, 6px 6px;
+      background-repeat: no-repeat;
+      padding-right: 42px;
+    }
+
+    .symptom-add-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 10px;
+    }
+
+    .symptom-add-row .button {
+      min-width: 86px;
+      border-radius: 16px;
+    }
+
+    .manager-symptom-editor {
+      margin: 4px 26px 18px;
+      padding: 12px;
+      border: 1px dashed rgba(25, 127, 182, 0.2);
+      border-radius: 18px;
+      background: #f8fdff;
+    }
+
+    .symptom-chip {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      min-height: 42px;
+      padding: 9px 12px;
+      border: 1px solid rgba(25, 127, 182, 0.18);
+      border-radius: 15px;
+      background: #ffffff;
+      color: #41636d;
+      font-weight: 800;
+    }
+
+    .symptom-chip button {
+      width: 28px;
+      height: 28px;
+      display: inline-grid;
+      place-items: center;
+      border: 1px solid rgba(220, 38, 38, 0.2);
+      border-radius: 999px;
+      background: #fff1f2;
+      color: #b4232f;
+      font-weight: 900;
+      cursor: pointer;
+      line-height: 1;
+    }
+
+    .body-part-popup .popup-actions {
+      padding: 16px 26px 24px;
+      border-top: 1px solid rgba(25, 127, 182, 0.1);
+      background: #ffffff;
+    }
+
     @media (max-width: 1120px) {
       .screen-tabs {
         grid-template-columns: 1fr 1fr;
       }
       .package-grid {
+        grid-template-columns: 1fr;
+      }
+      .manager-body-workspace,
+      .body-config-grid {
         grid-template-columns: 1fr;
       }
     }
@@ -1024,6 +1552,16 @@
       .screen-tabs {
         grid-template-columns: 1fr;
       }
+      .manager-body-intro {
+        align-items: stretch;
+        flex-direction: column;
+      }
+      .patient-controls {
+        width: 100%;
+      }
+      .body-view-grid {
+        grid-template-columns: 1fr;
+      }
     }
 
     @media (max-width: 700px) {
@@ -1033,6 +1571,8 @@
       }
     }
   </style>
+  <link rel="stylesheet" href="../shared-theme.css">
+  <link rel="stylesheet" href="manager-visibility.css">
 </head>
 <body>
   <div class="page">
@@ -1040,10 +1580,6 @@
       <div class="brand">
           <div class="brand-logo">
             <img src="logo.png" alt="Docah logo" />
-          </div>
-          <div>
-            <h1>Docah</h1>
-            <p>Hệ thống quản lý</p>
           </div>
         </div>
       <nav class="nav-menu">
@@ -1075,6 +1611,7 @@
           <span class="icon">⚙️</span>
           <span>Cài đặt hệ thống</span>
         </a>
+        <a class="nav-link" href="bao-cao-de-xuat.html"><span class="icon">💡</span><span>Báo cáo &amp; đề xuất</span></a>
       </nav>
     </aside>
 
@@ -1082,7 +1619,7 @@
       <div class="topbar">
         <div class="topbar-title">
           <h2>Chatbot & Quy trình</h2>
-          <p>Tạo và quản lý luồng tương tác, preview người dùng, cấu hình phân loại nguy cơ và paywall tự nhiên.</p>
+          <p>Tạo và quản lý khung cơ thể, cấu hình triệu chứng, phân loại nguy cơ và paywall tự nhiên.</p>
         </div>
         <div class="account-menu">
           <button class="account-button" id="accountToggle" type="button">
@@ -1107,7 +1644,7 @@
 
       <div class="panel-header">
         <div>
-          <p class="subtitle">Bốn màn hình liên kết giúp bạn thiết kế kịch bản chatbot từ câu hỏi đến gợi ý nâng cấp.</p>
+          <p class="subtitle">Bốn màn hình liên kết giúp bạn quản lý vùng cơ thể, triệu chứng, logic nguy cơ và gợi ý nâng cấp.</p>
         </div>
         <button class="button button-primary" id="saveConfigBtn" type="button">Lưu cấu hình</button>
       </div>
@@ -1115,13 +1652,13 @@
       <div class="screen-tabs">
         <button class="step-card active" data-step="1">
           <span class="step-label">1</span>
-          <p class="step-title">Soạn kịch bản</p>
-          <p class="step-description">Quản lý câu hỏi theo bước, thêm/xóa/sắp xếp dễ dàng.</p>
+          <p class="step-title">Khung cơ thể</p>
+          <p class="step-description">Bấm vào từng bộ phận để cấu hình triệu chứng và thời gian mặc định.</p>
         </button>
         <button class="step-card" data-step="2">
           <span class="step-label">2</span>
-          <p class="step-title">Preview giao diện</p>
-          <p class="step-description">Xem đúng như người dùng sẽ trải nghiệm conversation.</p>
+          <p class="step-title">Cấu hình triệu chứng</p>
+          <p class="step-description">Xem nhanh các bộ phận đã có triệu chứng và mức ưu tiên xử lý.</p>
         </button>
         <button class="step-card" data-step="3">
           <span class="step-label">3</span>
@@ -1137,139 +1674,129 @@
 
       <section class="screen-panel active" id="screen-1">
         <div class="panel-card">
-          <div class="question-header" style="display:flex; justify-content:space-between; gap:16px; align-items:center; flex-wrap:wrap;">
+          <div class="body-manager-head">
             <div>
-              <h3>Trình soạn kịch bản hỏi triệu chứng</h3>
-              <p style="margin-top:10px; color: var(--muted);">Mỗi bước là một câu hỏi quick reply. Người dùng trả lời bằng nút, không cần gõ.</p>
+              <h3>Khung cơ thể kiểm tra ban đầu</h3>
+              <p>Quản lý có thể bấm vào từng vùng cơ thể để thêm triệu chứng, đặt thời gian hỏi mặc định và mức ưu tiên cho chatbot.</p>
             </div>
-            <span class="status-pill">Đang hoạt động</span>
+            <span class="status-pill">Dùng cho màn khách</span>
           </div>
 
-          <ol class="question-list" id="questionList">
-            <li class="question-item" draggable="true">
-              <div class="question-item-header">
-                <div>
-                  <p class="question-item-title">Triệu chứng chính — “Bạn đang gặp vấn đề gì hôm nay?”</p>
-                  <span class="question-pill pill-required">Bắt buộc</span>
-                </div>
-                <div class="question-actions">
-                  <button type="button" data-action="edit">Chỉnh sửa</button>
-                  <button type="button" data-action="delete">Xóa</button>
-                </div>
-              </div>
-              <p style="color: var(--muted);">Người dùng trả lời nhanh bằng nút quick reply; cho phép xác định dòng triệu chứng chính.</p>
-            </li>
-            <li class="question-item" draggable="true">
-              <div class="question-item-header">
-                <div>
-                  <p class="question-item-title">Thời gian — “Triệu chứng xuất hiện từ bao lâu?”</p>
-                  <span class="question-pill pill-required">Bắt buộc</span>
-                </div>
-                <div class="question-actions">
-                  <button type="button" data-action="edit">Chỉnh sửa</button>
-                  <button type="button" data-action="delete">Xóa</button>
+          <section class="manager-body-intro">
+            <div>
+              <h4 id="managerBodyModelTitle">Mô hình cơ thể · Người lớn · Nữ</h4>
+              <p>Di chuột để xem tên vùng. Bấm vào bộ phận cần cấu hình hoặc dùng danh sách chọn nhanh bên dưới.</p>
+            </div>
+            <div class="patient-controls">
+              <div class="gender-control">
+                <strong>Giới tính hình minh họa</strong>
+                <div class="gender-toggle" role="group" aria-label="Chọn giới tính hình minh họa">
+                  <button class="gender-option active" type="button" data-manager-gender="female">Nữ</button>
+                  <button class="gender-option" type="button" data-manager-gender="male">Nam</button>
                 </div>
               </div>
-              <p style="color: var(--muted);">Xác định độ cấp tính của triệu chứng và thời điểm bắt đầu.</p>
-            </li>
-            <li class="question-item" draggable="true">
-              <div class="question-item-header">
-                <div>
-                  <p class="question-item-title">Mức độ — “Bạn đánh giá mức độ khó chịu từ 1-5?”</p>
-                  <span class="question-pill pill-required">Bắt buộc</span>
-                </div>
-                <div class="question-actions">
-                  <button type="button" data-action="edit">Chỉnh sửa</button>
-                  <button type="button" data-action="delete">Xóa</button>
-                </div>
-              </div>
-              <p style="color: var(--muted);">Cho phép phân đồ thị mức độ nghiêm trọng và lọc chuyển sang logic phù hợp.</p>
-            </li>
-            <li class="question-item" draggable="true">
-              <div class="question-item-header">
-                <div>
-                  <p class="question-item-title">Triệu chứng đi kèm — Sốt? Buồn nôn? Chóng mặt?</p>
-                  <span class="question-pill pill-optional">Tùy chọn</span>
-                </div>
-                <div class="question-actions">
-                  <button type="button" data-action="edit">Chỉnh sửa</button>
-                  <button type="button" data-action="delete">Xóa</button>
-                </div>
-              </div>
-              <p style="color: var(--muted);">Thu thập các dấu hiệu đi kèm để tăng độ chính xác phân loại.</p>
-            </li>
-            <li class="question-item" draggable="true">
-              <div class="question-item-header">
-                <div>
-                  <p class="question-item-title">Tiền sử bệnh — “Có bệnh nền? Đang uống thuốc gì?”</p>
-                  <span class="question-pill pill-optional">Tùy chọn</span>
-                </div>
-                <div class="question-actions">
-                  <button type="button" data-action="edit">Chỉnh sửa</button>
-                  <button type="button" data-action="delete">Xóa</button>
-                </div>
-              </div>
-              <p style="color: var(--muted);">Gợi ý bối cảnh sức khỏe, hỗ trợ gợi ý nâng cấp và phân loại nguy cơ.</p>
-            </li>
-            <li class="question-item" draggable="true">
-              <div class="question-item-header">
-                <div>
-                  <p class="question-item-title">Tóm tắt & xác nhận — Hiển thị lại toàn bộ để người dùng kiểm tra</p>
-                  <span class="question-pill pill-system">Hệ thống</span>
-                </div>
-                <div class="question-actions">
-                  <button type="button" data-action="edit">Chỉnh sửa</button>
-                  <button type="button" data-action="delete">Xóa</button>
-                </div>
-              </div>
-              <p style="color: var(--muted);">Bước cuối cùng giúp người dùng xác nhận trước khi xem kết quả phân loại.</p>
-            </li>
-          </ol>
+              <label class="age-control" for="managerAgeRange">
+                <span>
+                  <strong>Độ tuổi người bệnh</strong>
+                  <output id="managerAgeOutput">30 tuổi · Người lớn</output>
+                </span>
+                <input type="range" id="managerAgeRange" min="1" max="100" value="30">
+              </label>
+            </div>
+          </section>
 
-          <div style="display:flex; flex-wrap:wrap; gap:12px; margin-top:18px;">
-            <button class="button button-primary" id="addStepBtn" type="button">Thêm bước</button>
+          <div class="manager-body-workspace">
+            <section class="manager-body-card">
+              <div class="body-map-head">
+                <div>
+                  <h4>Bản đồ triệu chứng</h4>
+                  <p>Xem cả mặt trước và mặt sau để cấu hình đúng khu vực khách sẽ chọn.</p>
+                </div>
+                <span class="flow-badge" id="managerConfiguredCount">0 vùng đã cấu hình</span>
+              </div>
+              <div class="body-view-grid">
+                <div class="body-view">
+                  <span class="body-view-label">Mặt trước <small>Người lớn</small></span>
+                  <svg class="manager-body-figure" viewBox="0 0 320 620" role="img" aria-label="Mô hình cơ thể mặt trước">
+                    <g class="body-age-layer">
+                      <g class="manager-body-zone face-zone" data-manager-part="ears"><ellipse cx="113" cy="79" rx="9" ry="17"/><ellipse cx="207" cy="79" rx="9" ry="17"/></g>
+                      <g class="manager-body-zone face-zone" data-manager-part="head"><path d="M120 42 Q160 16 200 42 L197 88 Q190 126 160 133 Q130 126 123 88 Z"/></g>
+                      <g class="manager-body-zone feature-zone" data-manager-part="eyes"><ellipse cx="143" cy="73" rx="11" ry="7"/><ellipse cx="177" cy="73" rx="11" ry="7"/></g>
+                      <g class="manager-body-zone feature-zone" data-manager-part="nose"><path d="M160 78 L151 99 Q160 106 169 99 Z"/></g>
+                      <g class="manager-body-zone feature-zone" data-manager-part="mouth"><ellipse cx="160" cy="113" rx="17" ry="8"/></g>
+                      <g class="manager-body-zone torso-zone" data-manager-part="throat"><rect x="144" y="129" width="32" height="33" rx="13"/></g>
+                      <g class="manager-body-zone torso-zone" data-manager-part="shoulders"><path d="M122 154 Q101 154 86 173 L103 196 L128 182 Z"/><path d="M198 154 Q219 154 234 173 L217 196 L192 182 Z"/></g>
+                      <g class="manager-body-zone torso-zone" data-manager-part="chest"><path d="M127 162 Q160 145 193 162 L199 246 Q160 258 121 246 Z"/></g>
+                      <g class="manager-body-zone heart-zone" data-manager-part="heart"><path d="M162 193 C151 176 128 185 134 204 C138 218 151 229 162 238 C173 229 187 218 190 204 C196 185 173 176 162 193 Z"/></g>
+                      <g class="manager-body-zone abdomen-zone" data-manager-part="abdomen"><path d="M122 248 Q160 259 198 248 L187 306 Q160 320 133 306 Z"/></g>
+                      <g class="manager-body-zone limb-zone" data-manager-part="upperArms"><path d="M87 174 L105 183 L91 248 L70 243 Z"/><path d="M233 174 L215 183 L229 248 L250 243 Z"/></g>
+                      <g class="manager-body-zone joint-zone" data-manager-part="elbows"><ellipse cx="79" cy="257" rx="14" ry="16"/><ellipse cx="241" cy="257" rx="14" ry="16"/></g>
+                      <g class="manager-body-zone limb-zone" data-manager-part="forearms"><path d="M70 270 L88 268 L75 326 L55 321 Z"/><path d="M250 270 L232 268 L245 326 L265 321 Z"/></g>
+                      <g class="manager-body-zone limb-zone" data-manager-part="hands"><path d="M53 321 Q67 316 78 329 L72 369 Q60 383 48 367 Z"/><path d="M267 321 Q253 316 242 329 L248 369 Q260 383 272 367 Z"/></g>
+                      <g class="manager-body-zone abdomen-zone" data-manager-part="hips"><path d="M130 306 Q160 320 190 306 L195 348 Q160 365 125 348 Z"/></g>
+                      <g class="manager-body-zone limb-zone" data-manager-part="thighs"><path d="M126 348 L153 348 L150 439 L119 439 Z"/><path d="M167 348 L194 348 L201 439 L170 439 Z"/></g>
+                      <g class="manager-body-zone joint-zone" data-manager-part="knees"><ellipse cx="135" cy="454" rx="17" ry="19"/><ellipse cx="185" cy="454" rx="17" ry="19"/></g>
+                      <g class="manager-body-zone limb-zone" data-manager-part="legs"><path d="M119 472 L150 472 L147 552 L122 552 Z"/><path d="M170 472 L201 472 L198 552 L173 552 Z"/></g>
+                      <g class="manager-body-zone limb-zone" data-manager-part="feet"><path d="M121 550 L148 550 L153 581 Q128 591 112 578 Z"/><path d="M172 550 L199 550 L208 578 Q192 591 167 581 Z"/></g>
+                      <g class="body-detail">
+                        <path d="M141 92 Q160 103 179 92"/>
+                        <circle cx="160" cy="274" r="3"/>
+                        <path d="M160 309 L160 344"/>
+                      </g>
+                    </g>
+                  </svg>
+                </div>
+                <div class="body-view">
+                  <span class="body-view-label">Mặt sau <small>Người lớn</small></span>
+                  <svg class="manager-body-figure" viewBox="0 0 320 620" role="img" aria-label="Mô hình cơ thể mặt sau">
+                    <g class="body-age-layer">
+                      <g class="manager-body-zone face-zone" data-manager-part="ears"><ellipse cx="113" cy="79" rx="9" ry="17"/><ellipse cx="207" cy="79" rx="9" ry="17"/></g>
+                      <g class="manager-body-zone face-zone" data-manager-part="head"><path d="M120 42 Q160 16 200 42 L197 95 Q187 131 160 134 Q133 131 123 95 Z"/></g>
+                      <g class="manager-body-zone torso-zone" data-manager-part="throat"><rect x="143" y="129" width="34" height="33" rx="13"/></g>
+                      <g class="manager-body-zone torso-zone" data-manager-part="shoulders"><path d="M122 154 Q101 154 86 173 L103 196 L128 182 Z"/><path d="M198 154 Q219 154 234 173 L217 196 L192 182 Z"/></g>
+                      <g class="manager-body-zone back-zone" data-manager-part="back"><path d="M127 162 Q160 145 193 162 L199 248 Q160 263 121 248 Z"/></g>
+                      <g class="manager-body-zone back-zone" data-manager-part="lowerBack"><path d="M122 250 Q160 263 198 250 L188 307 Q160 319 132 307 Z"/></g>
+                      <g class="manager-body-zone limb-zone" data-manager-part="upperArms"><path d="M87 174 L105 183 L91 248 L70 243 Z"/><path d="M233 174 L215 183 L229 248 L250 243 Z"/></g>
+                      <g class="manager-body-zone joint-zone" data-manager-part="elbows"><ellipse cx="79" cy="257" rx="14" ry="16"/><ellipse cx="241" cy="257" rx="14" ry="16"/></g>
+                      <g class="manager-body-zone limb-zone" data-manager-part="forearms"><path d="M70 270 L88 268 L75 326 L55 321 Z"/><path d="M250 270 L232 268 L245 326 L265 321 Z"/></g>
+                      <g class="manager-body-zone limb-zone" data-manager-part="hands"><path d="M53 321 Q67 316 78 329 L72 369 Q60 383 48 367 Z"/><path d="M267 321 Q253 316 242 329 L248 369 Q260 383 272 367 Z"/></g>
+                      <g class="manager-body-zone abdomen-zone" data-manager-part="hips"><path d="M130 306 Q160 320 190 306 L195 348 Q160 365 125 348 Z"/></g>
+                      <g class="manager-body-zone limb-zone" data-manager-part="thighs"><path d="M126 348 L153 348 L150 439 L119 439 Z"/><path d="M167 348 L194 348 L201 439 L170 439 Z"/></g>
+                      <g class="manager-body-zone joint-zone" data-manager-part="knees"><ellipse cx="135" cy="454" rx="17" ry="19"/><ellipse cx="185" cy="454" rx="17" ry="19"/></g>
+                      <g class="manager-body-zone limb-zone" data-manager-part="legs"><path d="M119 472 L150 472 L147 552 L122 552 Z"/><path d="M170 472 L201 472 L198 552 L173 552 Z"/></g>
+                      <g class="manager-body-zone limb-zone" data-manager-part="feet"><path d="M121 550 L148 550 L153 581 Q128 591 112 578 Z"/><path d="M172 550 L199 550 L208 578 Q192 591 167 581 Z"/></g>
+                      <g class="body-detail">
+                        <path d="M160 165 L160 304"/>
+                        <path d="M135 210 Q160 228 185 210"/>
+                        <path d="M160 309 L160 344"/>
+                      </g>
+                    </g>
+                  </svg>
+                </div>
+              </div>
+              <div class="body-region-guide">
+                <strong>Chọn nhanh khu vực</strong>
+                <div class="body-region-chips" id="managerRegionChips"></div>
+              </div>
+              <div class="body-hover-card" id="managerBodyHoverCard">
+                <strong>Hướng dẫn</strong>
+                <p>Di chuột vào một bộ phận để xem cấu hình. Vùng đã có triệu chứng sẽ sáng lên.</p>
+              </div>
+            </section>
           </div>
         </div>
       </section>
 
       <section class="screen-panel" id="screen-2">
         <div class="panel-card">
-          <h3>Preview giao diện chatbot</h3>
-          <p>Giao diện conversation đúng như người dùng sẽ thấy trên ứng dụng.</p>
-
-          <div class="panel-card" style="background: rgba(255,255,255,0.04); border-color: rgba(148,163,184,0.12);">
-            <div class="chat-preview">
-              <div class="chat-bubble bot">Xin chào! Tôi sẽ giúp bạn đánh giá tình trạng sức khỏe ban đầu.</div>
-              <div class="chat-bubble bot">Bạn đang gặp vấn đề gì hôm nay?</div>
-              <div class="chat-bubble user">Đau đầu, mệt mỏi</div>
-              <div class="chat-bubble bot">Triệu chứng này xuất hiện từ bao lâu rồi?</div>
-              <div class="chat-bubble user">Khoảng 2 ngày nay</div>
-              <div class="chat-bubble bot">Bạn đánh giá mức độ khó chịu thế nào? (1 = nhẹ, 5 = rất khó chịu)</div>
+          <div class="body-manager-head">
+            <div>
+              <h3>Danh sách cấu hình triệu chứng theo bộ phận</h3>
+              <p>Những mục này sẽ được dùng làm gợi ý khi khách bấm vào từng vùng cơ thể ở màn kiểm tra ban đầu.</p>
             </div>
-
-            <div class="quick-replies">
-              <div class="quick-reply">1 — Nhẹ</div>
-              <div class="quick-reply">2</div>
-              <div class="quick-reply">3 — Vừa</div>
-              <div class="quick-reply">4</div>
-              <div class="quick-reply">5 — Nặng</div>
-            </div>
-
-            <div class="progress-track">
-              <div style="display:flex; justify-content:space-between; color: var(--muted); font-size:0.9rem;">
-                <span>Bước 3 / 6</span>
-                <span>Thời gian trả lời trung bình: 1m 20s</span>
-              </div>
-              <div class="track-bar">
-                <div class="track-line"><div class="track-fill"></div></div>
-              </div>
-            </div>
+            <button class="button button-primary" type="button" id="openFirstBodyPart">Thêm nhanh triệu chứng</button>
           </div>
-
-          <div style="margin-top: 18px; display: flex; flex-wrap: wrap; gap: 10px;">
-            <button class="button button-primary" id="toggleMobileViewBtn" type="button">Xem dạng mobile</button>
-            <button class="button button-secondary" id="editQuestionsBtn" type="button">Chỉnh câu hỏi</button>
-          </div>
+          <div class="body-config-grid" id="bodyConfigGrid"></div>
         </div>
       </section>
 
@@ -1378,6 +1905,48 @@
     </main>
   </div>
 
+  <div class="popup-backdrop" id="bodyPartBackdrop">
+    <div class="popup form-popup body-part-popup" role="dialog" aria-modal="true" aria-labelledby="managerBodyPartTitle">
+      <div class="body-part-popup-head">
+        <span class="popup-kicker">Cập nhật triệu chứng</span>
+        <h4 id="managerBodyPartTitle">Cấu hình bộ phận</h4>
+        <p class="body-part-popup-copy">Thêm các triệu chứng gợi ý và thời gian hỏi mặc định cho vùng cơ thể này.</p>
+      </div>
+
+      <label class="body-duration-control">
+        <span>
+          <strong>Khung thời gian mặc định</strong>
+          <output id="managerDurationOutput">1 ngày</output>
+        </span>
+        <input type="range" id="managerDurationRange" min="1" max="30" value="1">
+      </label>
+
+      <label class="body-popup-field">
+        Mức ưu tiên
+        <select id="managerSeveritySelect">
+          <option value="low">Thấp</option>
+          <option value="medium">Trung bình</option>
+          <option value="high">Cao</option>
+        </select>
+      </label>
+
+      <label class="body-popup-field">
+        Thêm triệu chứng
+        <div class="symptom-add-row">
+          <input id="managerSymptomInput" type="text" placeholder="Ví dụ: Đau nhói, tê bì, sưng đau...">
+          <button class="button button-secondary" id="addManagerSymptom" type="button">Thêm</button>
+        </div>
+      </label>
+
+      <div class="manager-symptom-editor" id="managerSymptomEditor"></div>
+
+      <div class="popup-actions">
+        <button class="button button-secondary" type="button" id="bodyPartCancel">Hủy</button>
+        <button class="button button-primary" type="button" id="bodyPartSave">Lưu cấu hình</button>
+      </div>
+    </div>
+  </div>
+
   <div class="popup-backdrop" id="popupBackdrop">
     <div class="popup" role="dialog" aria-modal="true" aria-labelledby="popupTitle">
       <h4 id="popupTitle">Xác nhận</h4>
@@ -1465,17 +2034,34 @@
     const formFields = document.getElementById('formFields');
     const formSave = document.getElementById('formSave');
     const formCancel = document.getElementById('formCancel');
-    const questionList = document.getElementById('questionList');
-    const addStepBtn = document.getElementById('addStepBtn');
-    const previewPanel = document.querySelector('.chat-preview');
-    const toggleMobileViewBtn = document.getElementById('toggleMobileViewBtn');
-    const editQuestionsBtn = document.getElementById('editQuestionsBtn');
+    const bodyPartBackdrop = document.getElementById('bodyPartBackdrop');
+    const managerBodyPartTitle = document.getElementById('managerBodyPartTitle');
+    const managerDurationRange = document.getElementById('managerDurationRange');
+    const managerDurationOutput = document.getElementById('managerDurationOutput');
+    const managerSeveritySelect = document.getElementById('managerSeveritySelect');
+    const managerSymptomInput = document.getElementById('managerSymptomInput');
+    const managerSymptomEditor = document.getElementById('managerSymptomEditor');
+    const managerConfiguredCount = document.getElementById('managerConfiguredCount');
+    const managerRegionChips = document.getElementById('managerRegionChips');
+    const managerBodyHoverCard = document.getElementById('managerBodyHoverCard');
+    const managerBodyModelTitle = document.getElementById('managerBodyModelTitle');
+    const managerAgeRange = document.getElementById('managerAgeRange');
+    const managerAgeOutput = document.getElementById('managerAgeOutput');
+    const managerGenderButtons = document.querySelectorAll('[data-manager-gender]');
+    const bodyConfigGrid = document.getElementById('bodyConfigGrid');
+    const addManagerSymptom = document.getElementById('addManagerSymptom');
+    const bodyPartCancel = document.getElementById('bodyPartCancel');
+    const bodyPartSave = document.getElementById('bodyPartSave');
+    const openFirstBodyPart = document.getElementById('openFirstBodyPart');
     const addPackageBtn = document.getElementById('addPackageBtn');
     const packageList = document.getElementById('packageList');
     const togglePaywallBtn = document.getElementById('togglePaywallBtn');
     let popupAction = null;
     let formContext = null;
-    let draggedQuestion = null;
+    let activeManagerBodyPart = null;
+    let draftManagerSymptoms = [];
+    let managerBodyGender = 'female';
+    let managerPatientAge = 30;
     let paywallActive = false;
 
     function showPopup(title, message, action) {
@@ -1493,9 +2079,7 @@
     function showForm(kind, target = null, data = {}) {
       formContext = { kind, target };
       formBackdrop.classList.add('visible');
-      formTitle.textContent = kind === 'question'
-        ? (target ? 'Chỉnh sửa câu hỏi' : 'Thêm bước mới')
-        : (target ? 'Chỉnh sửa gói' : 'Thêm gói mới');
+      formTitle.textContent = target ? 'Chỉnh sửa gói' : 'Thêm gói mới';
       renderFormFields(kind, data);
     }
 
@@ -1521,27 +2105,7 @@
     }
 
     function renderFormFields(kind, data) {
-      if (kind === 'question') {
-        formFields.innerHTML = `
-          <label>
-            Nhập câu hỏi
-            <input id="formQuestionInput" type="text" value="${data.question || ''}" />
-          </label>
-          <label>
-            Nhập mô tả
-            <textarea id="formDescriptionInput">${data.description || ''}</textarea>
-          </label>
-          <label>
-            Thể loại
-            ${createPopupSelect('formTypeSelect', [
-              { value: 'required', label: 'Bắt buộc' },
-              { value: 'optional', label: 'Tùy chọn' },
-              { value: 'system', label: 'Hệ thống' }
-            ], data.type || 'required')}
-          </label>
-        `;
-      } else {
-        formFields.innerHTML = `
+      formFields.innerHTML = `
           <label>
             Tên gói
             <input id="formPackageName" type="text" value="${data.name || ''}" />
@@ -1562,7 +2126,6 @@
             ], data.type || 'basic')}
           </label>
         `;
-      }
     }
 
     function createQuestionElement(question, description, type) {
@@ -1583,6 +2146,151 @@
         <p style="color: var(--muted);">${description}</p>
       `;
       return item;
+    }
+
+    const managerBodyParts = [
+      { id: 'head', label: 'Đầu', duration: 2, severity: 'medium', symptoms: ['Đau đầu', 'Chóng mặt'] },
+      { id: 'ears', label: 'Tai', duration: 1, severity: 'low', symptoms: ['Đau tai', 'Ù tai'] },
+      { id: 'eyes', label: 'Mắt', duration: 1, severity: 'low', symptoms: ['Đỏ mắt', 'Mờ mắt'] },
+      { id: 'nose', label: 'Mũi', duration: 2, severity: 'low', symptoms: ['Nghẹt mũi', 'Chảy nước mũi'] },
+      { id: 'mouth', label: 'Miệng', duration: 2, severity: 'low', symptoms: ['Đau răng', 'Loét miệng'] },
+      { id: 'throat', label: 'Cổ và họng', duration: 2, severity: 'medium', symptoms: ['Đau họng', 'Khó nuốt'] },
+      { id: 'chest', label: 'Ngực và hô hấp', duration: 1, severity: 'high', symptoms: ['Tức ngực', 'Khó thở'] },
+      { id: 'heart', label: 'Tim', duration: 1, severity: 'high', symptoms: ['Tim đập nhanh', 'Đau thắt ngực'] },
+      { id: 'abdomen', label: 'Bụng', duration: 3, severity: 'medium', symptoms: ['Đau bụng', 'Buồn nôn'] },
+      { id: 'upperArms', label: 'Cánh tay', duration: 4, severity: 'medium', symptoms: ['Tê bì', 'Sưng đau'] },
+      { id: 'elbows', label: 'Khuỷu tay', duration: 3, severity: 'low', symptoms: ['Đau khuỷu tay', 'Cứng khớp'] },
+      { id: 'forearms', label: 'Cẳng tay', duration: 4, severity: 'medium', symptoms: ['Đau cẳng tay', 'Yếu tay'] },
+      { id: 'hands', label: 'Bàn tay', duration: 3, severity: 'low', symptoms: ['Tê ngón tay', 'Khó cầm nắm'] },
+      { id: 'hips', label: 'Hông', duration: 4, severity: 'low', symptoms: ['Đau hông', 'Cứng khớp'] },
+      { id: 'thighs', label: 'Đùi', duration: 4, severity: 'medium', symptoms: ['Đau đùi', 'Căng cơ'] },
+      { id: 'knees', label: 'Đầu gối', duration: 4, severity: 'medium', symptoms: ['Đau đầu gối', 'Sưng khớp'] },
+      { id: 'legs', label: 'Cẳng chân', duration: 5, severity: 'medium', symptoms: ['Chuột rút', 'Sưng phù'] },
+      { id: 'feet', label: 'Bàn chân', duration: 5, severity: 'low', symptoms: ['Đau bàn chân', 'Sưng cổ chân'] },
+      { id: 'shoulders', label: 'Vai', duration: 4, severity: 'low', symptoms: ['Cứng vai', 'Đau khi giơ tay'] },
+      { id: 'back', label: 'Lưng', duration: 5, severity: 'medium', symptoms: ['Đau lưng', 'Cứng lưng'] },
+      { id: 'lowerBack', label: 'Thắt lưng', duration: 5, severity: 'medium', symptoms: ['Đau thắt lưng', 'Đau lan xuống chân'] }
+    ];
+
+    const severityLabels = {
+      low: 'Thấp',
+      medium: 'Trung bình',
+      high: 'Cao'
+    };
+
+    function getManagerDurationLabel(value) {
+      const days = Number(value);
+      return days === 1 ? '1 ngày' : `${days} ngày`;
+    }
+
+    function getManagerPart(partId) {
+      return managerBodyParts.find(part => part.id === partId);
+    }
+
+    function getManagerAgeProfile() {
+      if (managerPatientAge < 13) return 'Trẻ em';
+      if (managerPatientAge < 18) return 'Thiếu niên';
+      if (managerPatientAge > 64) return 'Người cao tuổi';
+      return 'Người lớn';
+    }
+
+    function updateManagerBodyMeta() {
+      const ageLabel = getManagerAgeProfile();
+      const genderLabel = managerBodyGender === 'female' ? 'Nữ' : 'Nam';
+      managerBodyModelTitle.textContent = `Mô hình cơ thể · ${ageLabel} · ${genderLabel}`;
+      managerAgeOutput.textContent = `${managerPatientAge} tuổi · ${ageLabel}`;
+      managerGenderButtons.forEach(button => {
+        button.classList.toggle('active', button.dataset.managerGender === managerBodyGender);
+      });
+      document.querySelectorAll('.body-view-label small').forEach(label => {
+        label.textContent = ageLabel;
+      });
+    }
+
+    function renderSymptomEditor() {
+      managerSymptomEditor.innerHTML = draftManagerSymptoms.length
+        ? draftManagerSymptoms.map(symptom => `
+          <span class="symptom-chip">
+            ${symptom}
+            <button type="button" data-remove-symptom="${symptom}" aria-label="Xóa ${symptom}">x</button>
+          </span>
+        `).join('')
+        : '<p style="margin:0; color: var(--muted);">Chưa có triệu chứng. Nhập triệu chứng mới rồi bấm Thêm.</p>';
+    }
+
+    function renderManagerBodyConfig() {
+      const configuredCount = managerBodyParts.filter(part => part.symptoms.length).length;
+      document.querySelectorAll('[data-manager-part]').forEach(zone => {
+        const part = getManagerPart(zone.dataset.managerPart);
+        zone.classList.toggle('configured', Boolean(part?.symptoms.length));
+        zone.classList.toggle('is-active', activeManagerBodyPart === zone.dataset.managerPart);
+      });
+
+      managerConfiguredCount.textContent = `${configuredCount} vùng đã cấu hình`;
+      managerRegionChips.innerHTML = managerBodyParts.map(part => `
+        <button class="body-region-chip ${part.symptoms.length ? 'active' : ''}" type="button" data-open-body-part="${part.id}">
+          ${part.label}
+        </button>
+      `).join('');
+
+      bodyConfigGrid.innerHTML = managerBodyParts.map(part => `
+        <article class="body-config-card">
+          <header>
+            <strong>${part.label}</strong>
+            <span class="severity-pill ${part.severity}">${severityLabels[part.severity]}</span>
+          </header>
+          <p><b>Thời gian:</b> ${getManagerDurationLabel(part.duration)}</p>
+          <p><b>Triệu chứng:</b> ${part.symptoms.join(', ')}</p>
+          <button class="button button-secondary" type="button" data-open-body-part="${part.id}">Chỉnh cấu hình</button>
+        </article>
+      `).join('');
+    }
+
+    function openBodyPartEditor(partId) {
+      const part = getManagerPart(partId);
+      if (!part) return;
+      activeManagerBodyPart = part.id;
+      draftManagerSymptoms = [...part.symptoms];
+      managerBodyPartTitle.textContent = `Cấu hình ${part.label}`;
+      managerDurationRange.value = part.duration;
+      managerDurationOutput.textContent = getManagerDurationLabel(part.duration);
+      managerSeveritySelect.value = part.severity;
+      managerSymptomInput.value = '';
+      renderSymptomEditor();
+      renderManagerBodyConfig();
+      bodyPartBackdrop.classList.add('visible');
+    }
+
+    function updateManagerHover(partId) {
+      const part = getManagerPart(partId);
+      if (!part || !managerBodyHoverCard) return;
+      managerBodyHoverCard.innerHTML = `
+        <strong>${part.label}</strong>
+        <p>${part.symptoms.length ? `${part.symptoms.join(', ')} · ${getManagerDurationLabel(part.duration)} · Ưu tiên ${severityLabels[part.severity]}` : 'Chưa có triệu chứng. Bấm để thêm cấu hình cho vùng này.'}</p>
+      `;
+    }
+
+    function resetManagerHover() {
+      if (!managerBodyHoverCard) return;
+      managerBodyHoverCard.innerHTML = `
+        <strong>Hướng dẫn</strong>
+        <p>Di chuột vào một bộ phận để xem cấu hình. Vùng đã có triệu chứng sẽ sáng lên.</p>
+      `;
+    }
+
+    function closeBodyPartEditor() {
+      bodyPartBackdrop.classList.remove('visible');
+      activeManagerBodyPart = null;
+      draftManagerSymptoms = [];
+      renderManagerBodyConfig();
+    }
+
+    function addDraftSymptom() {
+      const symptom = managerSymptomInput.value.trim();
+      if (!symptom || draftManagerSymptoms.includes(symptom)) return;
+      draftManagerSymptoms.push(symptom);
+      managerSymptomInput.value = '';
+      renderSymptomEditor();
     }
 
     function createPackageCard(id, name, price, description, type) {
@@ -1652,22 +2360,8 @@
     formSave.addEventListener('click', () => {
       if (!formContext) return;
       if (formContext.kind === 'question') {
-        const question = document.getElementById('formQuestionInput').value.trim();
-        const description = document.getElementById('formDescriptionInput').value.trim();
-        const type = document.getElementById('formTypeSelect').value;
-        if (!question) return;
-        if (formContext.target) {
-          const title = formContext.target.querySelector('.question-item-title');
-          const pill = formContext.target.querySelector('.question-pill');
-          const desc = formContext.target.querySelector('p');
-          title.textContent = question;
-          desc.textContent = description;
-          pill.textContent = type === 'required' ? 'Bắt buộc' : type === 'optional' ? 'Tùy chọn' : 'Hệ thống';
-          pill.className = `question-pill ${type === 'required' ? 'pill-required' : type === 'optional' ? 'pill-optional' : 'pill-system'}`;
-        } else {
-          const newItem = createQuestionElement(question, description, type);
-          questionList.appendChild(newItem);
-        }
+        closeForm();
+        return;
       } else {
         const name = document.getElementById('formPackageName').value.trim();
         const price = document.getElementById('formPackagePrice').value.trim();
@@ -1700,56 +2394,84 @@
       closeForm();
     });
 
-    questionList.addEventListener('click', (event) => {
-      const button = event.target.closest('button[data-action]');
+    document.querySelectorAll('[data-manager-part]').forEach(zone => {
+      zone.setAttribute('tabindex', '0');
+      zone.setAttribute('role', 'button');
+      zone.addEventListener('click', () => openBodyPartEditor(zone.dataset.managerPart));
+      zone.addEventListener('mouseenter', () => updateManagerHover(zone.dataset.managerPart));
+      zone.addEventListener('focus', () => updateManagerHover(zone.dataset.managerPart));
+      zone.addEventListener('mouseleave', resetManagerHover);
+      zone.addEventListener('blur', resetManagerHover);
+      zone.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          openBodyPartEditor(zone.dataset.managerPart);
+        }
+      });
+    });
+
+    managerRegionChips.addEventListener('click', (event) => {
+      const button = event.target.closest('[data-open-body-part]');
+      if (button) openBodyPartEditor(button.dataset.openBodyPart);
+    });
+
+    managerGenderButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        managerBodyGender = button.dataset.managerGender;
+        updateManagerBodyMeta();
+      });
+    });
+
+    managerAgeRange.addEventListener('input', () => {
+      managerPatientAge = Number(managerAgeRange.value);
+      updateManagerBodyMeta();
+    });
+
+    bodyConfigGrid.addEventListener('click', (event) => {
+      const button = event.target.closest('[data-open-body-part]');
+      if (button) openBodyPartEditor(button.dataset.openBodyPart);
+    });
+
+    openFirstBodyPart.addEventListener('click', () => {
+      openBodyPartEditor(managerBodyParts[0].id);
+    });
+
+    managerDurationRange.addEventListener('input', () => {
+      managerDurationOutput.textContent = getManagerDurationLabel(managerDurationRange.value);
+    });
+
+    addManagerSymptom.addEventListener('click', addDraftSymptom);
+    managerSymptomInput.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        addDraftSymptom();
+      }
+    });
+
+    managerSymptomEditor.addEventListener('click', (event) => {
+      const button = event.target.closest('[data-remove-symptom]');
       if (!button) return;
-      const action = button.dataset.action;
-      const item = button.closest('.question-item');
-      if (!item) return;
-
-      if (action === 'edit') {
-        const title = item.querySelector('.question-item-title').textContent;
-        const description = item.querySelector('p').textContent;
-        const pillText = item.querySelector('.question-pill').textContent;
-        const type = pillText === 'Bắt buộc' ? 'required' : pillText === 'Tùy chọn' ? 'optional' : 'system';
-        showForm('question', item, { question: title, description, type });
-      }
-
-      if (action === 'delete') {
-        showPopup('Xóa bước', 'Bạn có chắc chắn muốn xóa bước này khỏi luồng?', () => {
-          item.remove();
-        });
-      }
+      draftManagerSymptoms = draftManagerSymptoms.filter(symptom => symptom !== button.dataset.removeSymptom);
+      renderSymptomEditor();
     });
 
-    questionList.addEventListener('dragstart', (event) => {
-      const item = event.target.closest('.question-item');
-      if (!item) return;
-      draggedQuestion = item;
-      item.classList.add('dragging');
-      event.dataTransfer.effectAllowed = 'move';
-      event.dataTransfer.setData('text/plain', 'drag');
+    bodyPartCancel.addEventListener('click', closeBodyPartEditor);
+    bodyPartBackdrop.addEventListener('click', (event) => {
+      if (event.target === bodyPartBackdrop) closeBodyPartEditor();
     });
 
-    questionList.addEventListener('dragend', () => {
-      if (draggedQuestion) {
-        draggedQuestion.classList.remove('dragging');
-        draggedQuestion = null;
-      }
+    bodyPartSave.addEventListener('click', () => {
+      const part = getManagerPart(activeManagerBodyPart);
+      if (!part) return;
+      part.duration = Number(managerDurationRange.value);
+      part.severity = managerSeveritySelect.value;
+      part.symptoms = [...draftManagerSymptoms];
+      closeBodyPartEditor();
+      showPopup('Đã lưu cấu hình', `Cấu hình triệu chứng cho ${part.label} đã được cập nhật.`, null);
     });
 
-    questionList.addEventListener('dragover', (event) => {
-      event.preventDefault();
-      const item = event.target.closest('.question-item');
-      if (!item || item === draggedQuestion) return;
-      const rect = item.getBoundingClientRect();
-      const next = (event.clientY - rect.top) > rect.height / 2;
-      questionList.insertBefore(draggedQuestion, next ? item.nextSibling : item);
-    });
-
-    addStepBtn.addEventListener('click', () => {
-      showForm('question', null, { question: '', description: '', type: 'required' });
-    });
+    updateManagerBodyMeta();
+    renderManagerBodyConfig();
 
     packageList.addEventListener('click', (event) => {
       const button = event.target.closest('button[data-action]');
@@ -1773,17 +2495,6 @@
 
     addPackageBtn.addEventListener('click', () => {
       showForm('package', null, { name: '', price: '', description: '', type: 'basic' });
-    });
-
-    toggleMobileViewBtn.addEventListener('click', () => {
-      previewPanel.classList.toggle('mobile-mode');
-      toggleMobileViewBtn.textContent = previewPanel.classList.contains('mobile-mode') ? 'Xem dạng web' : 'Xem dạng mobile';
-    });
-
-    editQuestionsBtn.addEventListener('click', () => {
-      showPopup('Chỉnh câu hỏi', 'Bạn muốn quay lại màn hình Soạn kịch bản để chỉnh câu hỏi?', () => {
-        stepButtons[0].click();
-      });
     });
 
     togglePaywallBtn.addEventListener('click', () => {

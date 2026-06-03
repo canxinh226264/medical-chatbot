@@ -5,26 +5,26 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Docah - Khách hàng</title>
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="../shared-theme.css">
 </head>
-<body>
+<body class="customer-page">
   <div class="page">
     <aside class="sidebar">
       <div class="brand">
         <div class="brand-logo">
           <img src="../logo.png" alt="Docah logo">
         </div>
-        <div>
-          <h1>Docah</h1>
-          <p>Trợ lý sức khỏe gia đình</p>
-        </div>
       </div>
 
       <nav class="nav-menu" aria-label="Điều hướng khách hàng">
-        <button class="nav-link active" type="button" data-view="triage"><span class="icon">+</span><span>Kiểm tra ban đầu</span></button>
-        <button class="nav-link" type="button" data-view="appointments"><span class="icon">L</span><span>Đặt lịch khám</span></button>
-        <button class="nav-link" type="button" data-view="history"><span class="icon">H</span><span>Lịch sử tư vấn</span></button>
-        <button class="nav-link" type="button" data-view="profile"><span class="icon">P</span><span>Hồ sơ gia đình</span></button>
-        <button class="nav-link" type="button" data-view="plans"><span class="icon">V</span><span>Gói tư vấn</span></button>
+        <button class="nav-link active" type="button" data-view="triage"><span class="icon">&#129658;</span><span>Kiểm tra ban đầu</span></button>
+        <button class="nav-link" type="button" data-view="appointments"><span class="icon">&#128197;</span><span>Đặt lịch khám</span></button>
+        <button class="nav-link" type="button" data-view="history"><span class="icon">&#128203;</span><span>Lịch sử tư vấn</span></button>
+        <button class="nav-link" type="button" data-view="profile"><span class="icon">&#128100;</span><span>Hồ sơ cá nhân</span></button>
+        <button class="nav-link" type="button" data-view="plans"><span class="icon">&#128179;</span><span>Gói tư vấn</span></button>
+        <button class="nav-link" type="button" data-view="doctor-chat"><span class="icon">&#128172;</span><span>Chat với bác sĩ</span></button>
+        <button class="nav-link" type="button" data-view="doctor-rating"><span class="icon">&#11088;</span><span>Đánh giá bác sĩ</span></button>
+        <button class="nav-link" type="button" data-view="product-report"><span class="icon">&#128161;</span><span>Báo cáo &amp; đề xuất</span></button>
       </nav>
 
       <div class="sidebar-note">
@@ -62,24 +62,6 @@
       </header>
 
       <section class="view active" id="view-triage">
-        <div class="status-strip" aria-label="Trang thai dich vu">
-          <div>
-            <span class="status-dot free"></span>
-            <strong>Miễn phí</strong>
-            <p>Khảo sát triệu chứng, tóm tắt thông tin, phân loại nguy cơ.</p>
-          </div>
-          <div>
-            <span class="status-dot paid"></span>
-            <strong>Trả phí khi cần</strong>
-            <p>Bác sĩ gia đình đọc hồ sơ và tư vấn chuyên sâu theo yêu cầu.</p>
-          </div>
-          <div>
-            <span class="status-dot safety"></span>
-            <strong>Không ép buộc</strong>
-            <p>Bạn luôn thấy rõ lý do hệ thống gợi ý gặp bác sĩ.</p>
-          </div>
-        </div>
-
         <div class="workspace">
           <section class="triage-panel" aria-live="polite">
             <div class="panel-head">
@@ -98,6 +80,23 @@
           </section>
 
           <aside class="context-rail">
+            <div class="status-strip" aria-label="Trạng thái dịch vụ">
+              <div>
+                <span class="status-dot free"></span>
+                <strong>Miễn phí</strong>
+                <p>Khảo sát triệu chứng, tóm tắt thông tin, phân loại nguy cơ.</p>
+              </div>
+              <div>
+                <span class="status-dot paid"></span>
+                <strong>Trả phí khi cần</strong>
+                <p>Bác sĩ gia đình đọc hồ sơ và tư vấn chuyên sâu theo yêu cầu.</p>
+              </div>
+              <div>
+                <span class="status-dot safety"></span>
+                <strong>Không ép buộc</strong>
+                <p>Bạn luôn thấy rõ lý do hệ thống gợi ý gặp bác sĩ.</p>
+              </div>
+            </div>
             <section class="mini-panel">
               <div class="mini-head">
                 <span class="mini-icon">?</span>
@@ -176,48 +175,97 @@
             <h3>Các lần tư vấn gần đây</h3>
           </div>
         </div>
-        <div class="timeline">
-          <div class="timeline-row">
+        <div class="history-toolbar">
+          <label class="history-search">Tìm nội dung
+            <input id="historySearch" placeholder="Tìm theo triệu chứng hoặc lời khuyên...">
+          </label>
+          <label class="history-risk-filter">Mức độ
+            <select id="historyRiskFilter">
+              <option value="all">Tất cả mức độ</option>
+              <option value="high">Cao</option>
+              <option value="medium">Trung bình</option>
+              <option value="low">Thấp</option>
+            </select>
+          </label>
+        </div>
+        <div class="timeline" id="historyTimeline">
+          <div class="timeline-row" data-history-row data-history-id="fever" data-risk="medium" data-search="sốt đau họng đặt lịch bác sĩ 38.5 độ">
             <span class="risk-chip medium">Medium</span>
             <div>
               <h4>Sốt và đau họng</h4>
               <p>Đã gợi ý đặt lịch gặp bác sĩ nếu sốt trên 38.5 độ sau 48 giờ.</p>
             </div>
-            <small>22/05/2026</small>
+            <div class="timeline-actions">
+              <small>22/05/2026</small>
+              <button class="secondary-action history-detail-button" type="button" data-history-detail="fever">Xem chi tiết</button>
+            </div>
           </div>
-          <div class="timeline-row">
+          <div class="timeline-row" data-history-row data-history-id="fatigue" data-risk="low" data-search="mệt mỏi nhẹ theo dõi tại nhà ngủ bù">
             <span class="risk-chip low">Low</span>
             <div>
               <h4>Mệt mỏi nhẹ</h4>
               <p>Đã gợi ý theo dõi tại nhà, ngủ bù đủ và cập nhật nếu nặng lên.</p>
             </div>
-            <small>18/05/2026</small>
+            <div class="timeline-actions">
+              <small>18/05/2026</small>
+              <button class="secondary-action history-detail-button" type="button" data-history-detail="fatigue">Xem chi tiết</button>
+            </div>
           </div>
         </div>
+        <p class="history-empty" id="historyEmpty" hidden>Không tìm thấy lần tư vấn phù hợp với bộ lọc.</p>
       </section>
 
       <section class="view" id="view-profile">
         <div class="section-head">
           <div>
             <p class="eyebrow">Hồ sơ</p>
-            <h3>Thông tin sức khỏe gia đình</h3>
+            <h3>Hồ sơ cá nhân</h3>
           </div>
         </div>
-        <div class="profile-grid">
-          <label>Họ và tên<input value="Nguyễn Minh Anh"></label>
-          <label>Năm sinh<input value="1994"></label>
-          <label>Bệnh nền<input value="Không ghi nhận"></label>
-          <label>Dị ứng<input value="Chưa rõ"></label>
-          <label>Người liên hệ khẩn cấp<input value="Nguyễn Văn B - 0988 000 111"></label>
-          <label>Cơ sở ưu tiên<input value="Phòng khám ABC Nguyễn Trãi"></label>
-          <div class="profile-actions">
-            <button class="secondary-action" type="button" id="resetProfile">Hoàn tác</button>
-            <button class="primary-action" type="button" id="saveProfile">Lưu chỉnh sửa</button>
-          </div>
+        <div class="profile-sections">
+          <section class="profile-grid">
+            <div class="profile-section-head">
+              <h4>Thông tin cá nhân và sức khỏe</h4>
+              <p>Cập nhật thông tin để bác sĩ có thêm bối cảnh khi tư vấn.</p>
+            </div>
+            <label>Họ và tên<input value="Nguyễn Minh Anh"></label>
+            <label>Năm sinh<input value="1994"></label>
+            <label>Bệnh nền<input value="Không ghi nhận"></label>
+            <label>Dị ứng<input value="Chưa rõ"></label>
+            <label>Người liên hệ khẩn cấp<input value="Nguyễn Văn B - 0988 000 111"></label>
+            <label>Cơ sở ưu tiên<input value="Phòng khám ABC Nguyễn Trãi"></label>
+            <div class="profile-actions">
+              <button class="secondary-action" type="button" id="resetProfile" data-toast="off">Hoàn tác</button>
+              <button class="primary-action" type="button" id="saveProfile" data-toast="off">Lưu chỉnh sửa</button>
+            </div>
+          </section>
+          <section class="account-profile-card">
+            <div class="profile-section-head">
+              <h4>Thông tin tài khoản</h4>
+              <p>Thông tin dùng để đăng nhập và nhận thông báo từ Docah.</p>
+            </div>
+            <div class="account-info-grid">
+              <label>Email<input value="minhanh.nguyen@example.com" type="email"></label>
+              <label>Số điện thoại<input value="0988 123 456" type="tel"></label>
+            </div>
+            <button class="primary-action" type="button" id="saveAccountInfo" data-toast="off">Lưu thông tin tài khoản</button>
+          </section>
+          <section class="account-profile-card">
+            <div class="profile-section-head">
+              <h4>Đổi mật khẩu</h4>
+              <p>Nên sử dụng mật khẩu khác với các tài khoản cá nhân khác.</p>
+            </div>
+            <div class="account-password-grid">
+              <label>Mật khẩu hiện tại<span class="password-field"><input id="customerCurrentPassword" type="password" placeholder="Nhập mật khẩu hiện tại"><button class="password-toggle" type="button" data-toggle-password="customerCurrentPassword" aria-label="Hiện mật khẩu" title="Hiện mật khẩu">&#128065;</button></span></label>
+              <label>Mật khẩu mới<span class="password-field"><input id="customerNewPassword" type="password" placeholder="Ít nhất 8 ký tự"><button class="password-toggle" type="button" data-toggle-password="customerNewPassword" aria-label="Hiện mật khẩu" title="Hiện mật khẩu">&#128065;</button></span></label>
+              <label>Xác nhận mật khẩu mới<span class="password-field"><input id="customerConfirmPassword" type="password" placeholder="Nhập lại mật khẩu mới"><button class="password-toggle" type="button" data-toggle-password="customerConfirmPassword" aria-label="Hiện mật khẩu" title="Hiện mật khẩu">&#128065;</button></span></label>
+            </div>
+            <button class="primary-action" type="button" id="changeCustomerPassword" data-toast="off">Cập nhật mật khẩu</button>
+          </section>
         </div>
       </section>
 
-      <section class="view" id="view-plans">
+      <section class="view plans-view" id="view-plans">
         <div class="section-head">
           <div>
             <p class="eyebrow">Miễn phí và trả phí</p>
@@ -227,25 +275,256 @@
         <div class="plan-grid">
           <article class="plan">
             <span class="plan-label">Miễn phí</span>
+            <span class="plan-icon" aria-hidden="true">&#129658;</span>
             <h4>Sàng lọc ban đầu</h4>
             <p>Trả lời câu hỏi, xem tóm tắt, phân loại nguy cơ và hướng hành động tiếp theo.</p>
             <strong>0đ</strong>
+            <button class="secondary-action plan-action" type="button" data-plan-view="triage">Bắt đầu miễn phí</button>
           </article>
           <article class="plan featured">
             <span class="plan-label">Trả phí</span>
+            <span class="plan-icon" aria-hidden="true">&#128172;</span>
             <h4>Bác sĩ đọc hồ sơ</h4>
             <p>Bác sĩ gia đình xem lại tóm tắt, hỏi thêm nếu cần và tư vấn chuyên sâu.</p>
             <strong>80.000đ</strong>
+            <button class="primary-action plan-action" type="button" data-open-paid>Gửi hồ sơ bác sĩ</button>
           </article>
           <article class="plan">
             <span class="plan-label">Tại phòng khám</span>
+            <span class="plan-icon" aria-hidden="true">&#128197;</span>
             <h4>Đặt lịch khám</h4>
             <p>Chọn cơ sở ABC, khung giờ và bác sĩ phù hợp với mức độ nguy cơ.</p>
             <strong>Theo dịch vụ</strong>
+            <button class="secondary-action plan-action" type="button" data-plan-view="appointments">Chọn lịch khám</button>
           </article>
         </div>
       </section>
+
+      <section class="view doctor-chat-view" id="view-doctor-chat">
+        <div class="customer-chat-layout">
+          <aside class="customer-chat-doctors">
+            <div class="customer-chat-filters">
+              <input id="customerChatSearch" placeholder="Tìm bác sĩ hoặc người chat...">
+            </div>
+            <div class="customer-chat-list" id="customerChatList"></div>
+          </aside>
+          <section class="customer-chat-panel">
+            <div class="customer-chat-head">
+              <div id="customerChatHead"></div>
+              <label class="chat-type-filter">Lọc nội dung
+                <select id="customerChatTypeFilter">
+                  <option value="all">Tất cả tin nhắn</option>
+                  <option value="normal">Tin nhắn thường</option>
+                  <option value="prescription">Kê đơn từ bác sĩ</option>
+                  <option value="follow-up">Nội dung tái khám</option>
+                </select>
+              </label>
+            </div>
+            <div class="customer-chat-history" id="customerChatHistory"></div>
+            <div class="customer-chat-compose">
+              <textarea id="customerChatInput" rows="2" placeholder="Nhập nội dung cần trao đổi với bác sĩ..."></textarea>
+              <button class="primary-action" type="button" id="sendCustomerChat" data-toast="off">Gửi tin nhắn</button>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <section class="view doctor-rating-view" id="view-doctor-rating">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Phản hồi sau tư vấn</p>
+            <h3>Đánh giá bác sĩ</h3>
+            <p>Gửi nhận xét sau khi tư vấn để bác sĩ và Docah cải thiện chất lượng chăm sóc.</p>
+          </div>
+        </div>
+
+        <div class="doctor-rating-summary">
+          <article class="rating-metric-card">
+            <span>Tổng đánh giá</span>
+            <strong id="doctorRatingTotal">3</strong>
+          </article>
+          <article class="rating-metric-card">
+            <span>Điểm trung bình</span>
+            <strong id="doctorRatingAverage">4.3 ★</strong>
+          </article>
+          <article class="rating-metric-card success">
+            <span>Tích cực</span>
+            <strong id="doctorRatingPositive">2</strong>
+          </article>
+          <article class="rating-metric-card warning">
+            <span>Cần cải thiện</span>
+            <strong id="doctorRatingNeeds">1</strong>
+          </article>
+        </div>
+
+        <div class="doctor-rating-layout">
+          <form class="doctor-rating-form" id="doctorRatingForm" data-toast="off">
+            <div class="rating-form-head">
+              <p class="eyebrow">Đánh giá mới</p>
+              <h4>Chia sẻ trải nghiệm của bạn</h4>
+              <p>Thông tin này sẽ được gửi cho bác sĩ phụ trách và đội ngũ quản lý chất lượng.</p>
+            </div>
+            <div class="rating-form-grid">
+              <label>Bác sĩ
+                <select id="ratingDoctor" required>
+                  <option>BS. Trần Hoài An</option>
+                  <option>BS. Lê Minh Phương</option>
+                  <option>BS. Phạm Quốc Huy</option>
+                </select>
+              </label>
+              <label>Loại tư vấn
+                <select id="ratingConsultType" required>
+                  <option>Chat với bác sĩ</option>
+                  <option>Tư vấn sau kiểm tra ban đầu</option>
+                  <option>Đặt lịch khám</option>
+                  <option>Tái khám</option>
+                </select>
+              </label>
+              <label>Số sao
+                <select id="ratingScore" required>
+                  <option value="5">5 sao - Rất hài lòng</option>
+                  <option value="4">4 sao - Hài lòng</option>
+                  <option value="3">3 sao - Bình thường</option>
+                  <option value="2">2 sao - Cần cải thiện</option>
+                  <option value="1">1 sao - Không hài lòng</option>
+                </select>
+              </label>
+              <label>Cảm xúc
+                <select id="ratingSentiment" required>
+                  <option>Tích cực</option>
+                  <option>Trung lập</option>
+                  <option>Tiêu cực</option>
+                </select>
+              </label>
+            </div>
+            <label>Nhận xét chi tiết
+              <textarea id="ratingComment" rows="5" required placeholder="Bác sĩ giải thích có dễ hiểu không? Thời gian phản hồi, thái độ tư vấn và lời khuyên có phù hợp không?"></textarea>
+            </label>
+            <div class="rating-form-actions">
+              <button class="secondary-action" type="reset">Làm mới</button>
+              <button class="primary-action" type="submit">Gửi đánh giá</button>
+            </div>
+          </form>
+
+          <section class="doctor-rating-list-card">
+            <div class="rating-list-head">
+              <div>
+                <p class="eyebrow">Đánh giá gần đây</p>
+                <h4>Tất cả phản hồi</h4>
+              </div>
+              <span class="rating-filter-pill">Theo mẫu phản hồi bác sĩ</span>
+            </div>
+            <div class="doctor-rating-list" id="doctorRatingList">
+              <article class="doctor-rating-item" data-rating-item data-rating="5" data-sentiment="Tích cực">
+                <div class="rating-item-head">
+                  <div>
+                    <strong>BS. Trần Hoài An</strong>
+                    <span class="rating-badge success">Tích cực</span>
+                    <span class="rating-badge">Chat với bác sĩ</span>
+                  </div>
+                  <span class="rating-stars">★★★★★</span>
+                </div>
+                <p>Bác sĩ phản hồi nhanh, giải thích rõ tình trạng đau đầu và hướng dẫn theo dõi rất dễ hiểu.</p>
+                <div class="rating-ai-note"><small>Ghi nhận chất lượng</small><span>Tư vấn rõ ràng, thái độ tốt, lời khuyên có tính thực hành.</span></div>
+              </article>
+              <article class="doctor-rating-item" data-rating-item data-rating="5" data-sentiment="Tích cực">
+                <div class="rating-item-head">
+                  <div>
+                    <strong>BS. Lê Minh Phương</strong>
+                    <span class="rating-badge success">Tích cực</span>
+                    <span class="rating-badge">Đặt lịch khám</span>
+                  </div>
+                  <span class="rating-stars">★★★★★</span>
+                </div>
+                <p>Tư vấn nhẹ nhàng, hướng dẫn chuẩn bị trước khi đi khám rất đầy đủ.</p>
+                <div class="rating-ai-note"><small>Ghi nhận chất lượng</small><span>Bệnh nhân hài lòng với sự tận tâm và mức độ chi tiết.</span></div>
+              </article>
+              <article class="doctor-rating-item needs" data-rating-item data-rating="3" data-sentiment="Trung lập">
+                <div class="rating-item-head">
+                  <div>
+                    <strong>BS. Phạm Quốc Huy</strong>
+                    <span class="rating-badge warning">Trung lập</span>
+                    <span class="rating-badge">Tái khám</span>
+                  </div>
+                  <span class="rating-stars">★★★☆☆</span>
+                </div>
+                <p>Nội dung tư vấn hữu ích nhưng thời gian phản hồi hơi lâu, mong có thông báo chờ rõ hơn.</p>
+                <div class="rating-ai-note"><small>Điểm cần cải thiện</small><span>Cần tối ưu tốc độ phản hồi và thông tin trạng thái trong khi chờ.</span></div>
+              </article>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <section class="view" id="view-product-report">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Cải thiện Docah</p>
+            <h3>Báo cáo lỗi UI/UX hoặc gửi đề xuất</h3>
+            <p>Mô tả vấn đề bạn gặp phải để đội ngũ sản phẩm ưu tiên xử lý.</p>
+          </div>
+        </div>
+        <form class="product-report-form" id="customerReportForm" data-toast="off">
+          <div class="report-form-grid">
+            <label>Loại phản hồi
+              <select required><option>Lỗi giao diện UI/UX</option><option>Đề xuất cải tiến</option><option>Lỗi chức năng</option></select>
+            </label>
+            <label>Khu vực gặp vấn đề
+              <select required><option>Kiểm tra ban đầu</option><option>Chat với bác sĩ</option><option>Đặt lịch khám</option><option>Hồ sơ cá nhân</option><option>Khác</option></select>
+            </label>
+            <label>Mức ưu tiên
+              <select required><option>Thông thường</option><option>Ảnh hưởng trải nghiệm</option><option>Không thể tiếp tục thao tác</option></select>
+            </label>
+            <label>Tiêu đề
+              <input required placeholder="Tóm tắt ngắn vấn đề hoặc đề xuất">
+            </label>
+          </div>
+          <label>Mô tả chi tiết
+            <textarea required rows="6" placeholder="Bạn đã thao tác như thế nào? Điều gì xảy ra? Bạn mong muốn cải tiến ra sao?"></textarea>
+          </label>
+          <div class="report-form-actions">
+            <button class="secondary-action" type="reset">Làm mới</button>
+            <button class="primary-action" type="submit">Gửi phản hồi</button>
+          </div>
+        </form>
+      </section>
     </main>
+  </div>
+
+  <div class="modal" id="bodyPartModal" aria-hidden="true">
+    <div class="modal-panel body-part-modal-panel" role="dialog" aria-modal="true" aria-labelledby="bodyPartTitle">
+      <button class="modal-close" type="button" id="closeBodyPart" aria-label="Đóng">x</button>
+      <p class="eyebrow">Cập nhật triệu chứng</p>
+      <h3 id="bodyPartTitle">Chọn bộ phận</h3>
+      <p class="modal-copy">Chọn các triệu chứng đang gặp và kéo thanh thời gian để Docah tổng hợp chính xác hơn.</p>
+
+      <label class="duration-control" for="durationRange">
+        <span>
+          <strong>Thời gian bị bệnh</strong>
+          <output id="durationOutput">1 ngày</output>
+        </span>
+        <input type="range" id="durationRange" min="1" max="30" value="1">
+        <small>Kéo sang phải nếu tình trạng đã kéo dài nhiều ngày.</small>
+      </label>
+
+      <div class="symptom-picker">
+        <strong>Triệu chứng đang gặp</strong>
+        <div class="symptom-choice-grid" id="symptomChoices"></div>
+      </div>
+
+      <div class="body-modal-actions">
+        <button class="ghost-button" type="button" id="removeBodyPart">Xóa thông tin vùng này</button>
+        <button class="primary-action" type="button" id="saveBodyPart">Xác nhận triệu chứng</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="historyDetailModal" aria-hidden="true">
+    <div class="modal-panel history-detail-panel" role="dialog" aria-modal="true" aria-labelledby="historyDetailTitle">
+      <button class="modal-close" type="button" id="closeHistoryDetail" aria-label="Đóng">x</button>
+      <p class="eyebrow">Chi tiết tư vấn</p>
+      <div id="historyDetailBody"></div>
+    </div>
   </div>
 
   <div class="modal" id="paidModal" aria-hidden="true">
@@ -267,5 +546,6 @@
   </div>
 
   <script src="app.js"></script>
+  <script src="../shared-toast.js"></script>
 </body>
 </html>

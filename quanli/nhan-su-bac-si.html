@@ -388,6 +388,8 @@
     @media (max-width: 900px) { .clinic-grid, .filter-row { grid-template-columns: 1fr; } .filter-panel { padding: 18px; } }
     @media (max-width: 780px) { body { padding: 16px; } .page { grid-template-columns: 1fr; } .sidebar { position: relative; top: 0; min-height: auto; } }
   </style>
+  <link rel="stylesheet" href="../shared-theme.css">
+  <link rel="stylesheet" href="manager-visibility.css">
 </head>
 <body>
   <div class="page">
@@ -395,10 +397,6 @@
       <div class="brand">
           <div class="brand-logo">
             <img src="logo.png" alt="Docah logo" />
-          </div>
-          <div>
-            <h1>Docah</h1>
-            <p>Hệ thống quản lý</p>
           </div>
         </div>
       <nav class="nav-menu">
@@ -430,6 +428,7 @@
           <span class="icon">⚙️</span>
           <span>Cài đặt hệ thống</span>
         </a>
+        <a class="nav-link" href="bao-cao-de-xuat.html"><span class="icon">💡</span><span>Báo cáo &amp; đề xuất</span></a>
       </nav>
     </aside>
 
@@ -684,7 +683,7 @@
           <td>${item.facility}</td>
           <td><span class="role-pill ${item.role === 'Bác sĩ' ? 'role-doctor' : 'role-nurse'}">${item.role}</span></td>
           <td>${item.role === 'Bác sĩ' ? `<span class="specialty-pill">${item.specialty}</span>` : '-'}</td>
-          <td><span class="status-pill">${item.status}</span></td>
+          <td><span class="status-pill ${item.status === 'Đang hoạt động' ? 'status-active' : 'status-inactive'}">${item.status}</span></td>
           <td>
             <div class="action-buttons">
               <button class="button btn-detail" data-action="detail">Chi tiết</button>

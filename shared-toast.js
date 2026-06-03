@@ -139,6 +139,93 @@
     return (button.dataset.toastText || button.textContent || button.value || "").replace(/\s+/g, " ").trim();
   }
 
+  function closeDocahSelects(except = null) {
+    document.querySelectorAll(".docah-select.open").forEach((dropdown) => {
+      if (dropdown === except) return;
+      dropdown.classList.remove("open");
+      dropdown.querySelector(".docah-select-trigger")?.setAttribute("aria-expanded", "false");
+    });
+  }
+
+  function enhanceDocahSelect(select) {
+    if (!(select instanceof HTMLSelectElement)) return;
+    if (select.multiple || select.disabled || select.dataset.docahEnhanced === "true") return;
+    if (select.classList.contains("expert-select-native") || select.closest(".expert-select, .docah-select")) return;
+
+    select.dataset.docahEnhanced = "true";
+    select.classList.add("docah-select-native");
+    select.tabIndex = -1;
+    select.setAttribute("aria-hidden", "true");
+
+    const dropdown = document.createElement("div");
+    dropdown.className = "docah-select";
+    select.parentNode.insertBefore(dropdown, select);
+    dropdown.appendChild(select);
+
+    const trigger = document.createElement("button");
+    trigger.className = "docah-select-trigger";
+    trigger.type = "button";
+    trigger.setAttribute("aria-expanded", "false");
+    trigger.innerHTML = '<span></span><svg aria-hidden="true" viewBox="0 0 24 24"><path d="m7 10 5 5 5-5"/></svg>';
+    dropdown.appendChild(trigger);
+
+    const menu = document.createElement("div");
+    menu.className = "docah-select-menu";
+    dropdown.appendChild(menu);
+
+    Array.from(select.options).forEach((option) => {
+      const item = document.createElement("button");
+      item.className = "docah-select-option";
+      item.type = "button";
+      item.dataset.value = option.value;
+      item.textContent = option.textContent;
+      item.addEventListener("click", (event) => {
+        event.stopPropagation();
+        select.value = option.value;
+        select.dispatchEvent(new Event("change", { bubbles: true }));
+        dropdown.classList.remove("open");
+        trigger.setAttribute("aria-expanded", "false");
+        trigger.focus();
+      });
+      menu.appendChild(item);
+    });
+
+    const sync = () => {
+      const selected = select.options[select.selectedIndex];
+      trigger.querySelector("span").textContent = selected ? selected.textContent : "";
+      menu.querySelectorAll(".docah-select-option").forEach((item) => {
+        item.classList.toggle("active", item.dataset.value === select.value);
+      });
+    };
+
+    trigger.addEventListener("click", (event) => {
+      event.stopPropagation();
+      const shouldOpen = !dropdown.classList.contains("open");
+      closeDocahSelects(dropdown);
+      dropdown.classList.toggle("open", shouldOpen);
+      trigger.setAttribute("aria-expanded", String(shouldOpen));
+    });
+
+    select.addEventListener("change", sync);
+    sync();
+  }
+
+  function enhanceDocahSelects(root = document) {
+    if (root.matches?.("select")) enhanceDocahSelect(root);
+    root.querySelectorAll?.("select").forEach(enhanceDocahSelect);
+  }
+
+  function setupDocahSelects() {
+    enhanceDocahSelects();
+    new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        mutation.addedNodes.forEach((node) => {
+          if (node.nodeType === Node.ELEMENT_NODE) enhanceDocahSelects(node);
+        });
+      });
+    }).observe(document.body, { childList: true, subtree: true });
+  }
+
   function inferToast(button) {
     if (button.dataset.toastTitle) {
       return {
@@ -157,9 +244,16 @@
   window.showToast = showToast;
   window.DocahToast = { show: showToast };
 
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", setupDocahSelects);
+  } else {
+    setupDocahSelects();
+  }
+
   document.addEventListener("click", (event) => {
+    if (!event.target.closest(".docah-select")) closeDocahSelects();
     const button = event.target.closest("button, input[type='button'], input[type='submit']");
-    if (!button || button.disabled || button.closest(".password-field")) return;
+    if (!button || button.disabled || button.dataset.toast === "off" || button.closest(".password-field")) return;
 
     const toast = inferToast(button);
     if (!toast) return;
