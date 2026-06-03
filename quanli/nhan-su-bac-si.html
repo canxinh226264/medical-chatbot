@@ -752,8 +752,190 @@
         .replaceAll("'", '&#039;');
     }
 
+    const workDays = [
+      { id: 'mon', short: 'T2', label: 'Thứ 2' },
+      { id: 'tue', short: 'T3', label: 'Thứ 3' },
+      { id: 'wed', short: 'T4', label: 'Thứ 4' },
+      { id: 'thu', short: 'T5', label: 'Thứ 5' },
+      { id: 'fri', short: 'T6', label: 'Thứ 6' },
+      { id: 'sat', short: 'T7', label: 'Thứ 7' },
+      { id: 'sun', short: 'CN', label: 'Chủ nhật' }
+    ];
+
+    const timeOptions = [
+      '06:00', '06:30', '07:00', '07:30', '08:00', '08:30',
+      '09:00', '09:30', '10:00', '10:30', '11:00', '11:30',
+      '12:00', '12:30', '13:00', '13:30', '14:00', '14:30',
+      '15:00', '15:30', '16:00', '16:30', '17:00', '17:30',
+      '18:00', '18:30', '19:00', '19:30', '20:00'
+    ];
+
+    function getDayIndex(dayId) {
+      return workDays.findIndex(day => day.id === dayId);
+    }
+
+    function createTimeOptions(selectedValue) {
+      return timeOptions.map(time => `<option value="${time}" ${time === selectedValue ? 'selected' : ''}>${time}</option>`).join('');
+    }
+
+    function getFallbackScheduleFromText(staff) {
+      const schedule = {};
+      const text = `${staff.schedule || ''} ${staff.workTime || ''}`;
+      if (!text.trim()) return schedule;
+      const timeMatch = text.match(/(\d{2}:\d{2})\s*-\s*(\d{2}:\d{2})/);
+      const start = timeMatch?.[1] || '08:00';
+      const end = timeMatch?.[2] || '17:00';
+      const dayText = String(staff.schedule || '');
+
+      let selectedDays = workDays.slice(0, 5);
+      if (/T3\s*-\s*T7/i.test(dayText)) selectedDays = workDays.slice(1, 6);
+      if (/T2\s*-\s*T7/i.test(dayText)) selectedDays = workDays.slice(0, 6);
+      if (/CN/i.test(dayText)) selectedDays = workDays;
+
+      selectedDays.forEach(day => {
+        schedule[day.id] = { start, end };
+      });
+      return schedule;
+    }
+
+    function normalizeWorkSchedule(staff) {
+      if (staff.workSchedule && typeof staff.workSchedule === 'object') {
+        return Object.fromEntries(Object.entries(staff.workSchedule).filter(([, value]) => value?.start && value?.end));
+      }
+      return getFallbackScheduleFromText(staff);
+    }
+
+    function getScheduleEntries(workSchedule = {}) {
+      return workDays
+        .filter(day => workSchedule[day.id]?.start && workSchedule[day.id]?.end)
+        .map(day => ({ ...day, ...workSchedule[day.id] }));
+    }
+
+    function getScheduleSummary(workSchedule = {}) {
+      const entries = getScheduleEntries(workSchedule);
+      if (!entries.length) return 'Chưa cập nhật';
+      return entries.map(entry => `${entry.short}: ${entry.start} - ${entry.end}`).join(', ');
+    }
+
+    function renderScheduleSummary(workSchedule = {}) {
+      const entries = getScheduleEntries(workSchedule);
+      return entries.length
+        ? entries.map(entry => `<span class="schedule-summary-pill">${entry.label}: ${entry.start} - ${entry.end}</span>`).join('')
+        : '<span class="schedule-empty">Chưa chọn ngày làm việc</span>';
+    }
+
+    function renderWorkScheduleEditor(workSchedule = {}) {
+      return `
+        <section class="work-schedule-editor full">
+          <div class="schedule-editor-head">
+            <div>
+              <label>Lịch làm việc theo ngày</label>
+              <p>Chọn ngày làm việc, sau đó chọn giờ vào và giờ về.</p>
+            </div>
+          </div>
+          <div class="work-day-buttons" id="workDayButtons">
+            ${workDays.map(day => {
+              const selected = Boolean(workSchedule[day.id]);
+              const value = workSchedule[day.id];
+              return `<button class="work-day-button ${selected ? 'active' : ''}" type="button" data-work-day="${day.id}">
+                <strong>${day.label}</strong>
+                <span>${selected ? `${value.start} - ${value.end}` : 'Chưa chọn'}</span>
+              </button>`;
+            }).join('')}
+          </div>
+          <div class="work-time-panel" id="workTimePanel">
+            <span class="schedule-empty">Bấm vào một ngày để tùy chỉnh giờ làm việc.</span>
+          </div>
+          <div class="schedule-summary-row" id="workScheduleSummary">
+            ${renderScheduleSummary(workSchedule)}
+          </div>
+        </section>
+      `;
+    }
+
+    function setupWorkScheduleEditor(initialSchedule) {
+      let draftSchedule = { ...initialSchedule };
+      let activeDayId = getScheduleEntries(draftSchedule)[0]?.id || workDays[0].id;
+      const buttonsWrap = document.getElementById('workDayButtons');
+      const timePanel = document.getElementById('workTimePanel');
+      const summary = document.getElementById('workScheduleSummary');
+
+      const renderButtons = () => {
+        buttonsWrap.querySelectorAll('[data-work-day]').forEach(button => {
+          const day = workDays.find(item => item.id === button.dataset.workDay);
+          const value = draftSchedule[day.id];
+          button.classList.toggle('active', Boolean(value));
+          button.classList.toggle('selected', activeDayId === day.id);
+          button.querySelector('span').textContent = value ? `${value.start} - ${value.end}` : 'Chưa chọn';
+        });
+        summary.innerHTML = renderScheduleSummary(draftSchedule);
+      };
+
+      const renderPanel = () => {
+        const day = workDays.find(item => item.id === activeDayId);
+        const value = draftSchedule[activeDayId] || { start: '08:00', end: '17:00' };
+        timePanel.innerHTML = `
+          <div class="work-time-title">
+            <div>
+              <small>Đang chỉnh</small>
+              <strong>${day.label}</strong>
+            </div>
+            <button class="clear-day-button" type="button" data-clear-day="${day.id}">Bỏ chọn ngày</button>
+          </div>
+          <div class="work-time-selects">
+            <label>Giờ vào
+              <select id="workStartTime">${createTimeOptions(value.start)}</select>
+            </label>
+            <label>Giờ về
+              <select id="workEndTime">${createTimeOptions(value.end)}</select>
+            </label>
+          </div>
+          <button class="apply-time-button" type="button" data-apply-time="${day.id}">Áp dụng giờ</button>
+        `;
+      };
+
+      buttonsWrap.addEventListener('click', (event) => {
+        const button = event.target.closest('[data-work-day]');
+        if (!button) return;
+        activeDayId = button.dataset.workDay;
+        renderButtons();
+        renderPanel();
+      });
+
+      timePanel.addEventListener('change', (event) => {
+        if (!event.target.matches('#workStartTime, #workEndTime')) return;
+        const start = document.getElementById('workStartTime').value;
+        const end = document.getElementById('workEndTime').value;
+        draftSchedule[activeDayId] = { start, end };
+        renderButtons();
+      });
+
+      timePanel.addEventListener('click', (event) => {
+        const applyButton = event.target.closest('[data-apply-time]');
+        if (applyButton) {
+          const start = document.getElementById('workStartTime').value;
+          const end = document.getElementById('workEndTime').value;
+          draftSchedule[activeDayId] = { start, end };
+          renderButtons();
+          return;
+        }
+
+        const clearButton = event.target.closest('[data-clear-day]');
+        if (!clearButton) return;
+        delete draftSchedule[clearButton.dataset.clearDay];
+        renderButtons();
+        renderPanel();
+      });
+
+      renderButtons();
+      renderPanel();
+
+      return () => ({ ...draftSchedule });
+    }
+
     function showDetailModal(staff) {
       modalTitle.textContent = staff.role === 'Bác sĩ' ? 'Chi tiết bác sĩ' : 'Chi tiết nhân sự';
+      const workSchedule = normalizeWorkSchedule(staff);
       modalBody.innerHTML = `
         <div class="crud-detail-hero">
           <div class="crud-detail-mark">${staff.role === 'Bác sĩ' ? 'BS' : 'NS'}</div>
@@ -776,13 +958,9 @@
             <strong>${escapeHtml(staff.specialty || 'Chưa cập nhật')}</strong>
           </div>
           ` : ''}
-          <div class="crud-detail-item">
-            <small>Giờ làm việc</small>
-            <strong>${escapeHtml(staff.workTime || 'Chưa cập nhật')}</strong>
-          </div>
           <div class="crud-detail-item full">
-            <small>Lịch làm việc</small>
-            <strong>${escapeHtml(staff.schedule || 'Chưa cập nhật')}</strong>
+            <small>Lịch làm việc theo ngày</small>
+            <div class="schedule-summary-row">${renderScheduleSummary(workSchedule)}</div>
           </div>
         </div>
       `;
@@ -793,6 +971,7 @@
 
     function showEditModal(staff, isNew = false) {
       modalTitle.textContent = isNew ? 'Thêm nhân sự mới' : `Chỉnh sửa ${staff.name}`;
+      const initialSchedule = normalizeWorkSchedule(staff);
       modalBody.innerHTML = `
         <div class="crud-form-grid">
           <div class="field full">
@@ -818,20 +997,13 @@
             ], staff.specialty || '')}
           </div>
           <div class="field">
-            <label>Giờ làm việc</label>
-            <input type="text" id="staffWorkTime" placeholder="Ví dụ: 08:00 - 17:00" value="${escapeHtml(staff.workTime || '')}" />
-          </div>
-          <div class="field">
             <label>Trạng thái</label>
             ${createPopupSelect('staffStatus', [
               { value: 'Đang hoạt động', label: 'Đang hoạt động' },
               { value: 'Tạm ngưng', label: 'Tạm ngưng' }
             ], staff.status || 'Đang hoạt động')}
           </div>
-          <div class="field full">
-            <label>Lịch làm việc</label>
-            <textarea id="staffSchedule" placeholder="Ví dụ: T2 - T6: 08:00 - 17:00">${escapeHtml(staff.schedule || '')}</textarea>
-          </div>
+          ${renderWorkScheduleEditor(initialSchedule)}
         </div>
       `;
 
@@ -850,22 +1022,26 @@
       };
       staffRole.addEventListener('change', updateSpecialtyVisibility);
       updateSpecialtyVisibility();
+      const getDraftSchedule = setupWorkScheduleEditor(initialSchedule);
 
       document.getElementById('cancelEditBtn').addEventListener('click', closeModal);
       document.getElementById('saveEditBtn').addEventListener('click', () => {
+        const workSchedule = getDraftSchedule();
+        const scheduleSummary = getScheduleSummary(workSchedule);
         const updatedStaff = {
           id: staff.id || Date.now(),
           name: document.getElementById('staffName').value.trim(),
           facility: document.getElementById('staffFacility').value.trim(),
           role: document.getElementById('staffRole').value,
           specialty: staffRole.value === 'Bác sĩ' ? staffSpecialty.value : '',
-          schedule: document.getElementById('staffSchedule').value.trim(),
-          workTime: document.getElementById('staffWorkTime').value.trim(),
+          schedule: scheduleSummary,
+          workTime: scheduleSummary,
+          workSchedule,
           status: document.getElementById('staffStatus').value
         };
 
-        if (!updatedStaff.name || !updatedStaff.facility || !updatedStaff.schedule || !updatedStaff.workTime) {
-          alert('Vui lòng điền đầy đủ tên, cơ sở, lịch làm việc và giờ làm việc.');
+        if (!updatedStaff.name || !updatedStaff.facility || !getScheduleEntries(workSchedule).length) {
+          alert('Vui lòng điền đầy đủ tên, cơ sở và chọn ít nhất một ngày làm việc.');
           return;
         }
         if (updatedStaff.role === 'Bác sĩ' && !updatedStaff.specialty) {
